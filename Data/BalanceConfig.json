@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "description": "BloodSeal Pentagram istatistik maliyet ve büyüme katsayıları konfigürasyonu. GDD standardı 1.15'tir.",
+  "statGrowthFactors": {
+    "atk": 1.15,
+    "atkSpeed": 1.15,
+    "lifesteal": 1.15,
+    "maxHp": 1.15,
+    "range": 1.15
+  },
+  "baseCosts": {
+    "atk": 20,
+    "atkSpeed": 30,
+    "lifesteal": 40,
+    "maxHp": 25,
+    "range": 20
+  },
+  "experimentalPlaceholders": {
+    "note": "Aşağıdaki değerler test edilmemiş deneysel yer tutuculardır, oyunda varsayılan kural DEĞİLDİR.",
+    "atkSpeedAggressive": 1.18,
+    "lifestealAggressive": 1.22
+  }
+}

@@ -31,13 +31,12 @@ This document establishes the binding architectural standards, game design patte
 
 ---
 
-## 3. Idle RPG Economy & Math Standards (GDC Anthony Pecorella)
+## 3. Idle RPG Economy & Math Standards
 
 ### A. Progression Growth Formulas
 - **Upgrade Cost (Exponential):**
-  $$Cost = BaseCost \times GrowthFactor^{(Level - 1)}$$
-  - Standard base stats (ATK, Max HP, Range): `GrowthFactor = 1.15`
-  - High-impact scaling stats (ATK Speed, Lifesteal): `GrowthFactor = 1.18 - 1.22`
+  $$Cost = BaseCost \times 1.15^{(Level - 1)}$$
+  *(Stat-specific scaling multipliers can be tuned via configuration resources).*
 - **Enemy Health & Damage Scaling (Linear-Polynomial Waves):**
   - Minion HP: $Wave \times 25 + 50$
   - Minion ATK: $Wave \times 3 + 5$
@@ -55,9 +54,10 @@ This document establishes the binding architectural standards, game design patte
   - `>= 1,000,000,000`: `B` (`12.8B`)
   - `>= 1,000,000,000,000`: `T` (`3.1T`)
 
-### C. Offline Progress Calculation
+### C. Offline Progress Calculation & Anti-Cheat
 - Save timestamps using `DateTimeOffset.UtcNow.ToUnixTimeSeconds()`.
-- Hard-cap offline progress time to **6 hours** (21,600 seconds) to maintain retention and economy balance.
+- Clamp elapsed time between 0 and 21,600 seconds to protect against clock manipulation and cap at 6 hours:
+  $$ElapsedSeconds = \operatorname{Math.Clamp}(Now - SavedTime, 0, 21600)$$
 - Calculate offline gold based on the highest stable cleared wave earnings per second.
 
 ---

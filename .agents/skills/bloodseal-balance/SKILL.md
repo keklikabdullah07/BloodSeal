@@ -5,47 +5,48 @@ description: "Mathematical progression formulas, wave scaling, Boss enrage, offl
 
 # 🩸 BloodSeal Game Balance & Mathematical Economy Standards
 
-This skill defines the official mathematical curves, balancing standards, and economy hygiene for **BloodSeal**, based on Anthony Pecorella's GDC framework for Idle / Incremental RPGs.
+Bu doküman, **BloodSeal** GDD belgesindeki temel savaş matematiği, dalga ölçeklendirmesi ve boşta ilerleme (idle) standartlarını belirler.
 
-## 1. Upgrade Cost Scaling (Exponential)
+## 1. Yükseltme Maliyet Formülü (Pentagram Stats)
 
-Standard stats (ATK, Max HP, Range):
+GDD'de belirlenen bağlayıcı kural gereği tüm temel istatistikler (ATK, ATK Speed, Lifesteal, Max HP, Range) için tek taban üstel maliyet formülü uygulanır:
+
 $$Cost = BaseCost \times 1.15^{(Level - 1)}$$
 
-High-impact stats (ATK Speed, Lifesteal):
-$$Cost = BaseCost \times GrowthFactor^{(Level - 1)}$$
-- **ATK Speed:** $GrowthFactor = 1.18$ (Cap: 3.5 attacks/sec)
-- **Lifesteal:** $GrowthFactor = 1.22$ (Cap: 25.0%)
+- **Büyüme Katsayısı:** Tüm istatistikler için standart $1.15$'tir.
+- **Konfigürasyon Yeri:** Katsayılar ve taban maliyetler kod içerisine veya `Data/BalanceConfig.json` dosyasına bağlanır. Ajanlar farklı katsayıları (örneğin 1.18, 1.22 gibi test edilmemiş deneysel yer tutucuları) kesin kural saymamalıdır.
+- **ATK Speed Taban:** 1.0 vuruş/sn (Maksimum sınır: 3.5 vuruş/sn).
+- **Lifesteal Taban:** %1.0 (Maksimum sınır: %25.0).
 
-## 2. Enemy Wave Scaling (Linear-Polynomial)
+## 2. Düşman ve Dalga Büyüme Eğrisi
 
-- **Minion HP:** $Wave \times 25 + 50$
-- **Minion ATK:** $Wave \times 3 + 5$
-- **Minion Gold Reward:** $Wave \times 5 + 10$
-- **Boss HP (Every 10 waves):** $Wave \times 220 + 450$
-- **Boss ATK:** $Wave \times 14 + 25$
-- **Boss Gold Reward:** $Wave \times 60 + 250$
+- **Minyon Canı (HP):** $Wave \times 25 + 50$
+- **Minyon Hasarı (ATK):** $Wave \times 3 + 5$
+- **Minyon Altın Ödülü:** $Wave \times 5 + 10$
+- **Boss Canı (Her 10. dalgada):** $Wave \times 220 + 450$
+- **Boss Hasarı:** $Wave \times 14 + 25$
+- **Boss Altın Ödülü:** $Wave \times 60 + 250$
 
-### Boss Enrage Curve
-- Boss has no hard countdown kill timer.
-- Every 5 seconds elapsed in the boss fight:
-  $$BossDamage = BaseBossDamage \times (1.0 + 0.25 \times EnrageCycles)$$
-  Aura shifts progressively to darker blood crimson.
+### Boss Kademeli Öfkelenme (Enrage)
+- Sabit ölüm sayacı (enrage timer) yerine zamanla hasar çarpanı artar.
+- Savaş başladıktan sonra her 5 saniyede bir Boss hasarı $+%25$ artar ($1.25$ çarpan adımı):
+  $$BossDamage = BaseBossDamage \times (1.0 + 0.25 \times EnrageAdimi)$$
 
-## 3. Safe Farm Defeat Loop
-- If the hero dies on Boss Wave $N$, hero retreats immediately to Wave $N - 1$.
-- Wave $N - 1$ operates as infinite safe farm mode until the player triggers "Retry Boss".
+## 3. Yenilgi ve Güvenli Farm Döngüsü
+- Kahraman Boss dalgasında ($N$) ölürse oyun bitmez; anında tam canla bir önceki güvenli dalgaya ($N - 1$) çekilir.
+- Oyuncu "Boss'a Yeniden Meydan Oku" butonuna basana kadar bu dalgada kesintisiz farm yapılır.
 
-## 4. Offline Progress Math (Hard-Capped)
-- Timestamps stored in `DateTimeOffset.UtcNow.ToUnixTimeSeconds()`.
-- Maximum offline duration capped at **6 Hours** (21,600 seconds).
-- Formula:
-  $$OfflineGold = ClearedWaveGoldPerSec \times \min(SecondsOffline, 21600)$$
+## 4. Çevrimdışı İlerleme (Offline Progress) & Zaman Güvenliği
+- Zaman damgaları `DateTimeOffset.UtcNow.ToUnixTimeSeconds()` ile UTC üzerinden tutulur.
+- **Cihaz Saati & Negatif Süre Koruması:** Cihaz saatinin geriye alınması veya aşırı ileri sarılmasına karşı süre sınırlandırılır:
+  $$GecerliSure = \operatorname{Clamp}(SuAnkiZaman - KayitZamani, 0, 21600)$$
+- Başlangıç tavan süresi **6 Saattir** (21.600 saniye).
+- Çevrimdışı altın: $GecerliSure \times TemizlenenDalgaSaniyeBasiAltin$.
 
-## 5. Big Number Hygiene
-- All damage and gold variables must use `long` or `double` to prevent 32-bit integer overflow.
-- Standard representation:
-  - `< 1,000`: Exact
+## 5. Büyük Sayı (Big Number) & Taşma Güvenliği
+- Tüm para ve hasar hesaplamalarında 32-bit tamsayı taşmasını (overflow) önlemek için `long` ve `double` tipleri kullanılır.
+- UI sayı formatlaması:
+  - `< 1,000`: Tam sayı (`850`)
   - `>= 1,000`: `1.2K`
   - `>= 1,000,000`: `4.5M`
   - `>= 1,000,000,000`: `12.8B`
