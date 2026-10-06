@@ -6,7 +6,7 @@
 
 **Architecture:** Event-driven architecture with an Autoload `GameManager` singleton managing currencies, waves, and global states. Slices are decoupled into modular C# components (`Hero`, `PetCompanion`, `Enemy`, `BossEnemy`, `WaveSpawner`, `MainHUD`), communicating through C# events and Godot scene tree structures.
 
-**Tech Stack:** Godot 4.7.2 Mono (C# / .NET 8.0), Compatibility Renderer (OpenGL 3), 1920x1080 canvas_items stretch mode.
+**Tech Stack:** Godot 4.7.2 Mono (C# / .NET 10.0), Compatibility Renderer (OpenGL 3), 1920x1080 canvas_items stretch mode.
 
 ## Global Constraints
 - Target platform resolution: 1920x1080 (16:9 Landscape), `stretch/mode="canvas_items"`, `stretch/aspect="expand"`.

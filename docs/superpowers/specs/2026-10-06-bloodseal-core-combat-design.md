@@ -20,7 +20,7 @@ Phase 1 hedefi: F5 ile çalıştırıldığında akıcı bir şekilde oynanabile
 ```text
 blood-seal/
 ├── project.godot                     # 1920x1080, stretch canvas_items, GL Compatibility
-├── BloodSeal.csproj                  # .NET 8 / C# 8+ proje dosyası
+├── BloodSeal.csproj                  # .NET 10 / C# proje dosyası
 ├── Scenes/
 │   ├── MainCombat.tscn               # Ana savaş, Parallax ve UI konteyneri
 │   ├── Hero.tscn                     # CharacterBody2D tabanlı kahraman
