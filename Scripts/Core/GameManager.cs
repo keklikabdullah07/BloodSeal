@@ -9,6 +9,7 @@ namespace BloodSeal.Core
         public static GameManager Instance { get; private set; }
 
         public PentagramStats Stats { get; private set; } = new PentagramStats();
+        public CharacterProfile Profile { get; private set; } = new CharacterProfile();
 
         public long Gold { get; private set; } = 100; // Başlangıç testi için 100 altın
         public int CurrentWave { get; private set; } = 1;
@@ -23,6 +24,7 @@ namespace BloodSeal.Core
         public event Action<bool> OnRageStateChanged;
         public event Action OnHeroDied;
         public event Action OnStatsUpgraded;
+        public event Action<CharacterProfile> OnProfileChanged;
 
         private double _rageActiveTimer = 0.0;
 
@@ -178,6 +180,16 @@ namespace BloodSeal.Core
                 return true;
             }
             return false;
+        }
+
+        public void SetProfile(string name, BloodlineType bloodline, StreetOriginType origin)
+        {
+            Profile.PlayerName = string.IsNullOrWhiteSpace(name) ? "Valerius" : name.Trim();
+            Profile.Bloodline = bloodline;
+            Profile.Origin = origin;
+            Profile.HasCompletedPrologue = true;
+            OnProfileChanged?.Invoke(Profile);
+            OnStatsUpgraded?.Invoke();
         }
     }
 }

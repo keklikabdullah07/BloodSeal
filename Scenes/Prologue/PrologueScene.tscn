@@ -1,0 +1,260 @@
+[gd_scene load_steps=3 format=3 uid="uid://cprologue001"]
+
+[ext_resource type="Script" path="res://Scripts/UI/PrologueController.cs" id="1_prologue"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/SelectionCard.tscn" id="2_card"]
+
+[node name="PrologueScene" type="Control" node_paths=PackedStringArray("NameInput", "Step1Panel", "Step2Panel", "Step3Panel", "Step4Panel", "BloodlineCardsContainer", "OriginCardsContainer", "SummaryLabel", "AwakenButton")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_prologue")
+NameInput = NodePath("CenterContainer/Step1Panel/VBox/NameInput")
+Step1Panel = NodePath("CenterContainer/Step1Panel")
+Step2Panel = NodePath("CenterContainer/Step2Panel")
+Step3Panel = NodePath("CenterContainer/Step3Panel")
+Step4Panel = NodePath("CenterContainer/Step4Panel")
+BloodlineCardsContainer = NodePath("CenterContainer/Step2Panel/ScrollContainer/CardsHBox")
+OriginCardsContainer = NodePath("CenterContainer/Step3Panel/ScrollContainer/CardsHBox")
+CardScene = ExtResource("2_card")
+SummaryLabel = NodePath("CenterContainer/Step4Panel/VBox/SummaryLabel")
+AwakenButton = NodePath("CenterContainer/Step4Panel/VBox/AwakenButton")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.03, 0.06, 1)
+
+[node name="PentagramAura" type="Polygon2D" parent="."]
+position = Vector2(960, 540)
+color = Color(0.8, 0.08, 0.15, 0.12)
+polygon = PackedVector2Array(-240, 0, -170, -170, 0, -240, 170, -170, 240, 0, 170, 170, 0, 240, -170, 170)
+
+[node name="AshParticles" type="CPUParticles2D" parent="."]
+position = Vector2(960, 1100)
+amount = 45
+lifetime = 5.0
+emission_shape = 3
+emission_rect_extents = Vector2(960, 20)
+gravity = Vector2(0, -50)
+scale_amount_min = 2.5
+scale_amount_max = 6.0
+color = Color(0.75, 0.1, 0.18, 0.35)
+
+[node name="TopTitle" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 40.0
+offset_bottom = 90.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.9, 0.15, 0.22, 1)
+theme_override_font_sizes/font_size = 32
+text = "🩸 BLOODSEAL: KAN MÜHRÜNÜN MİRASI"
+horizontal_alignment = 1
+
+[node name="CenterContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 110.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 60
+theme_override_constants/margin_bottom = 20
+
+[node name="Step1Panel" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(750, 480)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Step1Panel"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="StepTitle" type="Label" parent="CenterContainer/Step1Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.8, 1)
+theme_override_font_sizes/font_size = 26
+text = "I. BÖLÜM: UYANIŞ VE İSİM"
+horizontal_alignment = 1
+
+[node name="StoryText" type="Label" parent="CenterContainer/Step1Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.75, 0.75, 1)
+theme_override_font_sizes/font_size = 18
+text = "Varnath dünyasının kadim 13 mühründen 12'si Kızıl Ahit tarikatı tarafından ele geçirildi.
+
+Darius'un kan tılsımıyla yıkık Malikaneye sığındın. Geriye yalnızca bedenine mühürlenen Köken Mührü kaldı...
+
+Mührün uyanışıyla adını fısılda, savaşçı:"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="NameInput" type="LineEdit" parent="CenterContainer/Step1Panel/VBox"]
+custom_minimum_size = Vector2(350, 55)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 20
+text = "Valerius"
+placeholder_text = "Adını buraya yaz..."
+alignment = 1
+
+[node name="Step1NextBtn" type="Button" parent="CenterContainer/Step1Panel/VBox"]
+custom_minimum_size = Vector2(240, 55)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 18
+text = "MÜHRÜ HİSSET ➔"
+
+[node name="Step2Panel" type="PanelContainer" parent="CenterContainer"]
+visible = false
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Step2Panel"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Step2Title" type="Label" parent="CenterContainer/Step2Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.8, 1)
+theme_override_font_sizes/font_size = 26
+text = "II. BÖLÜM: KANINDAKİ MUTASYON ŞEKLİ"
+horizontal_alignment = 1
+
+[node name="Step2Subtitle" type="Label" parent="CenterContainer/Step2Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 16
+text = "Bedenindeki kadim kan hangi biçime bürünüp güçlensin?"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/Step2Panel/VBox"]
+custom_minimum_size = Vector2(0, 320)
+layout_mode = 2
+
+[node name="CardsHBox" type="HBoxContainer" parent="CenterContainer/Step2Panel/VBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="NavHBox" type="HBoxContainer" parent="CenterContainer/Step2Panel/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 30
+
+[node name="Step2BackBtn" type="Button" parent="CenterContainer/Step2Panel/VBox/NavHBox"]
+custom_minimum_size = Vector2(160, 50)
+layout_mode = 2
+text = "⬅ GERİ"
+
+[node name="Step2NextBtn" type="Button" parent="CenterContainer/Step2Panel/VBox/NavHBox"]
+custom_minimum_size = Vector2(220, 50)
+layout_mode = 2
+text = "İLERLE ➔"
+
+[node name="Step3Panel" type="PanelContainer" parent="CenterContainer"]
+visible = false
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Step3Panel"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Step3Title" type="Label" parent="CenterContainer/Step3Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.8, 1)
+theme_override_font_sizes/font_size = 26
+text = "III. BÖLÜM: SOKAK GEÇMİŞİN"
+horizontal_alignment = 1
+
+[node name="Step3Subtitle" type="Label" parent="CenterContainer/Step3Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 16
+text = "Tarikat her şeyi yok etmeden önce kimdin?"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/Step3Panel/VBox"]
+custom_minimum_size = Vector2(0, 320)
+layout_mode = 2
+
+[node name="CardsHBox" type="HBoxContainer" parent="CenterContainer/Step3Panel/VBox/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="NavHBox" type="HBoxContainer" parent="CenterContainer/Step3Panel/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 30
+
+[node name="Step3BackBtn" type="Button" parent="CenterContainer/Step3Panel/VBox/NavHBox"]
+custom_minimum_size = Vector2(160, 50)
+layout_mode = 2
+text = "⬅ GERİ"
+
+[node name="Step3NextBtn" type="Button" parent="CenterContainer/Step3Panel/VBox/NavHBox"]
+custom_minimum_size = Vector2(220, 50)
+layout_mode = 2
+text = "ÖZETİ GÖR ➔"
+
+[node name="Step4Panel" type="PanelContainer" parent="CenterContainer"]
+visible = false
+custom_minimum_size = Vector2(800, 500)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Step4Panel"]
+layout_mode = 2
+theme_override_constants/separation = 26
+
+[node name="Step4Title" type="Label" parent="CenterContainer/Step4Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.25, 1)
+theme_override_font_sizes/font_size = 28
+text = "🔥 KÖKEN MÜHRÜNÜN UYANIŞI"
+horizontal_alignment = 1
+
+[node name="SummaryLabel" type="Label" parent="CenterContainer/Step4Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 20
+text = "Özet bilgileri buraya gelecek..."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="AwakenButton" type="Button" parent="CenterContainer/Step4Panel/VBox"]
+custom_minimum_size = Vector2(400, 75)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0.95, 0.95, 1)
+theme_override_font_sizes/font_size = 22
+text = "KÖKEN MÜHRÜNÜ UYANDIR & SAVAŞA BAŞLA"
+
+[node name="Step4BackBtn" type="Button" parent="CenterContainer/Step4Panel/VBox"]
+custom_minimum_size = Vector2(160, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "⬅ DEĞİŞTİR"
+
+[connection signal="pressed" from="CenterContainer/Step1Panel/VBox/Step1NextBtn" to="." method="OnStep1NextPressed"]
+[connection signal="pressed" from="CenterContainer/Step2Panel/VBox/NavHBox/Step2BackBtn" to="." method="OnStep2BackPressed"]
+[connection signal="pressed" from="CenterContainer/Step2Panel/VBox/NavHBox/Step2NextBtn" to="." method="OnStep2NextPressed"]
+[connection signal="pressed" from="CenterContainer/Step3Panel/VBox/NavHBox/Step3BackBtn" to="." method="OnStep3BackPressed"]
+[connection signal="pressed" from="CenterContainer/Step3Panel/VBox/NavHBox/Step3NextBtn" to="." method="OnStep3NextPressed"]
+[connection signal="pressed" from="CenterContainer/Step4Panel/VBox/Step4BackBtn" to="." method="OnStep4BackPressed"]

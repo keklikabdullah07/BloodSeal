@@ -8,6 +8,7 @@ namespace BloodSeal.UI
     {
         [Export] public Label GoldLabel;
         [Export] public Label WaveLabel;
+        [Export] public Label ProfileLabel;
         [Export] public Button RageButton;
         [Export] public ProgressBar RageProgressBar;
         [Export] public Button RetryBossButton;
@@ -29,11 +30,13 @@ namespace BloodSeal.UI
                 GameManager.Instance.OnRageChanged += UpdateRageUI;
                 GameManager.Instance.OnRageStateChanged += UpdateRageStateUI;
                 GameManager.Instance.OnStatsUpgraded += UpdateAllStatButtons;
+                GameManager.Instance.OnProfileChanged += UpdateProfileUI;
 
                 UpdateGoldUI(GameManager.Instance.Gold);
                 UpdateWaveUI(GameManager.Instance.CurrentWave, GameManager.Instance.CurrentWave % 10 == 0);
                 UpdateRageUI(GameManager.Instance.RagePercentage);
                 UpdateRageStateUI(GameManager.Instance.IsRageActive);
+                UpdateProfileUI(GameManager.Instance.Profile);
                 UpdateAllStatButtons();
             }
 
@@ -56,6 +59,17 @@ namespace BloodSeal.UI
                 GameManager.Instance.OnRageChanged -= UpdateRageUI;
                 GameManager.Instance.OnRageStateChanged -= UpdateRageStateUI;
                 GameManager.Instance.OnStatsUpgraded -= UpdateAllStatButtons;
+                GameManager.Instance.OnProfileChanged -= UpdateProfileUI;
+            }
+        }
+
+        private void UpdateProfileUI(CharacterProfile profile)
+        {
+            if (ProfileLabel != null && profile != null)
+            {
+                string bl = CharacterProfile.GetBloodlineName(profile.Bloodline);
+                string or = CharacterProfile.GetOriginName(profile.Origin);
+                ProfileLabel.Text = $"👤 {profile.PlayerName} [{bl} | {or}]";
             }
         }
 

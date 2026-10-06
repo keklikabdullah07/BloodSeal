@@ -36,8 +36,9 @@ namespace BloodSeal.Combat
                 GlobalPosition = _hero.GlobalPosition + BaseOffset + new Vector2(0, hoverY);
             }
 
+            float shootInterval = (GameManager.Instance?.Profile?.Origin == StreetOriginType.GangLeader) ? 1.05f : 1.4f;
             _shootTimer += delta;
-            if (_shootTimer >= 1.4)
+            if (_shootTimer >= shootInterval)
             {
                 _shootTimer = 0.0;
                 TryShoot();

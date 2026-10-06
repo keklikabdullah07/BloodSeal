@@ -146,6 +146,11 @@ namespace BloodSeal.Combat
 
         public void TakeDamage(float amount)
         {
+            if (GameManager.Instance?.Profile?.Bloodline == BloodlineType.SteelFleshed)
+            {
+                amount = Mathf.Max(1f, amount - 3f);
+            }
+
             CurrentHp -= amount;
             UpdateHealthUI();
 

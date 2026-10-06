@@ -36,6 +36,10 @@ namespace BloodSeal.Combat
             }
 
             float tapDmg = GameManager.Instance != null ? GameManager.Instance.Stats.Atk * 0.75f : 8f;
+            if (GameManager.Instance?.Profile?.Origin == StreetOriginType.UnderAlchemist)
+            {
+                tapDmg *= 1.25f; // +%25 Tıklama Hasarı
+            }
             bool isCrit = GameManager.Instance != null && GameManager.Instance.IsRageActive;
             if (isCrit) tapDmg *= 2f;
 

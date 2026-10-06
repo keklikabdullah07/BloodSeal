@@ -9,10 +9,11 @@ shader_parameter/vignette_intensity = 0.65
 shader_parameter/blood_color = Color(0.85, 0.05, 0.15, 1)
 shader_parameter/pulse_speed = 5.0
 
-[node name="MainHUD" type="CanvasLayer" node_paths=PackedStringArray("GoldLabel", "WaveLabel", "RageButton", "RageProgressBar", "RetryBossButton", "RageVignetteRect", "UpgradeAtkBtn", "UpgradeAtkSpdBtn", "UpgradeLifestealBtn", "UpgradeMaxHpBtn", "UpgradeRangeBtn")]
+[node name="MainHUD" type="CanvasLayer" node_paths=PackedStringArray("GoldLabel", "WaveLabel", "ProfileLabel", "RageButton", "RageProgressBar", "RetryBossButton", "RageVignetteRect", "UpgradeAtkBtn", "UpgradeAtkSpdBtn", "UpgradeLifestealBtn", "UpgradeMaxHpBtn", "UpgradeRangeBtn")]
 script = ExtResource("1_hud")
 GoldLabel = NodePath("TopBar/Margin/HBox/GoldLabel")
 WaveLabel = NodePath("TopBar/Margin/HBox/WaveLabel")
+ProfileLabel = NodePath("TopBar/Margin/HBox/ProfileLabel")
 RageButton = NodePath("RightPanel/RageContainer/RageButton")
 RageProgressBar = NodePath("RightPanel/RageContainer/RageBar")
 RetryBossButton = NodePath("RightPanel/RetryBossButton")
@@ -52,8 +53,14 @@ layout_mode = 2
 [node name="ZoneLabel" type="Label" parent="TopBar/Margin/HBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.7, 0.5, 1)
-theme_override_font_sizes/font_size = 24
-text = "🩸 VARNATH: MALİKANE KAPISI"
+theme_override_font_sizes/font_size = 22
+text = "🩸 VARNATH"
+
+[node name="ProfileLabel" type="Label" parent="TopBar/Margin/HBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.45, 0.55, 1)
+theme_override_font_sizes/font_size = 18
+text = "👤 Valerius"
 
 [node name="Spacer1" type="Control" parent="TopBar/Margin/HBox"]
 layout_mode = 2
