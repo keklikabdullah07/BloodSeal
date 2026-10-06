@@ -1,0 +1,178 @@
+[gd_scene format=3 uid="uid://chud001"]
+
+[ext_resource type="Script" path="res://Scripts/UI/MainHUD.cs" id="1_hud"]
+[ext_resource type="Shader" path="res://Shaders/BloodVignette.gdshader" id="2_vignette"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vig"]
+shader = ExtResource("2_vignette")
+shader_parameter/vignette_intensity = 0.65
+shader_parameter/blood_color = Color(0.85, 0.05, 0.15, 1)
+shader_parameter/pulse_speed = 5.0
+
+[node name="MainHUD" type="CanvasLayer" node_paths=PackedStringArray("GoldLabel", "WaveLabel", "RageButton", "RageProgressBar", "RetryBossButton", "RageVignetteRect", "UpgradeAtkBtn", "UpgradeAtkSpdBtn", "UpgradeLifestealBtn", "UpgradeMaxHpBtn", "UpgradeRangeBtn")]
+script = ExtResource("1_hud")
+GoldLabel = NodePath("TopBar/Margin/HBox/GoldLabel")
+WaveLabel = NodePath("TopBar/Margin/HBox/WaveLabel")
+RageButton = NodePath("RightPanel/RageContainer/RageButton")
+RageProgressBar = NodePath("RightPanel/RageContainer/RageBar")
+RetryBossButton = NodePath("RightPanel/RetryBossButton")
+RageVignetteRect = NodePath("RageVignette")
+UpgradeAtkBtn = NodePath("BottomPanel/Margin/HBox/AtkCard")
+UpgradeAtkSpdBtn = NodePath("BottomPanel/Margin/HBox/AtkSpdCard")
+UpgradeLifestealBtn = NodePath("BottomPanel/Margin/HBox/LifestealCard")
+UpgradeMaxHpBtn = NodePath("BottomPanel/Margin/HBox/MaxHpCard")
+UpgradeRangeBtn = NodePath("BottomPanel/Margin/HBox/RangeCard")
+
+[node name="RageVignette" type="ColorRect" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_vig")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopBar" type="PanelContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 80.0
+grow_horizontal = 2
+
+[node name="Margin" type="MarginContainer" parent="TopBar"]
+layout_mode = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 15
+
+[node name="HBox" type="HBoxContainer" parent="TopBar/Margin"]
+layout_mode = 2
+
+[node name="ZoneLabel" type="Label" parent="TopBar/Margin/HBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.7, 0.5, 1)
+theme_override_font_sizes/font_size = 24
+text = "🩸 VARNATH: MALİKANE KAPISI"
+
+[node name="Spacer1" type="Control" parent="TopBar/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WaveLabel" type="Label" parent="TopBar/Margin/HBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 28
+text = "DALGA 1 / 10"
+horizontal_alignment = 1
+
+[node name="Spacer2" type="Control" parent="TopBar/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="GoldLabel" type="Label" parent="TopBar/Margin/HBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.25, 1)
+theme_override_font_sizes/font_size = 28
+text = "🪙 0 Altın"
+horizontal_alignment = 2
+
+[node name="RightPanel" type="VBoxContainer" parent="."]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -180.0
+offset_right = -40.0
+offset_bottom = 160.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_constants/separation = 20
+
+[node name="RageContainer" type="VBoxContainer" parent="RightPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="RageBar" type="ProgressBar" parent="RightPanel/RageContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+max_value = 100.0
+value = 0.0
+show_percentage = false
+
+[node name="RageButton" type="Button" parent="RightPanel/RageContainer"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 18
+text = "Öfke: %0"
+
+[node name="RetryBossButton" type="Button" parent="RightPanel"]
+visible = false
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.25, 0.25, 1)
+theme_override_font_sizes/font_size = 18
+text = "⚔️ BOSS'A MEYDAN OKU!"
+
+[node name="BottomPanel" type="PanelContainer" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -150.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Margin" type="MarginContainer" parent="BottomPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 15
+
+[node name="HBox" type="HBoxContainer" parent="BottomPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="AtkCard" type="Button" parent="BottomPanel/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "ATK (Güç) Lv.1
+(10.0)
+🪙 20"
+
+[node name="AtkSpdCard" type="Button" parent="BottomPanel/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "HIZ Lv.1
+(1.0/s)
+🪙 30"
+
+[node name="LifestealCard" type="Button" parent="BottomPanel/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "CAN ÇALMA Lv.1
+(1.0%)
+🪙 40"
+
+[node name="MaxHpCard" type="Button" parent="BottomPanel/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "MAX CAN Lv.1
+(100.0)
+🪙 25"
+
+[node name="RangeCard" type="Button" parent="BottomPanel/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+text = "MENZİL Lv.1
+(180.0px)
+🪙 20"
