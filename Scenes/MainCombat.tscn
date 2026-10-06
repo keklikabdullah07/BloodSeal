@@ -9,6 +9,12 @@
 [ext_resource type="Script" path="res://Scripts/Combat/WaveSpawner.cs" id="7_spawner"]
 [ext_resource type="Script" path="res://Scripts/Combat/FloatingTextManager.cs" id="8_floatmgr"]
 [ext_resource type="Script" path="res://Scripts/Combat/TapCombatArea.cs" id="9_tap"]
+[ext_resource type="Script" path="res://Scripts/Combat/CameraShake.cs" id="10_cam"]
+[ext_resource type="Script" path="res://Scripts/Combat/FXManager.cs" id="11_fx"]
+[ext_resource type="PackedScene" path="res://Scenes/VFX/SlashVfx.tscn" id="12_slash"]
+[ext_resource type="PackedScene" path="res://Scenes/VFX/BloodSplatter.tscn" id="13_blood"]
+[ext_resource type="PackedScene" path="res://Scenes/VFX/DeathExplosion.tscn" id="14_expl"]
+[ext_resource type="PackedScene" path="res://Scenes/VFX/TapRipple.tscn" id="15_ripple"]
 
 [node name="MainCombat" type="Node2D"]
 
@@ -114,3 +120,15 @@ script = ExtResource("8_floatmgr")
 FloatingTextScene = ExtResource("5_float")
 
 [node name="MainHUD" parent="." instance=ExtResource("6_hud")]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(960, 540)
+script = ExtResource("10_cam")
+
+[node name="FXManager" type="Node2D" parent="."]
+script = ExtResource("11_fx")
+SlashScene = ExtResource("12_slash")
+BloodSplatterScene = ExtResource("13_blood")
+DeathExplosionScene = ExtResource("14_expl")
+TapRippleScene = ExtResource("15_ripple")
+

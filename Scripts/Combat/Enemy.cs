@@ -83,6 +83,9 @@ namespace BloodSeal.Combat
             // Pop-up floating damage text
             FloatingTextManager.Instance?.SpawnDamage(GlobalPosition + new Vector2(0, -50), amount, isCrit);
 
+            // Blood splatter VFX
+            FXManager.Instance?.PlayBloodSplatter(GlobalPosition + new Vector2(0, -35), Vector2.Right);
+
             // Flash visual on hit
             if (_visual != null)
             {
@@ -111,6 +114,9 @@ namespace BloodSeal.Combat
         {
             if (IsDead) return;
             IsDead = true;
+
+            // Death explosion particle
+            FXManager.Instance?.PlayDeathExplosion(GlobalPosition + new Vector2(0, -35), this is BossEnemy);
 
             long goldReward = GameManager.Instance.CurrentWave * 5 + 10;
             GameManager.Instance.AddGold(goldReward);

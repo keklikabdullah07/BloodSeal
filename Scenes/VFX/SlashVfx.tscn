@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://cslash001"]
+
+[ext_resource type="Script" path="res://Scripts/Combat/SlashEffect.cs" id="1_slash"]
+
+[node name="SlashVfx" type="Node2D"]
+script = ExtResource("1_slash")
+
+[node name="ArcOuter" type="Polygon2D" parent="."]
+color = Color(0.95, 0.1, 0.2, 0.95)
+polygon = PackedVector2Array(-10, -60, 20, -40, 35, 0, 20, 40, -10, 60, 10, 35, 18, 0, 10, -35)
+
+[node name="ArcInner" type="Polygon2D" parent="."]
+color = Color(1, 0.85, 0.85, 1)
+polygon = PackedVector2Array(0, -45, 18, -25, 26, 0, 18, 25, 0, 45, 10, 20, 15, 0, 10, -20)

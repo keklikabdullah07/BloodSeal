@@ -110,6 +110,20 @@ namespace BloodSeal.Combat
                 tween.TweenProperty(_visualRoot, "position:x", 0f, 0.12f);
             }
 
+            // Spawn Slash VFX
+            FXManager.Instance?.PlaySlash(target.GlobalPosition + new Vector2(-20, -35), isRage);
+
+            // Screen shake & hit freeze
+            if (isCrit)
+            {
+                CameraShake.Instance?.AddTrauma(0.35f);
+                FXManager.Instance?.TriggerHitFreeze(0.045f);
+            }
+            else
+            {
+                CameraShake.Instance?.AddTrauma(0.12f);
+            }
+
             target.TakeDamage(damage, isCrit);
 
             // Lifesteal
@@ -134,6 +148,9 @@ namespace BloodSeal.Combat
         {
             CurrentHp -= amount;
             UpdateHealthUI();
+
+            // Heavy screen shake on hero taking damage
+            CameraShake.Instance?.AddTrauma(0.25f);
 
             // Flash visual on hit
             if (_visualRoot != null)

@@ -49,6 +49,10 @@ namespace BloodSeal.Combat
                 GameManager.Instance.AddRage(1.5f);
             }
 
+            // Visual tap ripple & light screen shake
+            FXManager.Instance?.PlayTapRipple(tapPos);
+            CameraShake.Instance?.AddTrauma(0.08f);
+
             // Spawn visual tap damage popup at clicked point
             FloatingTextManager.Instance?.SpawnDamage(tapPos, tapDmg, isCrit);
         }

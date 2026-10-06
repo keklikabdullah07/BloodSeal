@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctapripple001"]
+
+[ext_resource type="Script" path="res://Scripts/Combat/TapRipple.cs" id="1_taprip"]
+
+[node name="TapRipple" type="Node2D"]
+script = ExtResource("1_taprip")
+
+[node name="Ring" type="Line2D" parent="."]
+points = PackedVector2Array(-24, 0, -17, -17, 0, -24, 17, -17, 24, 0, 17, 17, 0, 24, -17, 17, -24, 0)
+width = 4.0
+default_color = Color(1, 0.2, 0.25, 0.9)
+
+[node name="Center" type="Polygon2D" parent="."]
+color = Color(1, 0.4, 0.4, 0.8)
+polygon = PackedVector2Array(-6, 0, 0, -6, 6, 0, 0, 6)
