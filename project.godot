@@ -14,10 +14,18 @@ config/name="BloodSeal"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+GameManager="*res://Scripts/Core/GameManager.cs"
+
 [display]
 
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/resizable=true
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
 
 [dotnet]
 
