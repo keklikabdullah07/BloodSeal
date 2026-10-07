@@ -2,12 +2,39 @@
 
 [ext_resource type="Script" path="res://Scripts/UI/MainHUD.cs" id="1_hud"]
 [ext_resource type="Shader" path="res://Shaders/BloodVignette.gdshader" id="2_vignette"]
+[ext_resource type="Script" path="res://Scripts/UI/OfflineProgressModal.cs" id="3_offline"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vig"]
 shader = ExtResource("2_vignette")
 shader_parameter/vignette_intensity = 0.65
 shader_parameter/blood_color = Color(0.85, 0.05, 0.15, 1)
 shader_parameter/pulse_speed = 5.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal"]
+bg_color = Color(0.08, 0.06, 0.1, 0.95)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.75, 0.15, 0.15, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0.5, 0.05, 0.05, 0.4)
+shadow_size = 20
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_claim"]
+bg_color = Color(0.45, 0.08, 0.12, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.2, 0.2, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [node name="MainHUD" type="CanvasLayer" node_paths=PackedStringArray("GoldLabel", "WaveLabel", "ProfileLabel", "RageButton", "RageProgressBar", "RetryBossButton", "RageVignetteRect", "UpgradeAtkBtn", "UpgradeAtkSpdBtn", "UpgradeLifestealBtn", "UpgradeMaxHpBtn", "UpgradeRangeBtn")]
 script = ExtResource("1_hud")
@@ -183,3 +210,92 @@ theme_override_font_sizes/font_size = 16
 text = "MENZİL Lv.1
 (180.0px)
 🪙 20"
+
+[node name="OfflineModal" type="Control" parent="." node_paths=PackedStringArray("TimeLabel", "WaveLabel", "GoldLabel", "ClaimButton")]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_offline")
+TimeLabel = NodePath("Center/Panel/Margin/VBox/TimeLabel")
+WaveLabel = NodePath("Center/Panel/Margin/VBox/WaveLabel")
+GoldLabel = NodePath("Center/Panel/Margin/VBox/GoldLabel")
+ClaimButton = NodePath("Center/Panel/Margin/VBox/ClaimButton")
+
+[node name="Dimmer" type="ColorRect" parent="OfflineModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.02, 0.06, 0.85)
+
+[node name="Center" type="CenterContainer" parent="OfflineModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="OfflineModal/Center"]
+custom_minimum_size = Vector2(560, 360)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="Margin" type="MarginContainer" parent="OfflineModal/Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 35
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 35
+theme_override_constants/margin_bottom = 30
+
+[node name="VBox" type="VBoxContainer" parent="OfflineModal/Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Title" type="Label" parent="OfflineModal/Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.4, 1)
+theme_override_font_sizes/font_size = 24
+text = "🩸 KAN MÜHRÜ: ÇEVRİMDIŞI İLERLEME"
+horizontal_alignment = 1
+
+[node name="Sep1" type="HSeparator" parent="OfflineModal/Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="TimeLabel" type="Label" parent="OfflineModal/Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 18
+text = "Karanlıkta Geçen Süre: 0 dakika"
+horizontal_alignment = 1
+
+[node name="WaveLabel" type="Label" parent="OfflineModal/Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.8, 1)
+theme_override_font_sizes/font_size = 16
+text = "Güvenli Farm Bölgesi: Dalga 1"
+horizontal_alignment = 1
+
+[node name="GoldLabel" type="Label" parent="OfflineModal/Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 32
+text = "+0 Kan Altını"
+horizontal_alignment = 1
+
+[node name="Sep2" type="HSeparator" parent="OfflineModal/Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="ClaimButton" type="Button" parent="OfflineModal/Center/Panel/Margin/VBox"]
+custom_minimum_size = Vector2(0, 52)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.95, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_claim")
+text = "⚔️ KANI KABUL ET VE UYAN"

@@ -25,8 +25,12 @@ namespace BloodSeal.Core
         public event Action OnHeroDied;
         public event Action OnStatsUpgraded;
         public event Action<CharacterProfile> OnProfileChanged;
+        public event Action<OfflineEarningsResult> OnOfflineEarningsReady;
+
+        public OfflineEarningsResult PendingOfflineEarnings { get; private set; }
 
         private double _rageActiveTimer = 0.0;
+        private double _autoSaveTimer = 30.0;
 
         public override void _EnterTree()
         {
@@ -37,6 +41,50 @@ namespace BloodSeal.Core
             else
             {
                 QueueFree();
+            }
+        }
+
+        public override void _Ready()
+        {
+            LoadGame();
+        }
+
+        public override void _ExitTree()
+        {
+            if (Instance == this)
+            {
+                SaveGame();
+            }
+        }
+
+        public void LoadGame()
+        {
+            var data = SaveSystem.Load();
+            if (data != null)
+            {
+                var offline = SaveSystem.CalculateOfflineEarnings(data);
+                SaveSystem.ApplySaveData(data, this);
+                if (offline != null && offline.HasClaimableEarnings)
+                {
+                    PendingOfflineEarnings = offline;
+                    Callable.From(() => OnOfflineEarningsReady?.Invoke(offline)).CallDeferred();
+                }
+            }
+        }
+
+        public void SaveGame()
+        {
+            var data = SaveSystem.CaptureSaveData(this);
+            SaveSystem.SaveAtomic(data);
+        }
+
+        public void ClaimOfflineEarnings()
+        {
+            if (PendingOfflineEarnings != null && PendingOfflineEarnings.GoldEarned > 0)
+            {
+                AddGold(PendingOfflineEarnings.GoldEarned);
+                PendingOfflineEarnings = null;
+                SaveGame();
             }
         }
 
@@ -52,6 +100,13 @@ namespace BloodSeal.Core
                     OnRageStateChanged?.Invoke(false);
                     OnRageChanged?.Invoke(0f);
                 }
+            }
+
+            _autoSaveTimer -= delta;
+            if (_autoSaveTimer <= 0.0)
+            {
+                _autoSaveTimer = 30.0;
+                SaveGame();
             }
         }
 
@@ -98,6 +153,7 @@ namespace BloodSeal.Core
             if (wave > HighestWave) HighestWave = wave;
             bool isBoss = (wave % 10 == 0);
             OnWaveChanged?.Invoke(CurrentWave, isBoss);
+            SaveGame();
         }
 
         public void AdvanceWave()
@@ -122,61 +178,19 @@ namespace BloodSeal.Core
             }
         }
 
-        public bool UpgradeAtk()
-        {
-            double cost = Stats.GetAtkCost();
-            if (SpendGold(cost))
-            {
-                Stats.AtkLevel++;
-                OnStatsUpgraded?.Invoke();
-                return true;
-            }
-            return false;
-        }
+        public bool UpgradeAtk() => TryUpgradeStat(Stats.GetAtkCost(), () => Stats.AtkLevel++);
+        public bool UpgradeAtkSpeed() => TryUpgradeStat(Stats.GetAtkSpeedCost(), () => Stats.AtkSpeedLevel++);
+        public bool UpgradeLifesteal() => TryUpgradeStat(Stats.GetLifestealCost(), () => Stats.LifestealLevel++);
+        public bool UpgradeMaxHp() => TryUpgradeStat(Stats.GetMaxHpCost(), () => Stats.MaxHpLevel++);
+        public bool UpgradeRange() => TryUpgradeStat(Stats.GetRangeCost(), () => Stats.RangeLevel++);
 
-        public bool UpgradeAtkSpeed()
+        private bool TryUpgradeStat(double cost, Action upgradeAction)
         {
-            double cost = Stats.GetAtkSpeedCost();
             if (SpendGold(cost))
             {
-                Stats.AtkSpeedLevel++;
+                upgradeAction();
                 OnStatsUpgraded?.Invoke();
-                return true;
-            }
-            return false;
-        }
-
-        public bool UpgradeLifesteal()
-        {
-            double cost = Stats.GetLifestealCost();
-            if (SpendGold(cost))
-            {
-                Stats.LifestealLevel++;
-                OnStatsUpgraded?.Invoke();
-                return true;
-            }
-            return false;
-        }
-
-        public bool UpgradeMaxHp()
-        {
-            double cost = Stats.GetMaxHpCost();
-            if (SpendGold(cost))
-            {
-                Stats.MaxHpLevel++;
-                OnStatsUpgraded?.Invoke();
-                return true;
-            }
-            return false;
-        }
-
-        public bool UpgradeRange()
-        {
-            double cost = Stats.GetRangeCost();
-            if (SpendGold(cost))
-            {
-                Stats.RangeLevel++;
-                OnStatsUpgraded?.Invoke();
+                SaveGame();
                 return true;
             }
             return false;
