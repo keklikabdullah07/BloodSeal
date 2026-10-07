@@ -22,6 +22,10 @@ scale = Vector2(1, 0.4)
 color = Color(0, 0, 0, 0.5)
 polygon = PackedVector2Array(-25, 0, -18, -10, 0, -12, 18, -10, 25, 0, 18, 10, 0, 12, -18, 10)
 
+[node name="RimLight" type="Polygon2D" parent="Visual"]
+color = Color(0.8, 0.2, 0.25, 0.35)
+polygon = PackedVector2Array(-16, -67, 14, -67, 20, -35, 12, 1, -12, 1, -18, -35)
+
 [node name="Body" type="Polygon2D" parent="Visual"]
 color = Color(0.28, 0.08, 0.1, 1)
 polygon = PackedVector2Array(-14, -65, 12, -65, 18, -35, 10, 0, -10, 0, -16, -35)

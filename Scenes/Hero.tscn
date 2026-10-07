@@ -26,6 +26,10 @@ polygon = PackedVector2Array(-35, 0, -25, -12, 0, -16, 25, -12, 35, 0, 25, 12, 0
 color = Color(0.2, 0.04, 0.06, 1)
 polygon = PackedVector2Array(-24, -70, -34, -20, -16, -2, -10, -50)
 
+[node name="RimLight" type="Polygon2D" parent="VisualRoot"]
+color = Color(0.9, 0.3, 0.35, 0.4)
+polygon = PackedVector2Array(-20, -82, 20, -82, 24, -45, 14, -4, -14, -4, -24, -45)
+
 [node name="Body" type="Polygon2D" parent="VisualRoot"]
 color = Color(0.12, 0.12, 0.15, 1)
 polygon = PackedVector2Array(-18, -80, 18, -80, 22, -45, 12, -5, -12, -5, -22, -45)

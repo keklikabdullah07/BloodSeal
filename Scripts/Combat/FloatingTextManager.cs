@@ -23,12 +23,12 @@ namespace BloodSeal.Combat
             AddChild(text);
         }
 
-        public void SpawnGold(Vector2 pos, long amount)
+        public void SpawnGold(Vector2 pos, double amount)
         {
             if (FloatingTextScene == null) return;
             var text = FloatingTextScene.Instantiate<UI.FloatingText>();
             text.GlobalPosition = pos;
-            text.Setup($"+{amount} 🪙", new Color(1f, 0.85f, 0.2f), 1.15f);
+            text.Setup($"+{Core.BigNumberFormatter.Format(amount)} 🪙", new Color(1f, 0.85f, 0.2f), 1.15f);
             AddChild(text);
         }
 

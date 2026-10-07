@@ -73,9 +73,9 @@ namespace BloodSeal.UI
             }
         }
 
-        private void UpdateGoldUI(long gold)
+        private void UpdateGoldUI(double gold)
         {
-            if (GoldLabel != null) GoldLabel.Text = $"🪙 {FormatNumber(gold)} Altın";
+            if (GoldLabel != null) GoldLabel.Text = $"🪙 {BigNumberFormatter.Format(gold)} Altın";
             UpdateAllStatButtons();
         }
 
@@ -124,7 +124,7 @@ namespace BloodSeal.UI
         {
             if (GameManager.Instance == null) return;
             var stats = GameManager.Instance.Stats;
-            long gold = GameManager.Instance.Gold;
+            double gold = GameManager.Instance.Gold;
 
             UpdateButton(UpgradeAtkBtn, "ATK (Güç)", stats.AtkLevel, stats.Atk, stats.GetAtkCost(), gold);
             UpdateButton(UpgradeAtkSpdBtn, "HIZ", stats.AtkSpeedLevel, stats.AtkSpeed, stats.GetAtkSpeedCost(), gold, "/s");
@@ -133,22 +133,14 @@ namespace BloodSeal.UI
             UpdateButton(UpgradeRangeBtn, "MENZİL", stats.RangeLevel, stats.Range, stats.GetRangeCost(), gold, "px");
         }
 
-        private void UpdateButton(Button btn, string statName, int lvl, float val, long cost, long currentGold, string unit = "")
+        private void UpdateButton(Button btn, string statName, int lvl, float val, double cost, double currentGold, string unit = "")
         {
             if (btn == null) return;
-            btn.Text = $"{statName} Lv.{lvl}\n({val:F1}{unit})\n🪙 {FormatNumber(cost)}";
+            btn.Text = $"{statName} Lv.{lvl}\n({val:F1}{unit})\n🪙 {BigNumberFormatter.Format(cost)}";
             btn.Disabled = currentGold < cost;
         }
 
         private void OnRagePressed() => GameManager.Instance?.TriggerRage();
         private void OnRetryBossPressed() => GameManager.Instance?.RetryBoss();
-
-        private string FormatNumber(long num)
-        {
-            if (num >= 1_000_000_000) return $"{(num / 1_000_000_000f):F2}B";
-            if (num >= 1_000_000) return $"{(num / 1_000_000f):F2}M";
-            if (num >= 1_000) return $"{(num / 1_000f):F1}K";
-            return num.ToString();
-        }
     }
 }

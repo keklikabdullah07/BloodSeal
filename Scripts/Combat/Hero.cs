@@ -14,6 +14,7 @@ namespace BloodSeal.Combat
         private double _attackCooldown = 0.0;
         private Node2D _visualRoot;
         private ProgressBar _healthBar;
+        private bool _wasRageActive = false;
 
         public override void _Ready()
         {
@@ -52,9 +53,15 @@ namespace BloodSeal.Combat
 
         public override void _Process(double delta)
         {
-            _attackCooldown -= delta;
+            bool isRage = GameManager.Instance != null && GameManager.Instance.IsRageActive;
+            if (isRage != _wasRageActive)
+            {
+                _wasRageActive = isRage;
+                CameraShake.Instance?.SetBaseTrauma(isRage ? 0.15f : 0.0f);
+            }
+
             float currentAtkSpeed = GameManager.Instance != null ? GameManager.Instance.Stats.AtkSpeed : 1.0f;
-            if (GameManager.Instance != null && GameManager.Instance.IsRageActive)
+            if (isRage)
             {
                 currentAtkSpeed *= 2f;
             }
@@ -113,15 +120,27 @@ namespace BloodSeal.Combat
             // Spawn Slash VFX
             FXManager.Instance?.PlaySlash(target.GlobalPosition + new Vector2(-20, -35), isRage);
 
-            // Screen shake & hit freeze
-            if (isCrit)
+            // Screen shake & hit freeze per binding game feel rules
+            bool isBoss = target is BossEnemy;
+            if (isRage)
             {
-                CameraShake.Instance?.AddTrauma(0.35f);
-                FXManager.Instance?.TriggerHitFreeze(0.045f);
+                // In Berserk mode: NO per-hit trauma (fixed 0.15 base rumble handled by CameraShake)
+                // and NO hit-freeze during Berserk!
             }
             else
             {
-                CameraShake.Instance?.AddTrauma(0.12f);
+                if (isCrit)
+                {
+                    CameraShake.Instance?.AddTrauma(0.20f);
+                    if (isBoss)
+                    {
+                        FXManager.Instance?.TriggerLocalHitFreeze(this, target, 0.040f);
+                    }
+                }
+                else
+                {
+                    CameraShake.Instance?.AddTrauma(0.10f);
+                }
             }
 
             target.TakeDamage(damage, isCrit);

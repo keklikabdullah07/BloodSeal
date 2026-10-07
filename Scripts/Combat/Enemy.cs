@@ -118,10 +118,10 @@ namespace BloodSeal.Combat
             // Death explosion particle
             FXManager.Instance?.PlayDeathExplosion(GlobalPosition + new Vector2(0, -35), this is BossEnemy);
 
-            long goldReward = GameManager.Instance.CurrentWave * 5 + 10;
+            double goldReward = GameManager.Instance.CurrentWave * 5 + 10;
             if (GameManager.Instance?.Profile?.Origin == StreetOriginType.StreetThief)
             {
-                goldReward = (long)(goldReward * 1.15); // +%15 Altın
+                goldReward *= 1.15; // +%15 Altın
             }
 
             GameManager.Instance.AddGold(goldReward);

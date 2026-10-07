@@ -7,7 +7,7 @@ description: "Dark gothic fantasy visual direction, color palette, parallax laye
 
 This skill defines the artistic identity, color harmony, particle rules, and visual feedback guidelines for **BloodSeal**.
 
-## 1. Color Palette (Harmonious Dark Gothic)
+## 1. Color Palette & Mobile Contrast Rules (Dark Gothic)
 
 - **Blood Crimson:** `#D91A2A` / `Color(0.85, 0.1, 0.16)` — Core runes, blood slash arcs, critical alerts, moon halo.
 - **Abyssal Void:** `#0A080F` / `Color(0.04, 0.03, 0.06)` — Background sky base, deep shadows.
@@ -16,22 +16,31 @@ This skill defines the artistic identity, color harmony, particle rules, and vis
 - **Runic Amber Gold:** `#FFC845` / `Color(1.0, 0.78, 0.27)` — Gold currencies, rare loot, awakening seals.
 - **Bone Pale:** `#E8E0D5` / `Color(0.91, 0.88, 0.83)` — Skull masks, hero skin highlights, damage text.
 
-## 2. Layered Parallax Composition (16:9 1920x1080)
+### Mobile Screen Readability & Rim Lighting (Contrast Rule)
+Arka plan çok koyu (`#0A080F` ~ `#2A222B`) olduğundan mobil OLED/IPS ekranlarda karakterlerin kaybolmasını engellemek için:
+- **Karakter Siluet Kontrastı:** Kahraman ve düşmanların dış hatlarında en az 1-2px açık renkli kenar ışığı (Rim Light / pale outline) veya açık kemik/kızıl renk vurguları kullanılır.
+- **Zemin Ayrımı:** Kahramanın ve canavarların ayak hizasında hafif zemin sisi veya ambient ışık halkası bulunur.
 
-1. **Back Sky Layer (`motion_scale = (0.1, 0.1)`):** Deep black-purple gradient, large luminous Blood Moon (`Polygon2D` or sprite) with glowing outer corona.
-2. **Mid Ruins Layer (`motion_scale = (0.4, 0.4)`):** Spire gothic silhouettes, iron fences, floating red ash and mist particles (`CPUParticles2D`).
-3. **Foreground Layer (`motion_scale = (1.0, 1.0)`):** Walkable cobblestone path with red stain highlights, grave markers.
+## 2. Katmanlı Paralaks & Otomatik Kaydırma (Parallax Composition)
 
-## 3. Combat Juice & VFX Rules
+Kahraman solda sabit dövüşürken dünyanın aktığını hissettirmek için `ParallaxBackground` otomatik kaydırılır (`scroll_offset.x += speed * delta`):
 
-- **Slash Arc VFX:** Fast crescent light trail spawned on hero swing. Scaled +60% and shifted to flame-orange during Berserk mode.
-- **Hit Flash:** Damaged enemies flash bright white-red for 0.06s before returning to base tint.
-- **Blood Splatter:** Spawns 16 directional blood droplets with downward gravity (`gravity = Vector2(0, 400)`), short lifetime (0.35s).
-- **Death Explosion:** Explodes into radial blood + black smoke particles. Spawns directly under `FXManager` so it finishes gracefully even when the enemy node is freed.
-- **Tap Ripple:** Click/touch coordinates trigger an expanding shockwave ring and light camera shake.
-- **Screen Shake:** Camera2D with trauma-decay formula:
-  $$Offset = Random(-1, 1) \times 22 \times Trauma^2$$
-  - Tap / Normal hit: $+0.10$ trauma
-  - Critical / Berserk: $+0.35$ trauma
-  - Player Damage: $+0.25$ trauma
-- **Hit Freeze:** Critical strikes trigger an instant 45ms freeze frame (`Engine.TimeScale = 0.05`).
+1. **Gök Katmanı (SkyLayer - `motion_scale = (0.1, 0.1)`):** Derin mor-siyah degrade, Kızıl Ay ve hare (`scroll_speed = 8 px/sn`).
+2. **Harabe Katmanı (RuinsLayer - `motion_scale = (0.4, 0.4)`):** Gotik kule siluetleri, demir parmaklıklar, kırmızı kül ve sis parçacıkları (`scroll_speed = 35 px/sn`).
+3. **Ön Zemin Katmanı (ForegroundLayer - `motion_scale = (1.0, 1.0)`):** Taş parke zemin, mezar taşları ve kan lekeleri (`scroll_speed = 90 px/sn`).
+
+## 3. Game Feel & Combat VFX Kuralları (Bağlayıcı)
+
+- **Engine.TimeScale'e ASLA DOKUNULMAZ:** Hit-freeze kesinlikle yerel aktör görseli/tween'i üzerinde ~40 ms mikro duraksama ile yapılır. Küresel motor hızı değişmez.
+- **Hit-Freeze Koşulları:** Yalnızca Boss kritiği ve Boss ölümünde çalışır. Dahili bekleme süresi (ICD) en az 0.4 saniyedir. **Berserk modunda kesinlikle kapalıdır.**
+- **Camera Trauma & Sarsıntı:**
+  - Trauma her zaman `Clamp(0, 1)` ile sınırlandırılır.
+  - Sabit sönüm hızı: `1.5/sn`.
+  - Başlangıç değerleri:
+    - Normal vuruş: `+0.10` trauma
+    - Berserk dışı kritik: `+0.20` trauma
+    - Alınan hasar: `+0.25` trauma
+    - Boss ölümü: `+0.50` trauma
+  - **Berserk Modunda Sarsıntı:** Seri vuruş başına shake **eklenmez**. Berserk boyunca sabit taban `0.15` trauma uygulanır.
+- **Slash Arc VFX:** Kılıç savurmasında hilal ışık efekti. Berserk modunda %60 büyütülür ve turuncu-kızıl renge geçer.
+- **Bağımsız Parçacık Yaşam Döngüsü:** Kan sıçraması ve ölüm patlaması `FXManager` altına doğar; düşman `QueueFree` olsa bile parçacıklar kaybolmaz.

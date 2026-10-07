@@ -69,11 +69,11 @@ namespace BloodSeal.Combat
             }
         }
 
-        // Upgrade Costs (Base * 1.15^(level-1) - GDD Standardı)
-        public long GetAtkCost() => (long)(20 * Math.Pow(1.15, AtkLevel - 1));
-        public long GetAtkSpeedCost() => (long)(30 * Math.Pow(1.15, AtkSpeedLevel - 1));
-        public long GetLifestealCost() => (long)(40 * Math.Pow(1.15, LifestealLevel - 1));
-        public long GetMaxHpCost() => (long)(25 * Math.Pow(1.15, MaxHpLevel - 1));
-        public long GetRangeCost() => (long)(20 * Math.Pow(1.15, RangeLevel - 1));
+        // Upgrade Costs (Base * 1.15^(level-1) - GDD Standardı, double currency)
+        public double GetAtkCost() => 20.0 * Math.Pow(1.15, AtkLevel - 1);
+        public double GetAtkSpeedCost() => 30.0 * Math.Pow(1.15, AtkSpeedLevel - 1);
+        public double GetLifestealCost() => 40.0 * Math.Pow(1.15, LifestealLevel - 1);
+        public double GetMaxHpCost() => 25.0 * Math.Pow(1.15, MaxHpLevel - 1);
+        public double GetRangeCost() => 20.0 * Math.Pow(1.15, RangeLevel - 1);
     }
 }

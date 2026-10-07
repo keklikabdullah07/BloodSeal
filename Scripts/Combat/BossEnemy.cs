@@ -48,7 +48,12 @@ namespace BloodSeal.Combat
             if (IsDead) return;
             IsDead = true;
 
-            long bossGold = GameManager.Instance.CurrentWave * 60 + 250;
+            // Boss death game feel: 0.50 trauma, local freeze, death explosion
+            CameraShake.Instance?.AddTrauma(0.50f);
+            FXManager.Instance?.TriggerLocalHitFreeze(null, this, 0.040f);
+            FXManager.Instance?.PlayDeathExplosion(GlobalPosition + new Vector2(0, -35), true);
+
+            double bossGold = GameManager.Instance.CurrentWave * 60 + 250;
             GameManager.Instance.AddGold(bossGold);
             FloatingTextManager.Instance?.SpawnGold(GlobalPosition + new Vector2(0, -40), bossGold);
 

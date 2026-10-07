@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "version": "1.0.0",
-  "description": "BloodSeal Pentagram istatistik maliyet ve büyüme katsayıları konfigürasyonu. GDD standardı 1.15'tir.",
+  "version": "1.1.0",
+  "description": "BloodSeal Denge Konfigürasyonu: Pentagram maliyetleri, dalga büyümesi ve Boss enrage kuralları.",
   "statGrowthFactors": {
     "atk": 1.15,
     "atkSpeed": 1.15,
@@ -16,9 +16,38 @@
     "maxHp": 25,
     "range": 20
   },
-  "experimentalPlaceholders": {
-    "note": "Aşağıdaki değerler test edilmemiş deneysel yer tutuculardır, oyunda varsayılan kural DEĞİLDİR.",
-    "atkSpeedAggressive": 1.18,
-    "lifestealAggressive": 1.22
+  "heroBaseStats": {
+    "atk": 10.0,
+    "atkPerLevel": 3.0,
+    "atkSpeed": 1.0,
+    "atkSpeedPerLevel": 0.05,
+    "maxHp": 100.0,
+    "maxHpPerLevel": 25.0,
+    "lifestealPercent": 1.0,
+    "lifestealPerLevel": 0.5
+  },
+  "waveScaling": {
+    "minionHpBase": 50.0,
+    "minionHpPerWave": 25.0,
+    "minionAtkBase": 5.0,
+    "minionAtkPerWave": 3.0,
+    "minionGoldBase": 10.0,
+    "minionGoldPerWave": 5.0,
+    "bossHpBase": 450.0,
+    "bossHpPerWave": 220.0,
+    "bossAtkBase": 25.0,
+    "bossAtkPerWave": 14.0,
+    "bossGoldBase": 250.0,
+    "bossGoldPerWave": 60.0
+  },
+  "bossEnrage": {
+    "intervalSeconds": 5.0,
+    "damageStepMultiplier": 0.25,
+    "isMultiplicative": false
+  },
+  "simulation": {
+    "targetWaves": 10,
+    "tapRatePerSecond": 2.0,
+    "rageTriggerAt100": true
   }
 }

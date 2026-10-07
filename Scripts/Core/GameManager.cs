@@ -11,14 +11,14 @@ namespace BloodSeal.Core
         public PentagramStats Stats { get; private set; } = new PentagramStats();
         public CharacterProfile Profile { get; private set; } = new CharacterProfile();
 
-        public long Gold { get; private set; } = 100; // Başlangıç testi için 100 altın
+        public double Gold { get; private set; } = 100.0; // Başlangıç testi için 100 altın
         public int CurrentWave { get; private set; } = 1;
         public int HighestWave { get; private set; } = 1;
         public bool IsInSafeFarmMode { get; private set; } = false;
         public float RagePercentage { get; private set; } = 0f;
         public bool IsRageActive { get; private set; } = false;
 
-        public event Action<long> OnGoldChanged;
+        public event Action<double> OnGoldChanged;
         public event Action<int, bool> OnWaveChanged;
         public event Action<float> OnRageChanged;
         public event Action<bool> OnRageStateChanged;
@@ -55,13 +55,13 @@ namespace BloodSeal.Core
             }
         }
 
-        public void AddGold(long amount)
+        public void AddGold(double amount)
         {
             Gold += amount;
             OnGoldChanged?.Invoke(Gold);
         }
 
-        public bool SpendGold(long amount)
+        public bool SpendGold(double amount)
         {
             if (Gold >= amount)
             {
@@ -124,7 +124,7 @@ namespace BloodSeal.Core
 
         public bool UpgradeAtk()
         {
-            long cost = Stats.GetAtkCost();
+            double cost = Stats.GetAtkCost();
             if (SpendGold(cost))
             {
                 Stats.AtkLevel++;
@@ -136,7 +136,7 @@ namespace BloodSeal.Core
 
         public bool UpgradeAtkSpeed()
         {
-            long cost = Stats.GetAtkSpeedCost();
+            double cost = Stats.GetAtkSpeedCost();
             if (SpendGold(cost))
             {
                 Stats.AtkSpeedLevel++;
@@ -148,7 +148,7 @@ namespace BloodSeal.Core
 
         public bool UpgradeLifesteal()
         {
-            long cost = Stats.GetLifestealCost();
+            double cost = Stats.GetLifestealCost();
             if (SpendGold(cost))
             {
                 Stats.LifestealLevel++;
@@ -160,7 +160,7 @@ namespace BloodSeal.Core
 
         public bool UpgradeMaxHp()
         {
-            long cost = Stats.GetMaxHpCost();
+            double cost = Stats.GetMaxHpCost();
             if (SpendGold(cost))
             {
                 Stats.MaxHpLevel++;
@@ -172,7 +172,7 @@ namespace BloodSeal.Core
 
         public bool UpgradeRange()
         {
-            long cost = Stats.GetRangeCost();
+            double cost = Stats.GetRangeCost();
             if (SpendGold(cost))
             {
                 Stats.RangeLevel++;

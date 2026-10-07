@@ -58,11 +58,23 @@ namespace BloodSeal.Combat
             AddChild(rip);
         }
 
-        public async void TriggerHitFreeze(float duration = 0.045f)
+        private double _lastHitFreezeTime = -10.0;
+        private const double HitFreezeCooldown = 0.4;
+
+        public async void TriggerLocalHitFreeze(Node2D actorA, Node2D actorB, float duration = 0.040f)
         {
-            Engine.TimeScale = 0.05;
-            await ToSignal(GetTree().CreateTimer(duration * 0.05, true, false, true), "timeout");
-            Engine.TimeScale = 1.0;
+            double now = Time.GetTicksMsec() / 1000.0;
+            if (now - _lastHitFreezeTime < HitFreezeCooldown) return;
+            _lastHitFreezeTime = now;
+
+            // Local actor pause: do not touch global Engine.TimeScale
+            if (GodotObject.IsInstanceValid(actorA)) actorA.ProcessMode = ProcessModeEnum.Disabled;
+            if (GodotObject.IsInstanceValid(actorB)) actorB.ProcessMode = ProcessModeEnum.Disabled;
+
+            await ToSignal(GetTree().CreateTimer(duration, true, false, true), "timeout");
+
+            if (GodotObject.IsInstanceValid(actorA)) actorA.ProcessMode = ProcessModeEnum.Inherit;
+            if (GodotObject.IsInstanceValid(actorB)) actorB.ProcessMode = ProcessModeEnum.Inherit;
         }
     }
 }

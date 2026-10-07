@@ -62,16 +62,16 @@ This document establishes the binding architectural standards, game design patte
 
 ---
 
-## 4. Combat Juice & Game Feel (GDC "Juice It or Lose It")
+## 4. Game Feel Kuralları (Bağlayıcı)
 
-Every action must generate sensory feedback:
-1. **Screen Shake:** Managed via trauma-decay formula:
-   $$Offset = Random(-1, 1) \times MaxOffset \times Trauma^2$$
-   - Light (tap / standard hit): $+0.08 - 0.12$ trauma
-   - Heavy (crit / berserk hit / player damage): $+0.25 - 0.35$ trauma
-2. **Hitstop / Micro Freeze:** Critical hits trigger a 40–50ms freeze (`Engine.TimeScale = 0.05`) to give weight to slashing impacts.
-3. **Slash Arc VFX:** Slashing swords must generate directional crescent light arcs that scale during Berserk mode.
-4. **Independent Particle Lifecycles:** Particles (blood splatter, death explosion) must be spawned under `FXManager` or the scene root so they do not prematurely vanish when the dying enemy calls `QueueFree()`.
+- **Engine.TimeScale'e ASLA dokunma.** Hit-freeze yalnızca vuran ve vurulan aktörün animasyonu/tween'ini ~40 ms durdurur (yerel).
+- **Hit-freeze sadece boss kritiği ve boss ölümünde**, en az 0.4 sn aralıkla çalışır. Berserk modunda kesinlikle kapalıdır.
+- **Camera trauma 0..1 arasında Clamp edilir**, sabit sönüm hızı vardır (başlangıç: 1.5/sn).
+  - Başlangıç değerleri: normal vuruş 0.10, kritik 0.20 (Berserk dışı), alınan hasar 0.25, boss ölümü 0.50.
+  - Berserk'te vuruş başına shake yoktur; sabit taban 0.15 trauma uygulanır.
+- **Enrage (5 sn), Berserk (10 sn), gelir ve offline sayaçları gerçek delta ile ilerler.**
+  - Hiçbir efekt bu sayaçları durduramaz veya yavaşlatamaz. Gelir hesabı için `Timer` node'u kullanma.
+- **Slash Arc VFX & Bağımsız Parçacıklar:** Kılıç savurmalarında hilal ışık efekti; parçacıklar `FXManager` altına doğarak aktör `QueueFree` olsa bile yaşam döngüsünü tamamlar.
 
 ---
 
