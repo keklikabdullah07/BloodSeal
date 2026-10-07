@@ -83,8 +83,9 @@ namespace BloodSeal.Combat
             // Pop-up floating damage text
             FloatingTextManager.Instance?.SpawnDamage(GlobalPosition + new Vector2(0, -50), amount, isCrit);
 
-            // Blood splatter VFX
+            // Blood splatter VFX & SFX
             FXManager.Instance?.PlayBloodSplatter(GlobalPosition + new Vector2(0, -35), Vector2.Right);
+            Core.AudioManager.Instance?.PlayHit(isCrit);
 
             // Flash visual on hit
             if (_visual != null)

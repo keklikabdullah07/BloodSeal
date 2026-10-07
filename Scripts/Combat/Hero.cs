@@ -117,8 +117,9 @@ namespace BloodSeal.Combat
                 tween.TweenProperty(_visualRoot, "position:x", 0f, 0.12f);
             }
 
-            // Spawn Slash VFX
+            // Spawn Slash VFX & SFX
             FXManager.Instance?.PlaySlash(target.GlobalPosition + new Vector2(-20, -35), isRage);
+            AudioManager.Instance?.PlaySlash();
 
             // Screen shake & hit freeze per binding game feel rules
             bool isBoss = target is BossEnemy;

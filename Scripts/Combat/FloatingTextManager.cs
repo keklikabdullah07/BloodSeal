@@ -30,6 +30,7 @@ namespace BloodSeal.Combat
             text.GlobalPosition = pos;
             text.Setup($"+{Core.BigNumberFormatter.Format(amount)} 🪙", new Color(1f, 0.85f, 0.2f), 1.15f);
             AddChild(text);
+            Core.AudioManager.Instance?.PlayCoin();
         }
 
         public void SpawnEnrage(Vector2 pos, float multiplier)
@@ -39,6 +40,7 @@ namespace BloodSeal.Combat
             text.GlobalPosition = pos;
             text.Setup($"ENRAGE x{multiplier:F1}!", new Color(1f, 0.15f, 0.15f), 1.5f);
             AddChild(text);
+            Core.AudioManager.Instance?.PlayEnrage();
         }
     }
 }
