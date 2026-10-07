@@ -21,6 +21,10 @@ namespace BloodSeal.UI
         [Export] public Button UpgradeMaxHpBtn;
         [Export] public Button UpgradeRangeBtn;
 
+        // Manor Gate
+        [Export] public Button GateNotificationBtn;
+        [Export] public ManorGateModal GateModal;
+
         public override void _Ready()
         {
             if (GameManager.Instance != null)
@@ -31,18 +35,22 @@ namespace BloodSeal.UI
                 GameManager.Instance.OnRageStateChanged += UpdateRageStateUI;
                 GameManager.Instance.OnStatsUpgraded += UpdateAllStatButtons;
                 GameManager.Instance.OnProfileChanged += UpdateProfileUI;
+                GameManager.Instance.OnGateNotificationAvailable += UpdateGateNotificationUI;
+                GameManager.Instance.OnRuneEquipped += _ => UpdateGateNotificationUI();
 
                 UpdateGoldUI(GameManager.Instance.Gold);
                 UpdateWaveUI(GameManager.Instance.CurrentWave, GameManager.Instance.CurrentWave % 10 == 0);
                 UpdateRageUI(GameManager.Instance.RagePercentage);
                 UpdateRageStateUI(GameManager.Instance.IsRageActive);
                 UpdateProfileUI(GameManager.Instance.Profile);
+                UpdateGateNotificationUI();
                 UpdateAllStatButtons();
             }
 
             // Connect button signals
             RageButton?.Connect("pressed", Callable.From(OnRagePressed));
             RetryBossButton?.Connect("pressed", Callable.From(OnRetryBossPressed));
+            GateNotificationBtn?.Connect("pressed", Callable.From(() => GateModal?.ShowModal()));
             UpgradeAtkBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeAtk()));
             UpgradeAtkSpdBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeAtkSpeed()));
             UpgradeLifestealBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeLifesteal()));
@@ -60,7 +68,18 @@ namespace BloodSeal.UI
                 GameManager.Instance.OnRageStateChanged -= UpdateRageStateUI;
                 GameManager.Instance.OnStatsUpgraded -= UpdateAllStatButtons;
                 GameManager.Instance.OnProfileChanged -= UpdateProfileUI;
+                GameManager.Instance.OnGateNotificationAvailable -= UpdateGateNotificationUI;
             }
+        }
+
+        private void UpdateGateNotificationUI()
+        {
+            if (GateNotificationBtn == null || GameManager.Instance == null) return;
+
+            bool isAvailable = GameManager.Instance.CurrentWave >= ManorGateHelper.GateUnlockWave
+                               && !GameManager.Instance.HasClaimedGateReward;
+
+            GateNotificationBtn.Visible = isAvailable;
         }
 
         private void UpdateProfileUI(CharacterProfile profile)
@@ -69,7 +88,12 @@ namespace BloodSeal.UI
             {
                 string bl = CharacterProfile.GetBloodlineName(profile.Bloodline);
                 string or = CharacterProfile.GetOriginName(profile.Origin);
-                ProfileLabel.Text = $"👤 {profile.PlayerName} [{bl} | {or}]";
+                string runeTag = "";
+                if (GameManager.Instance != null && GameManager.Instance.ActiveRune != RuneType.None)
+                {
+                    runeTag = $" | ᚱ {ManorGateHelper.GetRuneName(GameManager.Instance.ActiveRune)}";
+                }
+                ProfileLabel.Text = $"👤 {profile.PlayerName} [{bl} | {or}{runeTag}]";
             }
         }
 

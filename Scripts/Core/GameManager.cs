@@ -18,6 +18,15 @@ namespace BloodSeal.Core
         public float RagePercentage { get; private set; } = 0f;
         public bool IsRageActive { get; private set; } = false;
 
+        public OfflineEarningsResult PendingOfflineEarnings { get; private set; }
+
+        // Manor Gate & Runes (GDD Bölüm 5)
+        public RuneType ActiveRune { get; set; } = RuneType.None;
+        public GateApproachType SelectedGateApproach { get; set; } = GateApproachType.None;
+        public bool HasEncounteredGate { get; set; } = false;
+        public bool HasClaimedGateReward { get; set; } = false;
+        public bool HasFirstLoreScroll { get; set; } = false;
+
         public event Action<double> OnGoldChanged;
         public event Action<int, bool> OnWaveChanged;
         public event Action<float> OnRageChanged;
@@ -26,8 +35,8 @@ namespace BloodSeal.Core
         public event Action OnStatsUpgraded;
         public event Action<CharacterProfile> OnProfileChanged;
         public event Action<OfflineEarningsResult> OnOfflineEarningsReady;
-
-        public OfflineEarningsResult PendingOfflineEarnings { get; private set; }
+        public event Action<RuneType> OnRuneEquipped;
+        public event Action OnGateNotificationAvailable;
 
         private double _rageActiveTimer = 0.0;
         private double _autoSaveTimer = 30.0;
@@ -37,6 +46,7 @@ namespace BloodSeal.Core
             if (Instance == null)
             {
                 Instance = this;
+                Stats.Profile = Profile;
             }
             else
             {
@@ -153,6 +163,12 @@ namespace BloodSeal.Core
             if (wave > HighestWave) HighestWave = wave;
             bool isBoss = (wave % 10 == 0);
             OnWaveChanged?.Invoke(CurrentWave, isBoss);
+
+            if (wave >= ManorGateHelper.GateUnlockWave && !HasClaimedGateReward)
+            {
+                OnGateNotificationAvailable?.Invoke();
+            }
+
             SaveGame();
         }
 
@@ -202,8 +218,30 @@ namespace BloodSeal.Core
             Profile.Bloodline = bloodline;
             Profile.Origin = origin;
             Profile.HasCompletedPrologue = true;
+            Stats.Profile = Profile;
             OnProfileChanged?.Invoke(Profile);
             OnStatsUpgraded?.Invoke();
+        }
+
+        public double CalculateGoldReward(double baseGold)
+        {
+            double mult = 1.0;
+            if (Profile?.Origin == StreetOriginType.StreetThief) mult += 0.15;
+            if (ActiveRune == RuneType.WealthGreed) mult += 0.20;
+            return baseGold * mult;
+        }
+
+        public void ClaimGateReward(GateApproachType approach)
+        {
+            SelectedGateApproach = approach;
+            ActiveRune = ManorGateHelper.GetRuneForApproach(approach);
+            Stats.ActiveRune = ActiveRune;
+            HasEncounteredGate = true;
+            HasClaimedGateReward = true;
+            if (approach == GateApproachType.BloodSeal) HasFirstLoreScroll = true;
+            OnRuneEquipped?.Invoke(ActiveRune);
+            OnStatsUpgraded?.Invoke();
+            SaveGame();
         }
     }
 }

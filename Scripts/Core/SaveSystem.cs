@@ -32,7 +32,12 @@ namespace BloodSeal.Core
                 LifestealLevel = gm.Stats?.LifestealLevel ?? 1,
                 MaxHpLevel = gm.Stats?.MaxHpLevel ?? 1,
                 RangeLevel = gm.Stats?.RangeLevel ?? 1,
-                LastSaveTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+                LastSaveTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                ActiveRune = gm.ActiveRune,
+                SelectedGateApproach = gm.SelectedGateApproach,
+                HasEncounteredGate = gm.HasEncounteredGate,
+                HasClaimedGateReward = gm.HasClaimedGateReward,
+                HasFirstLoreScroll = gm.HasFirstLoreScroll
             };
         }
 
@@ -53,6 +58,18 @@ namespace BloodSeal.Core
                 gm.Stats.LifestealLevel = Math.Max(1, data.LifestealLevel);
                 gm.Stats.MaxHpLevel = Math.Max(1, data.MaxHpLevel);
                 gm.Stats.RangeLevel = Math.Max(1, data.RangeLevel);
+            }
+
+            gm.ActiveRune = data.ActiveRune;
+            gm.SelectedGateApproach = data.SelectedGateApproach;
+            gm.HasEncounteredGate = data.HasEncounteredGate;
+            gm.HasClaimedGateReward = data.HasClaimedGateReward;
+            gm.HasFirstLoreScroll = data.HasFirstLoreScroll;
+
+            if (gm.Stats != null)
+            {
+                gm.Stats.ActiveRune = data.ActiveRune;
+                gm.Stats.Profile = gm.Profile;
             }
 
             // Doğrudan altın ve dalga yüklemesi
