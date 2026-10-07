@@ -70,7 +70,8 @@ namespace BloodSeal.Combat
             FXManager.Instance?.TriggerLocalHitFreeze(null, this, 0.040f);
             FXManager.Instance?.PlayDeathExplosion(GlobalPosition + new Vector2(0, -35), true);
 
-            double bossGold = GameManager.Instance.CurrentWave * 60 + 250;
+            double baseGold = GameManager.Instance.CurrentWave * 60 + 250;
+            double bossGold = GameManager.Instance.CalculateGoldReward(baseGold);
             GameManager.Instance.AddGold(bossGold);
             FloatingTextManager.Instance?.SpawnGold(GlobalPosition + new Vector2(0, -40), bossGold);
 

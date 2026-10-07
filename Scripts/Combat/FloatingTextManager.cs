@@ -42,5 +42,14 @@ namespace BloodSeal.Combat
             AddChild(text);
             Core.AudioManager.Instance?.PlayEnrage();
         }
+
+        public void SpawnMessage(Vector2 pos, string message, Color color, float scale = 1.2f)
+        {
+            if (FloatingTextScene == null) return;
+            var text = FloatingTextScene.Instantiate<UI.FloatingText>();
+            text.GlobalPosition = pos;
+            text.Setup(message, color, scale);
+            AddChild(text);
+        }
     }
 }

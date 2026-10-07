@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://Scripts/UI/MainHUD.cs" id="1_hud"]
 [ext_resource type="Shader" path="res://Shaders/BloodVignette.gdshader" id="2_vignette"]
 [ext_resource type="Script" path="res://Scripts/UI/OfflineProgressModal.cs" id="3_offline"]
+[ext_resource type="Script" path="res://Scripts/UI/ManorGateModal.cs" id="4_gate"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vig"]
 shader = ExtResource("2_vignette")
@@ -36,7 +37,35 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[node name="MainHUD" type="CanvasLayer" node_paths=PackedStringArray("GoldLabel", "WaveLabel", "ProfileLabel", "RageButton", "RageProgressBar", "RetryBossButton", "RageVignetteRect", "UpgradeAtkBtn", "UpgradeAtkSpdBtn", "UpgradeLifestealBtn", "UpgradeMaxHpBtn", "UpgradeRangeBtn")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gate_btn"]
+bg_color = Color(0.35, 0.05, 0.1, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.8, 0.25, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 8.0
+expand_margin_top = 4.0
+expand_margin_right = 8.0
+expand_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gate_card"]
+bg_color = Color(0.12, 0.08, 0.15, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.7, 0.2, 0.25, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="MainHUD" type="CanvasLayer" node_paths=PackedStringArray("GoldLabel", "WaveLabel", "ProfileLabel", "RageButton", "RageProgressBar", "RetryBossButton", "RageVignetteRect", "UpgradeAtkBtn", "UpgradeAtkSpdBtn", "UpgradeLifestealBtn", "UpgradeMaxHpBtn", "UpgradeRangeBtn", "GateNotificationBtn", "GateModal")]
 script = ExtResource("1_hud")
 GoldLabel = NodePath("TopBar/Margin/HBox/GoldLabel")
 WaveLabel = NodePath("TopBar/Margin/HBox/WaveLabel")
@@ -50,6 +79,8 @@ UpgradeAtkSpdBtn = NodePath("BottomPanel/Margin/HBox/AtkSpdCard")
 UpgradeLifestealBtn = NodePath("BottomPanel/Margin/HBox/LifestealCard")
 UpgradeMaxHpBtn = NodePath("BottomPanel/Margin/HBox/MaxHpCard")
 UpgradeRangeBtn = NodePath("BottomPanel/Margin/HBox/RangeCard")
+GateNotificationBtn = NodePath("TopBar/Margin/HBox/GateNotificationButton")
+GateModal = NodePath("GateModal")
 
 [node name="RageVignette" type="ColorRect" parent="."]
 visible = false
@@ -99,6 +130,14 @@ theme_override_colors/font_color = Color(1, 0.9, 0.9, 1)
 theme_override_font_sizes/font_size = 28
 text = "DALGA 1 / 10"
 horizontal_alignment = 1
+
+[node name="GateNotificationButton" type="Button" parent="TopBar/Margin/HBox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.25, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_gate_btn")
+text = "🚪 MALİKANE KAPISI"
 
 [node name="Spacer2" type="Control" parent="TopBar/Margin/HBox"]
 layout_mode = 2
@@ -299,3 +338,123 @@ theme_override_colors/font_color = Color(1, 0.95, 0.95, 1)
 theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_claim")
 text = "⚔️ KANI KABUL ET VE UYAN"
+
+[node name="GateModal" type="Control" parent="." node_paths=PackedStringArray("FrontGateBtn", "SewersBtn", "BloodSealBtn", "RoofBtn", "CloseBtn", "TacticalInfoLabel")]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_gate")
+FrontGateBtn = NodePath("Center/Panel/Margin/VBox/CardsGrid/FrontGateCard")
+SewersBtn = NodePath("Center/Panel/Margin/VBox/CardsGrid/SewersCard")
+BloodSealBtn = NodePath("Center/Panel/Margin/VBox/CardsGrid/BloodSealCard")
+RoofBtn = NodePath("Center/Panel/Margin/VBox/CardsGrid/RoofCard")
+CloseBtn = NodePath("Center/Panel/Margin/VBox/CloseButton")
+TacticalInfoLabel = NodePath("Center/Panel/Margin/VBox/TacticalInfo")
+
+[node name="DarkOverlay" type="ColorRect" parent="GateModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.01, 0.03, 0.85)
+
+[node name="Center" type="CenterContainer" parent="GateModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="GateModal/Center"]
+custom_minimum_size = Vector2(980, 560)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_modal")
+
+[node name="Margin" type="MarginContainer" parent="GateModal/Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 35
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 35
+theme_override_constants/margin_bottom = 25
+
+[node name="VBox" type="VBoxContainer" parent="GateModal/Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="GateModal/Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
+theme_override_font_sizes/font_size = 26
+text = "🩸 MALİKANE KAPISI ÇATIŞMASI: SIZMA SEÇİMİ"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="GateModal/Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.85, 1)
+theme_override_font_sizes/font_size = 15
+text = "Malikane kapılarına ulaştın. Bir yaklaşım seçerek mührün kadim gücünü uyandır ve rününü kuşan!"
+horizontal_alignment = 1
+
+[node name="Sep" type="HSeparator" parent="GateModal/Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="CardsGrid" type="GridContainer" parent="GateModal/Center/Panel/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+columns = 2
+
+[node name="FrontGateCard" type="Button" parent="GateModal/Center/Panel/Margin/VBox/CardsGrid"]
+custom_minimum_size = Vector2(440, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_gate_card")
+theme_override_font_sizes/font_size = 15
+text = "⚔️ ÖN KAPIYI KIR\n\n🛡️ Hedef: Zırhlı Malikane Muhafızı\n✨ Ödül: Kan Zırhı Rünü\n(+%10 ATK & +%10 Max HP)"
+
+[node name="SewersCard" type="Button" parent="GateModal/Center/Panel/Margin/VBox/CardsGrid"]
+custom_minimum_size = Vector2(440, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_gate_card")
+theme_override_font_sizes/font_size = 15
+text = "🐀 KANALİZASYONDAN SIZ\n\n⚡ Hedef: Karanlık Kanalizasyon Yaratığı\n✨ Ödül: Gölge Hızı Rünü\n(+%10 Saldırı Hızı & +25px Menzil)"
+
+[node name="BloodSealCard" type="Button" parent="GateModal/Center/Panel/Margin/VBox/CardsGrid"]
+custom_minimum_size = Vector2(440, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_gate_card")
+theme_override_font_sizes/font_size = 15
+text = "🩸 KANINLA MÜHÜRLE\n\n🔮 Hedef: Kadim Kan Başrahibi\n✨ Ödül: Ruh Çalma Rünü & Parşömen #1\n(+%2.5 Can Çalma + Lore Scroll)"
+
+[node name="RoofCard" type="Button" parent="GateModal/Center/Panel/Margin/VBox/CardsGrid"]
+custom_minimum_size = Vector2(440, 140)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_gate_card")
+theme_override_font_sizes/font_size = 15
+text = "🗝️ ÇATIDAN SIZ / RÜŞVET\n\n🎯 Hedef: Taktiksel Zayıflatma\n✨ Ödül: Zenginlik Rünü\n(+%20 Kalıcı Altın Kazanımı)"
+
+[node name="TacticalInfo" type="Label" parent="GateModal/Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.75, 0.4, 1)
+theme_override_font_sizes/font_size = 15
+text = "💡 Taktiksel avantaj..."
+horizontal_alignment = 1
+
+[node name="CloseButton" type="Button" parent="GateModal/Center/Panel/Margin/VBox"]
+custom_minimum_size = Vector2(240, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.8, 0.8, 0.85, 1)
+theme_override_font_sizes/font_size = 16
+text = "Daha Sonra Karar Ver"

@@ -23,5 +23,12 @@ namespace BloodSeal.Core
 
         // Offline Progress (Unix epoch seconds)
         public long LastSaveTimestamp { get; set; } = 0;
+
+        // Manor Gate Progression & Runes (GDD Section 5)
+        public RuneType ActiveRune { get; set; } = RuneType.None;
+        public GateApproachType SelectedGateApproach { get; set; } = GateApproachType.None;
+        public bool HasEncounteredGate { get; set; } = false;
+        public bool HasClaimedGateReward { get; set; } = false;
+        public bool HasFirstLoreScroll { get; set; } = false;
     }
 }

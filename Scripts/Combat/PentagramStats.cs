@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using BloodSeal.Core;
 
@@ -11,14 +12,24 @@ namespace BloodSeal.Combat
         public int MaxHpLevel { get; set; } = 1;
         public int RangeLevel { get; set; } = 1;
 
-        // Stat Calculations (Base + Level Scaling + Bloodline/Origin Passives)
+        public CharacterProfile? Profile { get; set; }
+        public RuneType ActiveRune { get; set; } = RuneType.None;
+
+        public PentagramStats(CharacterProfile? profile = null)
+        {
+            Profile = profile;
+        }
+
+        // Stat Calculations (Base + Level Scaling + Bloodline/Origin Passives + Runes)
         public float Atk
         {
             get
             {
                 float val = 10f + (AtkLevel - 1) * 3f;
-                if (GameManager.Instance?.Profile?.Origin == StreetOriginType.PitFighter)
+                if (Profile?.Origin == StreetOriginType.PitFighter)
                     val *= 1.10f; // +%10 ATK
+                if (ActiveRune == RuneType.BloodArmor)
+                    val *= 1.10f; // Kan Zırhı Rünü (+%10 ATK)
                 return val;
             }
         }
@@ -27,12 +38,14 @@ namespace BloodSeal.Combat
         {
             get
             {
-                float val = Math.Min(3.5f, 1.0f + (AtkSpeedLevel - 1) * 0.05f);
-                if (GameManager.Instance?.Profile?.Origin == StreetOriginType.ExMercenary)
+                float val = 1.0f + (AtkSpeedLevel - 1) * 0.05f;
+                if (Profile?.Origin == StreetOriginType.ExMercenary)
                     val *= 1.08f; // +%8 Saldırı Hızı
-                if (GameManager.Instance?.Profile?.Bloodline == BloodlineType.SoulDrinker)
+                if (Profile?.Bloodline == BloodlineType.SoulDrinker)
                     val *= 1.15f; // -%15 Bekleme süresi eşdeğeri hız
-                return val;
+                if (ActiveRune == RuneType.ShadowSpeed)
+                    val *= 1.10f; // Gölge Hızı Rünü (+%10 Saldırı Hızı)
+                return Math.Min(3.5f, val);
             }
         }
 
@@ -40,10 +53,12 @@ namespace BloodSeal.Combat
         {
             get
             {
-                float val = Math.Min(25f, 1.0f + (LifestealLevel - 1) * 0.5f);
-                if (GameManager.Instance?.Profile?.Bloodline == BloodlineType.BloodClawed)
+                float val = 1.0f + (LifestealLevel - 1) * 0.5f;
+                if (Profile?.Bloodline == BloodlineType.BloodClawed)
                     val += 2.5f; // +%2.5 Doğuştan Can Çalma
-                return val;
+                if (ActiveRune == RuneType.SoulLeech)
+                    val += 2.5f; // Ruh Çalma Rünü (+%2.5 Can Çalma)
+                return Math.Min(25f, val);
             }
         }
 
@@ -52,8 +67,10 @@ namespace BloodSeal.Combat
             get
             {
                 float val = 100f + (MaxHpLevel - 1) * 25f;
-                if (GameManager.Instance?.Profile?.Bloodline == BloodlineType.BoneWeaver)
+                if (Profile?.Bloodline == BloodlineType.BoneWeaver)
                     val *= 1.10f; // +%10 Maksimum Can
+                if (ActiveRune == RuneType.BloodArmor)
+                    val *= 1.10f; // Kan Zırhı Rünü (+%10 Max HP)
                 return val;
             }
         }
@@ -62,10 +79,12 @@ namespace BloodSeal.Combat
         {
             get
             {
-                float val = Math.Min(350f, 180f + (RangeLevel - 1) * 10f);
-                if (GameManager.Instance?.Profile?.Bloodline == BloodlineType.ShadowVeined)
+                float val = 180f + (RangeLevel - 1) * 10f;
+                if (Profile?.Bloodline == BloodlineType.ShadowVeined)
                     val += 35f; // +35px Menzil
-                return val;
+                if (ActiveRune == RuneType.ShadowSpeed)
+                    val += 25f; // Gölge Hızı Rünü (+25px Menzil)
+                return Math.Min(350f, val);
             }
         }
 
