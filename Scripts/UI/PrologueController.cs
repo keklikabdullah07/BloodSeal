@@ -31,7 +31,7 @@ namespace BloodSeal.UI
             // Auto bypass if already completed
             if (GameManager.Instance != null && GameManager.Instance.Profile.HasCompletedPrologue)
             {
-                GetTree().ChangeSceneToFile("res://Scenes/MainCombat.tscn");
+                Callable.From(() => GetTree().ChangeSceneToFile("res://Scenes/MainCombat.tscn")).CallDeferred();
                 return;
             }
 

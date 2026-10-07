@@ -10,6 +10,8 @@ namespace BloodSeal.Combat
         [Export] public Color AuraColor = new Color(0.9f, 0.1f, 0.2f, 0.9f);
         [Export] public PackedScene ProjectileScene;
 
+        [Export] public Node2D TargetHero;
+
         private Node2D _hero;
         private double _shootTimer = 0.0;
         private double _timePassed = 0.0;
@@ -17,13 +19,14 @@ namespace BloodSeal.Combat
         public void Setup(Node2D hero)
         {
             _hero = hero;
+            TargetHero = hero;
         }
 
         public override void _Ready()
         {
-            if (_hero == null && GetParent() != null)
+            if (_hero == null && TargetHero != null)
             {
-                _hero = GetParent().GetNodeOrNull<Node2D>("Hero");
+                _hero = TargetHero;
             }
         }
 
