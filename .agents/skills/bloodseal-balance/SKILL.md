@@ -29,8 +29,11 @@ $$Cost = BaseCost \times 1.15^{(Level - 1)}$$
 
 ### Boss Kademeli Öfkelenme (Enrage)
 - Sabit ölüm sayacı (enrage timer) yerine zamanla hasar çarpanı artar.
-- Savaş başladıktan sonra her 5 saniyede bir Boss hasarı $+%25$ artar ($1.25$ çarpan adımı):
+- Tek doğruluk kaynağı `Data/BalanceConfig.json` (`bossEnrage`) dosyasıdır.
+- `isMultiplicative: false` (varsayılan toplamsal mod) olduğunda her 5 saniyede bir Boss hasarı taban hasarın $+%25$'i kadar artar:
   $$BossDamage = BaseBossDamage \times (1.0 + 0.25 \times EnrageAdimi)$$
+  *(60. saniyede 12 adım ile tam $4.0\times$ çarpan oluşur).*
+- `isMultiplicative: true` (çarpımsal mod) seçilirse çarpan her adımda bileşik katlanır ($(1.0 + 0.25)^{EnrageAdimi}$, 60. saniyede $\approx 14.55\times$).
 
 ## 3. Yenilgi ve Güvenli Farm Döngüsü
 - Kahraman Boss dalgasında ($N$) ölürse oyun bitmez; anında tam canla bir önceki güvenli dalgaya ($N - 1$) çekilir.

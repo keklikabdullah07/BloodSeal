@@ -43,7 +43,7 @@ This document establishes the binding architectural standards, game design patte
   - Boss HP: $Wave \times 220 + 450$
   - Boss ATK: $Wave \times 14 + 25$
 - **Boss Enrage Mechanic:**
-  - Savaş uzadıkça Boss her 5 saniyede bir $+25\%$ çarpanla güçlenir ($EnrageMultiplier \times 1.25$).
+  - Savaş uzadıkça Boss her 5 saniyede bir taban hasarın $+25\%$ çarpan adımıyla güçlenir ($BossDamage = BaseBossDamage \times (1.0 + 0.25 \times EnrageAdimi)$). Formül `Data/BalanceConfig.json` içindeki `bossEnrage.isMultiplicative` ile belirlenir (varsayılan: toplamsal, 60. saniyede 4.0x çarpan).
 
 ### B. Big Number & Currency Hygiene
 - Use `long` or `double` for currency and damage calculations to prevent 32-bit integer overflow.

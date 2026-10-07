@@ -100,6 +100,7 @@ namespace BloodSeal.Tests
 
             double enrageInterval = enrageConfig.GetProperty("intervalSeconds").GetDouble();
             double enrageStep = enrageConfig.GetProperty("damageStepMultiplier").GetDouble();
+            bool isMultiplicative = enrageConfig.TryGetProperty("isMultiplicative", out var multProp) && multProp.GetBoolean();
 
             int farmRetries = 0;
             bool bossDefeated = false;
@@ -142,9 +143,12 @@ namespace BloodSeal.Tests
                         currentHeroDps = heroAtk * heroSpd + tapDps + petDps;
                     }
 
-                    // Enrage multiplier
+                    // Enrage multiplier (single source of truth: isMultiplicative)
                     int enrageSteps = (int)(fightTime / enrageInterval);
-                    double currentBossAtk = bossBaseAtk * (1.0 + enrageSteps * enrageStep);
+                    double enrageMultiplier = isMultiplicative
+                        ? Math.Pow(1.0 + enrageStep, enrageSteps)
+                        : 1.0 + (enrageSteps * enrageStep);
+                    double currentBossAtk = bossBaseAtk * enrageMultiplier;
 
                     // Hero damages Boss
                     currentBossHp -= currentHeroDps * dt;
@@ -203,5 +207,67 @@ namespace BloodSeal.Tests
             Assert.True(bossDefeated, "Boss 10 makul farm denemeleri içinde kesilebilmelidir.");
             Assert.True(timeToFirstBoss < 180.0, "10. Dalga Boss'una 3 dakikadan kısa sürede ulaşılmalıdır.");
         }
+
+        [Fact]
+        public void Verify_Boss_Enrage_Multiplier_At_60_Seconds()
+        {
+            string configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "Data", "BalanceConfig.json");
+            configPath = Path.GetFullPath(configPath);
+            Assert.True(File.Exists(configPath), $"BalanceConfig.json bulunamadi: {configPath}");
+
+            string json = File.ReadAllText(configPath);
+            using var doc = JsonDocument.Parse(json);
+            var enrageConfig = doc.RootElement.GetProperty("bossEnrage");
+
+            double interval = enrageConfig.GetProperty("intervalSeconds").GetDouble();
+            double step = enrageConfig.GetProperty("damageStepMultiplier").GetDouble();
+            bool isMultiplicative = enrageConfig.TryGetProperty("isMultiplicative", out var multProp) && multProp.GetBoolean();
+
+            int stepsAt60Sec = (int)(60.0 / interval);
+            Assert.Equal(12, stepsAt60Sec);
+
+            double multiplierAt60Sec = isMultiplicative
+                ? Math.Pow(1.0 + step, stepsAt60Sec)
+                : 1.0 + (stepsAt60Sec * step);
+
+            if (isMultiplicative)
+            {
+                // Çarpımsal mod: 1.25^12 = 14.551915... (~14.55)
+                Assert.InRange(multiplierAt60Sec, 14.54, 14.56);
+                _output.WriteLine($"[Enrage Doğrulama] 60. saniyedeki çarpan (Çarpımsal): {multiplierAt60Sec:F2}x (Beklenen: ~14.55)");
+            }
+            else
+            {
+                // Toplamsal mod: 1.0 + 12 * 0.25 = 4.0
+                Assert.Equal(4.0, multiplierAt60Sec, precision: 4);
+                _output.WriteLine($"[Enrage Doğrulama] 60. saniyedeki çarpan (Toplamsal): {multiplierAt60Sec:F1}x (Beklenen: 4.0)");
+            }
+        }
+
+        [Theory]
+        [InlineData(false, 4.0)]
+        [InlineData(true, 14.5519)]
+        public void Verify_Enrage_Formulas_Mathematical_Expectations_At_60_Seconds(bool isMultiplicative, double expected)
+        {
+            double interval = 5.0;
+            double step = 0.25;
+            int stepsAt60Sec = (int)(60.0 / interval);
+
+            double multiplier = isMultiplicative
+                ? Math.Pow(1.0 + step, stepsAt60Sec)
+                : 1.0 + (stepsAt60Sec * step);
+
+            if (isMultiplicative)
+            {
+                Assert.InRange(multiplier, 14.54, 14.56);
+                _output.WriteLine($"[Formül Testi] Çarpımsal 60. sn: {multiplier:F4}x (~14.55)");
+            }
+            else
+            {
+                Assert.Equal(expected, multiplier, precision: 4);
+                _output.WriteLine($"[Formül Testi] Toplamsal 60. sn: {multiplier:F1}x (4.0)");
+            }
+        }
     }
 }
+
