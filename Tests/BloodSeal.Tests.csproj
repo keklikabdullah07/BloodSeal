@@ -24,6 +24,7 @@
     <Compile Include="..\Scripts\Core\OfflineProgressCalculator.cs" Link="Core\OfflineProgressCalculator.cs" />
     <Compile Include="..\Scripts\Core\ManorGateModels.cs" Link="Core\ManorGateModels.cs" />
     <Compile Include="..\Scripts\Core\ResearchModels.cs" Link="Core\ResearchModels.cs" />
+    <Compile Include="..\Scripts\Core\ResearchManager.cs" Link="Core\ResearchManager.cs" />
     <Compile Include="..\Scripts\Combat\PentagramStats.cs" Link="Combat\PentagramStats.cs" />
   </ItemGroup>
 

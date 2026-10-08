@@ -28,5 +28,22 @@ namespace BloodSeal.Tests
             Assert.True(costLv2 > costLv1);
             Assert.Equal(0, node.GetScrollCost(1));
         }
+
+        [Fact]
+        public void ResearchManager_TryUpgrade_ConsumesGoldAndScrollsCorrectly()
+        {
+            var manager = new ResearchManager();
+            manager.AddLoreScrolls(2);
+            double gold = 1000.0;
+
+            Assert.Equal(0, manager.GetResearchLevel("Econ_SealEfficiency"));
+            bool success = manager.TryUpgradeResearch("Econ_SealEfficiency", ref gold);
+            
+            Assert.True(success);
+            Assert.Equal(1, manager.GetResearchLevel("Econ_SealEfficiency"));
+            Assert.Equal(1, manager.LoreScrolls); // Consumed 1 scroll
+            Assert.True(gold < 1000.0);
+            Assert.Equal(0.98f, manager.GetSealCostDiscountMultiplier(), 0.001f); // -2% discount -> 0.98x
+        }
     }
 }
