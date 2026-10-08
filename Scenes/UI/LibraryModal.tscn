@@ -1,0 +1,163 @@
+[gd_scene format=3 uid="uid://df7x8k1l2m3n4"]
+
+[ext_resource type="Script" path="res://Scripts/UI/LibraryModal.cs" id="1_modal"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lib_modal"]
+bg_color = Color(0.05, 0.03, 0.07, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.65, 0.45, 0.2, 0.85)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.6)
+shadow_size = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab"]
+bg_color = Color(0.12, 0.08, 0.16, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.3, 0.5, 0.8)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="LibraryModal" type="Control" node_paths=PackedStringArray("EconTabBtn", "MemoryTabBtn", "WarTabBtn", "CloseBtn", "GoldLabel", "ScrollsLabel", "CategoryTitleLabel", "CardsContainer")]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_modal")
+EconTabBtn = NodePath("Center/Panel/Margin/VBox/TabsContainer/EconTabBtn")
+MemoryTabBtn = NodePath("Center/Panel/Margin/VBox/TabsContainer/MemoryTabBtn")
+WarTabBtn = NodePath("Center/Panel/Margin/VBox/TabsContainer/WarTabBtn")
+CloseBtn = NodePath("Center/Panel/Margin/VBox/Header/CloseButton")
+GoldLabel = NodePath("Center/Panel/Margin/VBox/Header/Currencies/GoldLabel")
+ScrollsLabel = NodePath("Center/Panel/Margin/VBox/Header/Currencies/ScrollsLabel")
+CategoryTitleLabel = NodePath("Center/Panel/Margin/VBox/CategoryTitle")
+CardsContainer = NodePath("Center/Panel/Margin/VBox/Scroll/CardsContainer")
+
+[node name="DarkOverlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.01, 0.03, 0.85)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(980, 580)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_lib_modal")
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 22
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 22
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Center/Panel/Margin/VBox/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
+theme_override_font_sizes/font_size = 24
+text = "🏛️ MALİKANE KÜTÜPHANESİ & ARAŞTIRMA"
+
+[node name="Spacer" type="Control" parent="Center/Panel/Margin/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Currencies" type="HBoxContainer" parent="Center/Panel/Margin/VBox/Header"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="GoldLabel" type="Label" parent="Center/Panel/Margin/VBox/Header/Currencies"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.25, 1)
+theme_override_font_sizes/font_size = 18
+text = "🪙 0 Altın"
+
+[node name="ScrollsLabel" type="Label" parent="Center/Panel/Margin/VBox/Header/Currencies"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "📜 0 Kadim Parşömen"
+
+[node name="CloseButton" type="Button" parent="Center/Panel/Margin/VBox/Header"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "✕"
+
+[node name="Sep1" type="HSeparator" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="TabsContainer" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="EconTabBtn" type="Button" parent="Center/Panel/Margin/VBox/TabsContainer"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_tab")
+theme_override_font_sizes/font_size = 15
+text = "🪙 Kadim Ekonomi"
+
+[node name="MemoryTabBtn" type="Button" parent="Center/Panel/Margin/VBox/TabsContainer"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_tab")
+theme_override_font_sizes/font_size = 15
+text = "⏳ Kan Hafızası"
+
+[node name="WarTabBtn" type="Button" parent="Center/Panel/Margin/VBox/TabsContainer"]
+custom_minimum_size = Vector2(0, 42)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_tab")
+theme_override_font_sizes/font_size = 15
+text = "⚔️ Savaş Ezoterizmi"
+
+[node name="CategoryTitle" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.8, 0.6, 1)
+theme_override_font_sizes/font_size = 16
+text = "🪙 KADİM EKONOMİ DİSİPLİNİ"
+horizontal_alignment = 1
+
+[node name="Scroll" type="ScrollContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="CardsContainer" type="VBoxContainer" parent="Center/Panel/Margin/VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12

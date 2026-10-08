@@ -25,6 +25,10 @@ namespace BloodSeal.UI
         [Export] public Button GateNotificationBtn;
         [Export] public ManorGateModal GateModal;
 
+        // Manor Library
+        [Export] public Button LibraryBtn;
+        [Export] public LibraryModal LibraryModal;
+
         public override void _Ready()
         {
             if (GameManager.Instance != null)
@@ -44,13 +48,20 @@ namespace BloodSeal.UI
                 UpdateRageStateUI(GameManager.Instance.IsRageActive);
                 UpdateProfileUI(GameManager.Instance.Profile);
                 UpdateGateNotificationUI();
+                UpdateLibraryNotificationUI();
                 UpdateAllStatButtons();
+            }
+
+            if (ResearchManager.Instance != null)
+            {
+                ResearchManager.Instance.OnLoreScrollsChanged += _ => UpdateLibraryNotificationUI();
             }
 
             // Connect button signals
             RageButton?.Connect("pressed", Callable.From(OnRagePressed));
             RetryBossButton?.Connect("pressed", Callable.From(OnRetryBossPressed));
             GateNotificationBtn?.Connect("pressed", Callable.From(() => GateModal?.ShowModal()));
+            LibraryBtn?.Connect("pressed", Callable.From(() => LibraryModal?.ShowModal()));
             UpgradeAtkBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeAtk()));
             UpgradeAtkSpdBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeAtkSpeed()));
             UpgradeLifestealBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeLifesteal()));
@@ -80,6 +91,17 @@ namespace BloodSeal.UI
                                && !GameManager.Instance.HasClaimedGateReward;
 
             GateNotificationBtn.Visible = isAvailable;
+        }
+
+        private void UpdateLibraryNotificationUI()
+        {
+            if (LibraryBtn == null || GameManager.Instance == null) return;
+
+            bool isAvailable = GameManager.Instance.CurrentWave >= ManorGateHelper.GateUnlockWave
+                               || GameManager.Instance.HasClaimedGateReward
+                               || (ResearchManager.Instance != null && ResearchManager.Instance.LoreScrolls > 0);
+
+            LibraryBtn.Visible = isAvailable;
         }
 
         private void UpdateProfileUI(CharacterProfile profile)
@@ -119,6 +141,8 @@ namespace BloodSeal.UI
             {
                 RetryBossButton.Visible = GameManager.Instance != null && GameManager.Instance.IsInSafeFarmMode;
             }
+
+            UpdateLibraryNotificationUI();
         }
 
         private void UpdateRageUI(float percentage)
