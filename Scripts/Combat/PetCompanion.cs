@@ -39,7 +39,10 @@ namespace BloodSeal.Combat
                 GlobalPosition = _hero.GlobalPosition + BaseOffset + new Vector2(0, hoverY);
             }
 
+            float petMult = ResearchManager.Instance?.GetPetMultiplier() ?? 1.0f;
             float shootInterval = (GameManager.Instance?.Profile?.Origin == StreetOriginType.GangLeader) ? 1.05f : 1.4f;
+            shootInterval = Mathf.Max(0.5f, shootInterval / petMult);
+
             _shootTimer += delta;
             if (_shootTimer >= shootInterval)
             {
@@ -72,7 +75,8 @@ namespace BloodSeal.Combat
                 var proj = ProjectileScene.Instantiate<BloodProjectile>();
                 proj.GlobalPosition = GlobalPosition;
                 proj.Target = nearest;
-                proj.Damage = GameManager.Instance.Stats.Atk * 0.4f;
+                float petMult = ResearchManager.Instance?.GetPetMultiplier() ?? 1.0f;
+                proj.Damage = GameManager.Instance.Stats.Atk * 0.4f * petMult;
                 GetTree().CurrentScene.AddChild(proj);
             }
         }

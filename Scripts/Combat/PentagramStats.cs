@@ -88,11 +88,17 @@ namespace BloodSeal.Combat
             }
         }
 
-        // Upgrade Costs (Base * 1.15^(level-1) - GDD Standardı, double currency)
-        public double GetAtkCost() => 20.0 * Math.Pow(1.15, AtkLevel - 1);
-        public double GetAtkSpeedCost() => 30.0 * Math.Pow(1.15, AtkSpeedLevel - 1);
-        public double GetLifestealCost() => 40.0 * Math.Pow(1.15, LifestealLevel - 1);
-        public double GetMaxHpCost() => 25.0 * Math.Pow(1.15, MaxHpLevel - 1);
-        public double GetRangeCost() => 20.0 * Math.Pow(1.15, RangeLevel - 1);
+        private double ApplyDiscount(double cost)
+        {
+            float discountMult = ResearchManager.Instance?.GetSealCostDiscountMultiplier() ?? 1.0f;
+            return cost * discountMult;
+        }
+
+        // Upgrade Costs (Base * 1.15^(level-1) with Research Discount)
+        public double GetAtkCost() => ApplyDiscount(20.0 * Math.Pow(1.15, AtkLevel - 1));
+        public double GetAtkSpeedCost() => ApplyDiscount(30.0 * Math.Pow(1.15, AtkSpeedLevel - 1));
+        public double GetLifestealCost() => ApplyDiscount(40.0 * Math.Pow(1.15, LifestealLevel - 1));
+        public double GetMaxHpCost() => ApplyDiscount(25.0 * Math.Pow(1.15, MaxHpLevel - 1));
+        public double GetRangeCost() => ApplyDiscount(20.0 * Math.Pow(1.15, RangeLevel - 1));
     }
 }

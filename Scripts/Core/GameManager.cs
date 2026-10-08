@@ -48,24 +48,11 @@ namespace BloodSeal.Core
                 Instance = this;
                 Stats.Profile = Profile;
             }
-            else
-            {
-                QueueFree();
-            }
+            else QueueFree();
         }
 
-        public override void _Ready()
-        {
-            LoadGame();
-        }
-
-        public override void _ExitTree()
-        {
-            if (Instance == this)
-            {
-                SaveGame();
-            }
-        }
+        public override void _Ready() => LoadGame();
+        public override void _ExitTree() { if (Instance == this) SaveGame(); }
 
         public void LoadGame()
         {
@@ -149,7 +136,8 @@ namespace BloodSeal.Core
             if (RagePercentage >= 100f && !IsRageActive)
             {
                 IsRageActive = true;
-                _rageActiveTimer = 10.0;
+                double bonus = ResearchManager.Instance?.GetBerserkBonusDuration() ?? 0.0;
+                _rageActiveTimer = 10.0 + bonus;
                 OnRageStateChanged?.Invoke(true);
                 return true;
             }
@@ -172,26 +160,17 @@ namespace BloodSeal.Core
             SaveGame();
         }
 
-        public void AdvanceWave()
-        {
-            SetWave(CurrentWave + 1, false);
-        }
+        public void AdvanceWave() => SetWave(CurrentWave + 1, false);
 
         public void NotifyHeroDied()
         {
             OnHeroDied?.Invoke();
-            // Boss veya zorlu dalgada ölürse güvenli farm dalgasına çekil
-            int retreatWave = Math.Max(1, CurrentWave - 1);
-            SetWave(retreatWave, true);
+            SetWave(Math.Max(1, CurrentWave - 1), true);
         }
 
         public void RetryBoss()
         {
-            if (IsInSafeFarmMode)
-            {
-                int bossWave = ((CurrentWave / 10) + 1) * 10;
-                SetWave(bossWave, false);
-            }
+            if (IsInSafeFarmMode) SetWave(((CurrentWave / 10) + 1) * 10, false);
         }
 
         public bool UpgradeAtk() => TryUpgradeStat(Stats.GetAtkCost(), () => Stats.AtkLevel++);
@@ -228,6 +207,11 @@ namespace BloodSeal.Core
             double mult = 1.0;
             if (Profile?.Origin == StreetOriginType.StreetThief) mult += 0.15;
             if (ActiveRune == RuneType.WealthGreed) mult += 0.20;
+            if (ResearchManager.Instance != null)
+            {
+                mult *= ResearchManager.Instance.GetGoldBountyMultiplier();
+                if (CurrentWave % 10 == 0) mult *= ResearchManager.Instance.GetBossTributeMultiplier();
+            }
             return baseGold * mult;
         }
 
@@ -238,7 +222,11 @@ namespace BloodSeal.Core
             Stats.ActiveRune = ActiveRune;
             HasEncounteredGate = true;
             HasClaimedGateReward = true;
-            if (approach == GateApproachType.BloodSeal) HasFirstLoreScroll = true;
+            if (approach == GateApproachType.BloodSeal)
+            {
+                HasFirstLoreScroll = true;
+                ResearchManager.Instance?.AddLoreScrolls(1);
+            }
             OnRuneEquipped?.Invoke(ActiveRune);
             OnStatsUpgraded?.Invoke();
             SaveGame();

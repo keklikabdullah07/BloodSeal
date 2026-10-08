@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 
 namespace BloodSeal.Core
@@ -14,13 +15,15 @@ namespace BloodSeal.Core
     {
         public const long MaxOfflineSeconds = 21600; // 6 saat (21.600 saniye)
 
-        public static OfflineEarningsResult Calculate(int highestWave, long lastSaveTimestamp, long currentTimestamp)
+        public static OfflineEarningsResult Calculate(int highestWave, long lastSaveTimestamp, long currentTimestamp, ResearchManager? research = null)
         {
             var result = new OfflineEarningsResult();
             if (lastSaveTimestamp <= 0 || currentTimestamp <= 0) return result;
 
+            research ??= ResearchManager.Instance;
             long rawElapsed = currentTimestamp - lastSaveTimestamp;
-            result.ElapsedSeconds = Math.Clamp(rawElapsed, 0, MaxOfflineSeconds);
+            long effectiveMaxSeconds = MaxOfflineSeconds + (research?.GetOfflineCapBonusSeconds() ?? 0);
+            result.ElapsedSeconds = Math.Clamp(rawElapsed, 0, effectiveMaxSeconds);
 
             // 60 saniyeden az sürede çevrimdışı kazancı tetiklenmez (anti-spam / debounce)
             if (result.ElapsedSeconds < 60) return result;
@@ -33,8 +36,9 @@ namespace BloodSeal.Core
             double goldPerWave = 5.0 * (10.0 + farmWave * 5.0);
             double estimatedWaveDurationSeconds = 15.0; // Güvenli farm dalga temizleme süresi
             double goldPerSecond = goldPerWave / estimatedWaveDurationSeconds;
+            double yieldMultiplier = research?.GetOfflineYieldMultiplier() ?? 1.0;
 
-            result.GoldEarned = Math.Round(result.ElapsedSeconds * goldPerSecond, 0);
+            result.GoldEarned = Math.Round(result.ElapsedSeconds * goldPerSecond * yieldMultiplier, 0);
             return result;
         }
     }

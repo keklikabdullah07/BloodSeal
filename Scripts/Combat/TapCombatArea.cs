@@ -40,6 +40,7 @@ namespace BloodSeal.Combat
             {
                 tapDmg *= 1.25f; // +%25 Tıklama Hasarı
             }
+            tapDmg *= ResearchManager.Instance?.GetTapDamageMultiplier() ?? 1.0f;
             bool isCrit = GameManager.Instance != null && GameManager.Instance.IsRageActive;
             if (isCrit) tapDmg *= 2f;
 

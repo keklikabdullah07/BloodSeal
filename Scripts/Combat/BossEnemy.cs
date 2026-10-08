@@ -75,6 +75,29 @@ namespace BloodSeal.Combat
             GameManager.Instance.AddGold(bossGold);
             FloatingTextManager.Instance?.SpawnGold(GlobalPosition + new Vector2(0, -40), bossGold);
 
+            // Kadim Parşömen Düşüşü: İlk kesimde (Milestone) garanti, tekrarlarda %10 şans
+            int wave = GameManager.Instance != null ? GameManager.Instance.CurrentWave : 10;
+            var rm = ResearchManager.Instance;
+            if (rm != null)
+            {
+                bool isMilestone = !rm.HasDefeatedMilestoneBoss(wave);
+                bool dropsScroll = isMilestone || (GD.Randf() <= 0.10f);
+
+                if (dropsScroll)
+                {
+                    rm.AddLoreScrolls(1);
+                    if (isMilestone)
+                    {
+                        rm.RecordMilestoneBossDefeated(wave);
+                    }
+                    FloatingTextManager.Instance?.SpawnMessage(
+                        GlobalPosition + new Vector2(0, -75),
+                        "📜 Kadim Parşömen Ele Geçirildi!",
+                        new Color(0.95f, 0.85f, 0.3f)
+                    );
+                }
+            }
+
             QueueFree();
         }
     }
