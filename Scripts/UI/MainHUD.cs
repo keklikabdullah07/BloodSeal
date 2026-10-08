@@ -29,6 +29,10 @@ namespace BloodSeal.UI
         [Export] public Button LibraryBtn;
         [Export] public LibraryModal LibraryModal;
 
+        // Awakening / Rebirth
+        [Export] public Button AwakeningBtn;
+        [Export] public AwakeningModal AwakeningModal;
+
         public override void _Ready()
         {
             if (GameManager.Instance != null)
@@ -49,6 +53,7 @@ namespace BloodSeal.UI
                 UpdateProfileUI(GameManager.Instance.Profile);
                 UpdateGateNotificationUI();
                 UpdateLibraryNotificationUI();
+                UpdateAwakeningNotificationUI();
                 UpdateAllStatButtons();
             }
 
@@ -57,11 +62,18 @@ namespace BloodSeal.UI
                 ResearchManager.Instance.OnLoreScrollsChanged += _ => UpdateLibraryNotificationUI();
             }
 
+            if (AwakeningManager.Instance != null)
+            {
+                AwakeningManager.Instance.OnAwakeningPointsChanged += _ => UpdateAwakeningNotificationUI();
+                AwakeningManager.Instance.OnAwakened += UpdateAwakeningNotificationUI;
+            }
+
             // Connect button signals
             RageButton?.Connect("pressed", Callable.From(OnRagePressed));
             RetryBossButton?.Connect("pressed", Callable.From(OnRetryBossPressed));
             GateNotificationBtn?.Connect("pressed", Callable.From(() => GateModal?.ShowModal()));
             LibraryBtn?.Connect("pressed", Callable.From(() => LibraryModal?.ShowModal()));
+            AwakeningBtn?.Connect("pressed", Callable.From(() => AwakeningModal?.ShowModal()));
             UpgradeAtkBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeAtk()));
             UpgradeAtkSpdBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeAtkSpeed()));
             UpgradeLifestealBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeLifesteal()));
@@ -104,6 +116,25 @@ namespace BloodSeal.UI
             LibraryBtn.Visible = isAvailable;
         }
 
+        private void UpdateAwakeningNotificationUI()
+        {
+            if (AwakeningBtn == null || GameManager.Instance == null) return;
+            bool isAvailable = GameManager.Instance.CurrentWave >= AwakeningManager.MinimumAwakeningWave
+                               || (AwakeningManager.Instance != null && (AwakeningManager.Instance.AwakeningPoints > 0 || AwakeningManager.Instance.TotalAwakenings > 0));
+
+            AwakeningBtn.Visible = isAvailable;
+            if (isAvailable && AwakeningManager.Instance != null)
+            {
+                int pending = AwakeningManager.Instance.CalculatePendingPoints(GameManager.Instance.CurrentWave);
+                if (pending > 0)
+                    AwakeningBtn.Text = $"🩸 UYANIŞ (+{pending} AP)";
+                else if (AwakeningManager.Instance.AwakeningPoints > 0)
+                    AwakeningBtn.Text = $"✨ MÜHÜRLER ({AwakeningManager.Instance.AwakeningPoints} AP)";
+                else
+                    AwakeningBtn.Text = "🩸 KIZIL UYANIŞ";
+            }
+        }
+
         private void UpdateProfileUI(CharacterProfile profile)
         {
             if (ProfileLabel != null && profile != null)
@@ -143,6 +174,7 @@ namespace BloodSeal.UI
             }
 
             UpdateLibraryNotificationUI();
+            UpdateAwakeningNotificationUI();
         }
 
         private void UpdateRageUI(float percentage)

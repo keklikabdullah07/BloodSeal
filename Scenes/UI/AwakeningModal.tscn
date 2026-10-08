@@ -1,0 +1,213 @@
+[gd_scene format=3 uid="uid://e4f5a6b7c8d90"]
+
+[ext_resource type="Script" path="res://Scripts/UI/AwakeningModal.cs" id="1_modal"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_awakening_modal"]
+bg_color = Color(0.06, 0.03, 0.05, 0.97)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.8, 0.25, 0.25, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.7)
+shadow_size = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ritual_box"]
+bg_color = Color(0.1, 0.04, 0.06, 0.8)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.6, 0.2, 0.2, 0.7)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tab"]
+bg_color = Color(0.14, 0.07, 0.1, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.5, 0.2, 0.3, 0.8)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="AwakeningModal" type="Control" node_paths=PackedStringArray("CloseBtn", "WarTabBtn", "MomentumTabBtn", "HeritageTabBtn", "HeaderStatusLabel", "RitualStatusLabel", "ExecuteAwakeningBtn", "TreeCardsContainer")]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_modal")
+CloseBtn = NodePath("Center/Panel/Margin/VBox/Header/CloseButton")
+WarTabBtn = NodePath("Center/Panel/Margin/VBox/Body/RightPanel/TabsContainer/WarTabBtn")
+MomentumTabBtn = NodePath("Center/Panel/Margin/VBox/Body/RightPanel/TabsContainer/MomentumTabBtn")
+HeritageTabBtn = NodePath("Center/Panel/Margin/VBox/Body/RightPanel/TabsContainer/HeritageTabBtn")
+HeaderStatusLabel = NodePath("Center/Panel/Margin/VBox/HeaderStatus")
+RitualStatusLabel = NodePath("Center/Panel/Margin/VBox/Body/LeftPanel/Margin/RitualVBox/RitualStatusLabel")
+ExecuteAwakeningBtn = NodePath("Center/Panel/Margin/VBox/Body/LeftPanel/Margin/RitualVBox/ExecuteAwakeningBtn")
+TreeCardsContainer = NodePath("Center/Panel/Margin/VBox/Body/RightPanel/Scroll/TreeCardsContainer")
+
+[node name="DarkOverlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.01, 0.02, 0.88)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(1020, 600)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_awakening_modal")
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Header" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Center/Panel/Margin/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+theme_override_font_sizes/font_size = 22
+text = "🩸 KIZIL UYANIŞ RİTÜELİ (AWAKENING & REBIRTH)"
+
+[node name="CloseButton" type="Button" parent="Center/Panel/Margin/VBox/Header"]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+text = "✕"
+
+[node name="HeaderStatus" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.4, 1)
+theme_override_font_sizes/font_size = 14
+text = "⚔️ Dalga: 1  |  ✨ AP: 0  |  📜 Uyanışlar: 0"
+
+[node name="Separator" type="HSeparator" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="Body" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="LeftPanel" type="PanelContainer" parent="Center/Panel/Margin/VBox/Body"]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ritual_box")
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel/Margin/VBox/Body/LeftPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="RitualVBox" type="VBoxContainer" parent="Center/Panel/Margin/VBox/Body/LeftPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="RitualTitle" type="Label" parent="Center/Panel/Margin/VBox/Body/LeftPanel/Margin/RitualVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.5, 0.5, 1)
+theme_override_font_sizes/font_size = 16
+text = "KIZIL KAN RİTÜELİ"
+
+[node name="RitualDesc" type="Label" parent="Center/Panel/Margin/VBox/Body/LeftPanel/Margin/RitualVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.75, 0.75, 1)
+theme_override_font_sizes/font_size = 12
+text = "Dünyevi altın ve geçici seviyeleri kurban et. Uyanış Puanı kazanarak Kadim Mühürleri sonsuza dek aç."
+autowrap_mode = 2
+
+[node name="RitualStatusLabel" type="Label" parent="Center/Panel/Margin/VBox/Body/LeftPanel/Margin/RitualVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 14
+text = "⚡ UYANIŞA HAZIR!"
+
+[node name="ResetRules" type="Label" parent="Center/Panel/Margin/VBox/Body/LeftPanel/Margin/RitualVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.65, 0.65, 0.65, 1)
+theme_override_font_sizes/font_size = 11
+text = "⚠️ SIFIRLANACAKLAR:
+• Mevcut Dalga (Dalga 1'e döner)
+• Pentagram Statları (Lv. 1'e döner)
+• Mevcut Altın (Taban bonusla başlar)
+
+🛡️ ASLA SIFIRLANMAYANLAR:
+• Tüm Uyanış Puanları & Mühürler
+• Kütüphane Araştırmaları
+• Malikane Kapısı ve Rünler"
+autowrap_mode = 2
+
+[node name="ExecuteAwakeningBtn" type="Button" parent="Center/Panel/Margin/VBox/Body/LeftPanel/Margin/RitualVBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "KIZIL UYANIŞI BAŞLAT"
+
+[node name="RightPanel" type="VBoxContainer" parent="Center/Panel/Margin/VBox/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="TabsContainer" type="HBoxContainer" parent="Center/Panel/Margin/VBox/Body/RightPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="WarTabBtn" type="Button" parent="Center/Panel/Margin/VBox/Body/RightPanel/TabsContainer"]
+custom_minimum_size = Vector2(130, 36)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_tab")
+text = "🗡️ Savaş Mührü"
+
+[node name="MomentumTabBtn" type="Button" parent="Center/Panel/Margin/VBox/Body/RightPanel/TabsContainer"]
+custom_minimum_size = Vector2(130, 36)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_tab")
+text = "⚡ Hız & Akış"
+
+[node name="HeritageTabBtn" type="Button" parent="Center/Panel/Margin/VBox/Body/RightPanel/TabsContainer"]
+custom_minimum_size = Vector2(130, 36)
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_tab")
+text = "🩸 Kan Mirası"
+
+[node name="Scroll" type="ScrollContainer" parent="Center/Panel/Margin/VBox/Body/RightPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TreeCardsContainer" type="VBoxContainer" parent="Center/Panel/Margin/VBox/Body/RightPanel/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8

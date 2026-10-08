@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://Scripts/UI/OfflineProgressModal.cs" id="3_offline"]
 [ext_resource type="Script" path="res://Scripts/UI/ManorGateModal.cs" id="4_gate"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/LibraryModal.tscn" id="5_lib"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/AwakeningModal.tscn" id="6_awakening"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vig"]
 shader = ExtResource("2_vignette")
@@ -66,7 +67,7 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[node name="MainHUD" type="CanvasLayer" node_paths=PackedStringArray("GoldLabel", "WaveLabel", "ProfileLabel", "RageButton", "RageProgressBar", "RetryBossButton", "RageVignetteRect", "UpgradeAtkBtn", "UpgradeAtkSpdBtn", "UpgradeLifestealBtn", "UpgradeMaxHpBtn", "UpgradeRangeBtn", "GateNotificationBtn", "GateModal", "LibraryBtn", "LibraryModal")]
+[node name="MainHUD" type="CanvasLayer" node_paths=PackedStringArray("GoldLabel", "WaveLabel", "ProfileLabel", "RageButton", "RageProgressBar", "RetryBossButton", "RageVignetteRect", "UpgradeAtkBtn", "UpgradeAtkSpdBtn", "UpgradeLifestealBtn", "UpgradeMaxHpBtn", "UpgradeRangeBtn", "GateNotificationBtn", "GateModal", "LibraryBtn", "LibraryModal", "AwakeningBtn", "AwakeningModal")]
 script = ExtResource("1_hud")
 GoldLabel = NodePath("TopBar/Margin/HBox/GoldLabel")
 WaveLabel = NodePath("TopBar/Margin/HBox/WaveLabel")
@@ -84,6 +85,8 @@ GateNotificationBtn = NodePath("TopBar/Margin/HBox/GateNotificationButton")
 GateModal = NodePath("GateModal")
 LibraryBtn = NodePath("TopBar/Margin/HBox/LibraryNotificationButton")
 LibraryModal = NodePath("LibraryModal")
+AwakeningBtn = NodePath("TopBar/Margin/HBox/AwakeningNotificationButton")
+AwakeningModal = NodePath("AwakeningModal")
 
 [node name="RageVignette" type="ColorRect" parent="."]
 visible = false
@@ -149,6 +152,14 @@ theme_override_colors/font_color = Color(0.9, 0.85, 0.4, 1)
 theme_override_font_sizes/font_size = 15
 theme_override_styles/normal = SubResource("StyleBoxFlat_gate_btn")
 text = "🏛️ KÜTÜPHANE"
+
+[node name="AwakeningNotificationButton" type="Button" parent="TopBar/Margin/HBox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_gate_btn")
+text = "🩸 UYANIŞ"
 
 [node name="Spacer2" type="Control" parent="TopBar/Margin/HBox"]
 layout_mode = 2
@@ -471,3 +482,5 @@ theme_override_font_sizes/font_size = 16
 text = "Daha Sonra Karar Ver"
 
 [node name="LibraryModal" parent="." instance=ExtResource("5_lib")]
+
+[node name="AwakeningModal" parent="." instance=ExtResource("6_awakening")]
