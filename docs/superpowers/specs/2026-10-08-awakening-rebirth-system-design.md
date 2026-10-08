@@ -40,9 +40,9 @@ $$FinalPoints = \lfloor BasePoints \times (1.0 + PrimordialHarvestBonus) \rfloor
 | **Dalga 25** | $2$ AP | Minyon dalgası temizlendi |
 | **Dalga 30** | $3$ AP | 3. Boss kesildi |
 | **Dalga 40** | $6$ AP | Hızlanma aşaması |
-| **Dalga 50** | $10$ AP | Orta aşama prestij |
-| **Dalga 75** | $21$ AP | Derin ilerleme |
-| **Dalga 100** | $36$ AP | Usta kademe prestij |
+| **Dalga 50** | $9$ AP | Orta aşama prestij |
+| **Dalga 75** | $17$ AP | Derin ilerleme |
+| **Dalga 100** | $25$ AP | Usta kademe prestij |
 
 ### C. Sıfırlama Kapsamı (Soft Reset vs Kalıcı İlerleme)
 
