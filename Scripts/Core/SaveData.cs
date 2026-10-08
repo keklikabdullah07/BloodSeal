@@ -30,5 +30,10 @@ namespace BloodSeal.Core
         public bool HasEncounteredGate { get; set; } = false;
         public bool HasClaimedGateReward { get; set; } = false;
         public bool HasFirstLoreScroll { get; set; } = false;
+
+        // Manor Library Research Progression (GDD Section 2 & 4.4)
+        public int LoreScrolls { get; set; } = 0;
+        public System.Collections.Generic.Dictionary<string, int> ResearchLevels { get; set; } = new();
+        public System.Collections.Generic.List<int> DefeatedMilestoneBosses { get; set; } = new();
     }
 }

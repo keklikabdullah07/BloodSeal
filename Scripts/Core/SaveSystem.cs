@@ -14,36 +14,69 @@ namespace BloodSeal.Core
 
         public static SaveData CaptureSaveData(GameManager gm)
         {
-            if (gm == null) return new SaveData();
-
-            return new SaveData
+            var data = new SaveData();
+            if (gm != null)
             {
-                Version = CurrentSaveVersion,
-                Gold = gm.Gold,
-                CurrentWave = gm.CurrentWave,
-                HighestWave = gm.HighestWave,
-                IsInSafeFarmMode = gm.IsInSafeFarmMode,
-                PlayerName = gm.Profile?.PlayerName ?? "Valerius",
-                Bloodline = gm.Profile?.Bloodline ?? BloodlineType.BoneWeaver,
-                Origin = gm.Profile?.Origin ?? StreetOriginType.PitFighter,
-                HasCompletedPrologue = gm.Profile?.HasCompletedPrologue ?? false,
-                AtkLevel = gm.Stats?.AtkLevel ?? 1,
-                AtkSpeedLevel = gm.Stats?.AtkSpeedLevel ?? 1,
-                LifestealLevel = gm.Stats?.LifestealLevel ?? 1,
-                MaxHpLevel = gm.Stats?.MaxHpLevel ?? 1,
-                RangeLevel = gm.Stats?.RangeLevel ?? 1,
-                LastSaveTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                ActiveRune = gm.ActiveRune,
-                SelectedGateApproach = gm.SelectedGateApproach,
-                HasEncounteredGate = gm.HasEncounteredGate,
-                HasClaimedGateReward = gm.HasClaimedGateReward,
-                HasFirstLoreScroll = gm.HasFirstLoreScroll
-            };
+                data.Version = CurrentSaveVersion;
+                data.Gold = gm.Gold;
+                data.CurrentWave = gm.CurrentWave;
+                data.HighestWave = gm.HighestWave;
+                data.IsInSafeFarmMode = gm.IsInSafeFarmMode;
+                data.PlayerName = gm.Profile?.PlayerName ?? "Valerius";
+                data.Bloodline = gm.Profile?.Bloodline ?? BloodlineType.BoneWeaver;
+                data.Origin = gm.Profile?.Origin ?? StreetOriginType.PitFighter;
+                data.HasCompletedPrologue = gm.Profile?.HasCompletedPrologue ?? false;
+                data.AtkLevel = gm.Stats?.AtkLevel ?? 1;
+                data.AtkSpeedLevel = gm.Stats?.AtkSpeedLevel ?? 1;
+                data.LifestealLevel = gm.Stats?.LifestealLevel ?? 1;
+                data.MaxHpLevel = gm.Stats?.MaxHpLevel ?? 1;
+                data.RangeLevel = gm.Stats?.RangeLevel ?? 1;
+                data.LastSaveTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                data.ActiveRune = gm.ActiveRune;
+                data.SelectedGateApproach = gm.SelectedGateApproach;
+                data.HasEncounteredGate = gm.HasEncounteredGate;
+                data.HasClaimedGateReward = gm.HasClaimedGateReward;
+                data.HasFirstLoreScroll = gm.HasFirstLoreScroll;
+            }
+
+            var rm = ResearchManager.Instance;
+            if (rm != null)
+            {
+                data.LoreScrolls = rm.LoreScrolls;
+                data.ResearchLevels = rm.GetAllLevels();
+                data.DefeatedMilestoneBosses = rm.GetDefeatedMilestones();
+            }
+
+            return data;
         }
 
         public static void ApplySaveData(SaveData data, GameManager gm)
         {
-            if (data == null || gm == null) return;
+            if (data == null) return;
+
+            var rm = ResearchManager.Instance;
+            if (rm != null)
+            {
+                rm.Reset();
+                if (data.LoreScrolls > 0) rm.AddLoreScrolls(data.LoreScrolls);
+                if (data.ResearchLevels != null)
+                {
+                    foreach (var kvp in data.ResearchLevels)
+                        rm.SetResearchLevel(kvp.Key, kvp.Value);
+                }
+                if (data.DefeatedMilestoneBosses != null)
+                {
+                    foreach (int w in data.DefeatedMilestoneBosses)
+                        rm.RecordMilestoneBossDefeated(w);
+                }
+                // Geriye dönük uyumluluk: Kapıdan parşömen kazanılmışsa ve liste boşsa
+                if (data.HasFirstLoreScroll && rm.LoreScrolls == 0 && data.ResearchLevels?.Count == 0)
+                {
+                    rm.AddLoreScrolls(1);
+                }
+            }
+
+            if (gm == null) return;
 
             gm.SetProfile(data.PlayerName, data.Bloodline, data.Origin);
             if (gm.Profile != null)

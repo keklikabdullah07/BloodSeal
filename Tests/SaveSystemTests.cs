@@ -104,5 +104,30 @@ namespace BloodSeal.Tests
             Assert.InRange(result.GoldEarned, 131900, 132100);
             Assert.True(result.HasClaimableEarnings);
         }
+
+        [Fact]
+        public void SaveData_SerializesAndDeserializes_ResearchFields()
+        {
+            var data = new SaveData
+            {
+                LoreScrolls = 7,
+                ResearchLevels = new System.Collections.Generic.Dictionary<string, int>
+                {
+                    ["Econ_GoldBounty"] = 4,
+                    ["Mem_OfflineCap"] = 2
+                },
+                DefeatedMilestoneBosses = new System.Collections.Generic.List<int> { 10, 20 }
+            };
+
+            string json = JsonSerializer.Serialize(data);
+            var deserialized = JsonSerializer.Deserialize<SaveData>(json);
+
+            Assert.NotNull(deserialized);
+            Assert.Equal(7, deserialized.LoreScrolls);
+            Assert.Equal(4, deserialized.ResearchLevels["Econ_GoldBounty"]);
+            Assert.Equal(2, deserialized.ResearchLevels["Mem_OfflineCap"]);
+            Assert.Contains(10, deserialized.DefeatedMilestoneBosses);
+            Assert.Contains(20, deserialized.DefeatedMilestoneBosses);
+        }
     }
 }
