@@ -61,5 +61,38 @@ namespace BloodSeal.Tests
             Assert.Equal(0.20f, rm.GetDamageBonus(), 0.001f);
             Assert.Equal(0.15f, rm.GetHpBonus(), 0.001f);
         }
+
+        [Fact]
+        public void OfflineProgress_Includes_CryptKey_Relic_Bonus()
+        {
+            var rm = new RelicManager();
+            long now = 10000;
+            long last = now - 3600; // 1 hour elapsed
+
+            var baseResult = OfflineProgressCalculator.Calculate(20, last, now, null, rm);
+            
+            rm.UnlockRelic("Relic_CryptKey");
+            var boostedResult = OfflineProgressCalculator.Calculate(20, last, now, null, rm);
+
+            Assert.True(boostedResult.GoldEarned > baseResult.GoldEarned);
+            // CryptKey is +10% offline earnings
+            Assert.Equal(Math.Round(baseResult.GoldEarned * 1.10), boostedResult.GoldEarned);
+        }
+
+        [Fact]
+        public void AwakeningManager_Includes_ExtinguishedLantern_Relic_Bonus()
+        {
+            var rm = new RelicManager();
+            RelicManager.SetInstance(rm);
+
+            var am = new AwakeningManager();
+            AwakeningManager.SetInstance(am);
+
+            Assert.Equal(0f, am.GetPointsMultiplier());
+
+            rm.UnlockRelic("Relic_ExtinguishedLantern");
+            Assert.Equal(0.10f, am.GetPointsMultiplier(), 0.001f);
+        }
     }
 }
+

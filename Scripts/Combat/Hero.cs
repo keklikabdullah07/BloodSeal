@@ -155,7 +155,8 @@ namespace BloodSeal.Combat
 
                 // Rage accumulation
                 float rageMult = AwakeningManager.Instance?.GetRageGainMultiplier() ?? 1.0f;
-                GameManager.Instance.AddRage(2.0f * rageMult);
+                float relicRage = RelicManager.Instance?.GetRageGainBonus() ?? 0f;
+                GameManager.Instance.AddRage(2.0f * rageMult * (1.0f + relicRage));
             }
         }
 

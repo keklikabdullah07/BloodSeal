@@ -15,12 +15,14 @@ namespace BloodSeal.Core
     {
         public const long MaxOfflineSeconds = 21600; // 6 saat (21.600 saniye)
 
-        public static OfflineEarningsResult Calculate(int highestWave, long lastSaveTimestamp, long currentTimestamp, ResearchManager? research = null)
+        public static OfflineEarningsResult Calculate(int highestWave, long lastSaveTimestamp, long currentTimestamp, ResearchManager? research = null, RelicManager? relics = null)
         {
             var result = new OfflineEarningsResult();
             if (lastSaveTimestamp <= 0 || currentTimestamp <= 0) return result;
 
             research ??= ResearchManager.Instance;
+            relics ??= RelicManager.Instance;
+
             long rawElapsed = currentTimestamp - lastSaveTimestamp;
             long effectiveMaxSeconds = MaxOfflineSeconds + (research?.GetOfflineCapBonusSeconds() ?? 0);
             result.ElapsedSeconds = Math.Clamp(rawElapsed, 0, effectiveMaxSeconds);
@@ -37,8 +39,10 @@ namespace BloodSeal.Core
             double estimatedWaveDurationSeconds = 15.0; // Güvenli farm dalga temizleme süresi
             double goldPerSecond = goldPerWave / estimatedWaveDurationSeconds;
             double yieldMultiplier = research?.GetOfflineYieldMultiplier() ?? 1.0;
+            double relicBonus = relics?.GetOfflineIncomeBonus() ?? 0.0;
+            double totalYield = yieldMultiplier * (1.0 + relicBonus);
 
-            result.GoldEarned = Math.Round(result.ElapsedSeconds * goldPerSecond * yieldMultiplier, 0);
+            result.GoldEarned = Math.Round(result.ElapsedSeconds * goldPerSecond * totalYield, 0);
             return result;
         }
     }

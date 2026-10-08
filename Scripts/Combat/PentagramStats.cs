@@ -32,6 +32,8 @@ namespace BloodSeal.Combat
                     val *= 1.10f; // Kan Zırhı Rünü (+%10 ATK)
                 if (AwakeningManager.Instance != null)
                     val *= AwakeningManager.Instance.GetDamageMultiplier();
+                if (RelicManager.Instance != null)
+                    val *= (1.0f + RelicManager.Instance.GetDamageBonus());
                 return val;
             }
         }
@@ -47,6 +49,8 @@ namespace BloodSeal.Combat
                     val *= 1.15f; // -%15 Bekleme süresi eşdeğeri hız
                 if (ActiveRune == RuneType.ShadowSpeed)
                     val *= 1.10f; // Gölge Hızı Rünü (+%10 Saldırı Hızı)
+                if (RelicManager.Instance != null)
+                    val *= (1.0f + RelicManager.Instance.GetAttackSpeedBonus());
                 return Math.Min(3.5f, val);
             }
         }
@@ -62,6 +66,8 @@ namespace BloodSeal.Combat
                     val += 2.5f; // Ruh Çalma Rünü (+%2.5 Can Çalma)
                 if (AwakeningManager.Instance != null)
                     val += AwakeningManager.Instance.GetBonusLifesteal();
+                if (RelicManager.Instance != null)
+                    val += RelicManager.Instance.GetLifestealBonus();
                 return Math.Min(25f, val);
             }
         }
@@ -77,6 +83,8 @@ namespace BloodSeal.Combat
                     val *= 1.10f; // Kan Zırhı Rünü (+%10 Max HP)
                 if (AwakeningManager.Instance != null)
                     val *= AwakeningManager.Instance.GetMaxHpMultiplier();
+                if (RelicManager.Instance != null)
+                    val *= (1.0f + RelicManager.Instance.GetHpBonus());
                 return val;
             }
         }

@@ -204,6 +204,7 @@ namespace BloodSeal.Core
                 mult *= ResearchManager.Instance.GetGoldBountyMultiplier();
                 if (CurrentWave % 10 == 0) mult *= ResearchManager.Instance.GetBossTributeMultiplier();
             }
+            if (RelicManager.Instance != null) mult *= (1.0 + RelicManager.Instance.GetGoldBonus());
             return baseGold * mult;
         }
 

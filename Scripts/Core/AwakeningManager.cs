@@ -101,6 +101,6 @@ namespace BloodSeal.Core
         public float GetWaveLeapChance() => AwakeningDatabase.GetNode("Flow_WaveLeap")?.GetEffectValue(GetSealLevel("Flow_WaveLeap")) ?? 0f;
         public float GetRageGainMultiplier() => 1.0f + (AwakeningDatabase.GetNode("Flow_CrimsonSurge")?.GetEffectValue(GetSealLevel("Flow_CrimsonSurge")) ?? 0f);
         public double GetStartingGold() => AwakeningDatabase.GetNode("Heritage_BloodRecall")?.GetEffectValue(GetSealLevel("Heritage_BloodRecall")) ?? 0.0;
-        public float GetPointsMultiplier() => AwakeningDatabase.GetNode("Heritage_PrimordialHarvest")?.GetEffectValue(GetSealLevel("Heritage_PrimordialHarvest")) ?? 0f;
+        public float GetPointsMultiplier() => (AwakeningDatabase.GetNode("Heritage_PrimordialHarvest")?.GetEffectValue(GetSealLevel("Heritage_PrimordialHarvest")) ?? 0f) + (RelicManager.Instance?.GetAwakeningBonus() ?? 0f);
     }
 }

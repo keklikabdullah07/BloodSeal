@@ -41,6 +41,7 @@ namespace BloodSeal.Combat
                 tapDmg *= 1.25f; // +%25 Tıklama Hasarı
             }
             tapDmg *= ResearchManager.Instance?.GetTapDamageMultiplier() ?? 1.0f;
+            tapDmg *= (1.0f + (RelicManager.Instance?.GetTapDamageBonus() ?? 0f));
             bool isCrit = GameManager.Instance != null && GameManager.Instance.IsRageActive;
             if (isCrit) tapDmg *= 2f;
 
@@ -52,7 +53,8 @@ namespace BloodSeal.Combat
             if (GameManager.Instance != null)
             {
                 float rageMult = AwakeningManager.Instance?.GetRageGainMultiplier() ?? 1.0f;
-                GameManager.Instance.AddRage(1.5f * rageMult);
+                float relicRage = RelicManager.Instance?.GetRageGainBonus() ?? 0f;
+                GameManager.Instance.AddRage(1.5f * rageMult * (1.0f + relicRage));
             }
 
             // Visual tap ripple, SFX & light screen shake (outside Berserk)

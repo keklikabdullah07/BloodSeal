@@ -89,10 +89,11 @@ namespace BloodSeal.Combat
                     if (isMilestone)
                     {
                         rm.RecordMilestoneBossDefeated(wave);
+                        RelicManager.Instance?.UnlockRelicForWave(wave);
                     }
                     FloatingTextManager.Instance?.SpawnMessage(
                         GlobalPosition + new Vector2(0, -75),
-                        "📜 Kadim Parşömen Ele Geçirildi!",
+                        isMilestone ? "📜 Kadim Eser & Parşömen Bulundu!" : "📜 Kadim Parşömen Ele Geçirildi!",
                         new Color(0.95f, 0.85f, 0.3f)
                     );
                 }
