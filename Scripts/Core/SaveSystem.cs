@@ -47,6 +47,14 @@ namespace BloodSeal.Core
                 data.DefeatedMilestoneBosses = rm.GetDefeatedMilestones();
             }
 
+            var am = AwakeningManager.Instance;
+            if (am != null)
+            {
+                data.AwakeningPoints = am.AwakeningPoints;
+                data.TotalAwakenings = am.TotalAwakenings;
+                data.AwakeningLevels = am.GetAllLevels();
+            }
+
             return data;
         }
 
@@ -73,6 +81,19 @@ namespace BloodSeal.Core
                 if (data.HasFirstLoreScroll && rm.LoreScrolls == 0 && data.ResearchLevels?.Count == 0)
                 {
                     rm.AddLoreScrolls(1);
+                }
+            }
+
+            var am = AwakeningManager.Instance;
+            if (am != null)
+            {
+                am.Reset();
+                if (data.AwakeningPoints > 0) am.AddAwakeningPoints(data.AwakeningPoints);
+                am.SetTotalAwakenings(data.TotalAwakenings);
+                if (data.AwakeningLevels != null)
+                {
+                    foreach (var kvp in data.AwakeningLevels)
+                        am.SetSealLevel(kvp.Key, kvp.Value);
                 }
             }
 

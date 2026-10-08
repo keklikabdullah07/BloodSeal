@@ -129,5 +129,29 @@ namespace BloodSeal.Tests
             Assert.Contains(10, deserialized.DefeatedMilestoneBosses);
             Assert.Contains(20, deserialized.DefeatedMilestoneBosses);
         }
+
+        [Fact]
+        public void SaveData_SerializesAndDeserializes_AwakeningFields()
+        {
+            var data = new SaveData
+            {
+                AwakeningPoints = 15,
+                TotalAwakenings = 3,
+                AwakeningLevels = new System.Collections.Generic.Dictionary<string, int>
+                {
+                    ["War_PrimordialMight"] = 4,
+                    ["Flow_WaveLeap"] = 2
+                }
+            };
+
+            string json = JsonSerializer.Serialize(data);
+            var deserialized = JsonSerializer.Deserialize<SaveData>(json);
+
+            Assert.NotNull(deserialized);
+            Assert.Equal(15, deserialized.AwakeningPoints);
+            Assert.Equal(3, deserialized.TotalAwakenings);
+            Assert.Equal(4, deserialized.AwakeningLevels["War_PrimordialMight"]);
+            Assert.Equal(2, deserialized.AwakeningLevels["Flow_WaveLeap"]);
+        }
     }
 }

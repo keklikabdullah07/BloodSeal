@@ -35,5 +35,10 @@ namespace BloodSeal.Core
         public int LoreScrolls { get; set; } = 0;
         public System.Collections.Generic.Dictionary<string, int> ResearchLevels { get; set; } = new();
         public System.Collections.Generic.List<int> DefeatedMilestoneBosses { get; set; } = new();
+
+        // Awakening / Rebirth Progression (GDD Section 4.5)
+        public int AwakeningPoints { get; set; } = 0;
+        public int TotalAwakenings { get; set; } = 0;
+        public System.Collections.Generic.Dictionary<string, int> AwakeningLevels { get; set; } = new();
     }
 }

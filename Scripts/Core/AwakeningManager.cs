@@ -30,6 +30,7 @@ namespace BloodSeal.Core
 
         public int GetSealLevel(string id) => _sealLevels.TryGetValue(id, out int lvl) ? lvl : 0;
         public void SetSealLevel(string id, int level) => _sealLevels[id] = level;
+        public void SetTotalAwakenings(int count) => TotalAwakenings = Math.Max(0, count);
         public Dictionary<string, int> GetAllLevels() => new(_sealLevels);
 
         public void AddAwakeningPoints(int points)
