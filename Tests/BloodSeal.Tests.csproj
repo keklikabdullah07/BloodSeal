@@ -27,6 +27,8 @@
     <Compile Include="..\Scripts\Core\ResearchManager.cs" Link="Core\ResearchManager.cs" />
     <Compile Include="..\Scripts\Core\AwakeningModels.cs" Link="Core\AwakeningModels.cs" />
     <Compile Include="..\Scripts\Core\AwakeningManager.cs" Link="Core\AwakeningManager.cs" />
+    <Compile Include="..\Scripts\Core\RelicModels.cs" Link="Core\RelicModels.cs" />
+    <Compile Include="..\Scripts\Core\RelicManager.cs" Link="Core\RelicManager.cs" />
     <Compile Include="..\Scripts\Combat\PentagramStats.cs" Link="Combat\PentagramStats.cs" />
   </ItemGroup>
 
