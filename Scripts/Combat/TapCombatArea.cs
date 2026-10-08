@@ -51,7 +51,8 @@ namespace BloodSeal.Combat
 
             if (GameManager.Instance != null)
             {
-                GameManager.Instance.AddRage(1.5f);
+                float rageMult = AwakeningManager.Instance?.GetRageGainMultiplier() ?? 1.0f;
+                GameManager.Instance.AddRage(1.5f * rageMult);
             }
 
             // Visual tap ripple, SFX & light screen shake (outside Berserk)

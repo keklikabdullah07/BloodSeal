@@ -57,32 +57,24 @@ namespace BloodSeal.Core
         public void LoadGame()
         {
             var data = SaveSystem.Load();
-            if (data != null)
+            if (data == null) return;
+            var offline = SaveSystem.CalculateOfflineEarnings(data);
+            SaveSystem.ApplySaveData(data, this);
+            if (offline != null && offline.HasClaimableEarnings)
             {
-                var offline = SaveSystem.CalculateOfflineEarnings(data);
-                SaveSystem.ApplySaveData(data, this);
-                if (offline != null && offline.HasClaimableEarnings)
-                {
-                    PendingOfflineEarnings = offline;
-                    Callable.From(() => OnOfflineEarningsReady?.Invoke(offline)).CallDeferred();
-                }
+                PendingOfflineEarnings = offline;
+                Callable.From(() => OnOfflineEarningsReady?.Invoke(offline)).CallDeferred();
             }
         }
 
-        public void SaveGame()
-        {
-            var data = SaveSystem.CaptureSaveData(this);
-            SaveSystem.SaveAtomic(data);
-        }
+        public void SaveGame() => SaveSystem.SaveAtomic(SaveSystem.CaptureSaveData(this));
 
         public void ClaimOfflineEarnings()
         {
-            if (PendingOfflineEarnings != null && PendingOfflineEarnings.GoldEarned > 0)
-            {
-                AddGold(PendingOfflineEarnings.GoldEarned);
-                PendingOfflineEarnings = null;
-                SaveGame();
-            }
+            if (PendingOfflineEarnings == null || PendingOfflineEarnings.GoldEarned <= 0) return;
+            AddGold(PendingOfflineEarnings.GoldEarned);
+            PendingOfflineEarnings = null;
+            SaveGame();
         }
 
         public override void _Process(double delta)
@@ -228,6 +220,23 @@ namespace BloodSeal.Core
                 ResearchManager.Instance?.AddLoreScrolls(1);
             }
             OnRuneEquipped?.Invoke(ActiveRune);
+            OnStatsUpgraded?.Invoke();
+            SaveGame();
+        }
+
+        public void ResetForAwakening()
+        {
+            Stats.ResetToDefaults();
+            CurrentWave = 1;
+            IsInSafeFarmMode = false;
+            double startingBonus = AwakeningManager.Instance?.GetStartingGold() ?? 0.0;
+            Gold = 100.0 + startingBonus;
+            RagePercentage = 0f;
+            IsRageActive = false;
+            OnGoldChanged?.Invoke(Gold);
+            OnWaveChanged?.Invoke(CurrentWave, false);
+            OnRageChanged?.Invoke(0f);
+            OnRageStateChanged?.Invoke(false);
             OnStatsUpgraded?.Invoke();
             SaveGame();
         }

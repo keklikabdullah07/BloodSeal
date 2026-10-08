@@ -154,7 +154,8 @@ namespace BloodSeal.Combat
                 Heal(heal);
 
                 // Rage accumulation
-                GameManager.Instance.AddRage(2.0f);
+                float rageMult = AwakeningManager.Instance?.GetRageGainMultiplier() ?? 1.0f;
+                GameManager.Instance.AddRage(2.0f * rageMult);
             }
         }
 

@@ -72,7 +72,18 @@ namespace BloodSeal.Combat
                 if (activeEnemies.Count == 0)
                 {
                     _isWaveActive = false;
+                    int curWave = GameManager.Instance.CurrentWave;
                     GameManager.Instance.AdvanceWave();
+
+                    // Wave Leap (Dalga Sıçraması - non-boss only)
+                    if (curWave % 10 != 0 && (curWave + 1) % 10 != 0)
+                    {
+                        float leapChance = AwakeningManager.Instance?.GetWaveLeapChance() ?? 0.0f;
+                        if (leapChance > 0f && GD.Randf() < leapChance)
+                        {
+                            GameManager.Instance.AdvanceWave();
+                        }
+                    }
                 }
             }
         }

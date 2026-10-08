@@ -20,7 +20,7 @@ namespace BloodSeal.Combat
             Profile = profile;
         }
 
-        // Stat Calculations (Base + Level Scaling + Bloodline/Origin Passives + Runes)
+        // Stat Calculations (Base + Level Scaling + Bloodline/Origin Passives + Runes + Awakening)
         public float Atk
         {
             get
@@ -30,6 +30,8 @@ namespace BloodSeal.Combat
                     val *= 1.10f; // +%10 ATK
                 if (ActiveRune == RuneType.BloodArmor)
                     val *= 1.10f; // Kan Zırhı Rünü (+%10 ATK)
+                if (AwakeningManager.Instance != null)
+                    val *= AwakeningManager.Instance.GetDamageMultiplier();
                 return val;
             }
         }
@@ -58,6 +60,8 @@ namespace BloodSeal.Combat
                     val += 2.5f; // +%2.5 Doğuştan Can Çalma
                 if (ActiveRune == RuneType.SoulLeech)
                     val += 2.5f; // Ruh Çalma Rünü (+%2.5 Can Çalma)
+                if (AwakeningManager.Instance != null)
+                    val += AwakeningManager.Instance.GetBonusLifesteal();
                 return Math.Min(25f, val);
             }
         }
@@ -71,6 +75,8 @@ namespace BloodSeal.Combat
                     val *= 1.10f; // +%10 Maksimum Can
                 if (ActiveRune == RuneType.BloodArmor)
                     val *= 1.10f; // Kan Zırhı Rünü (+%10 Max HP)
+                if (AwakeningManager.Instance != null)
+                    val *= AwakeningManager.Instance.GetMaxHpMultiplier();
                 return val;
             }
         }
@@ -86,6 +92,15 @@ namespace BloodSeal.Combat
                     val += 25f; // Gölge Hızı Rünü (+25px Menzil)
                 return Math.Min(350f, val);
             }
+        }
+
+        public void ResetToDefaults()
+        {
+            AtkLevel = 1;
+            AtkSpeedLevel = 1;
+            LifestealLevel = 1;
+            MaxHpLevel = 1;
+            RangeLevel = 1;
         }
 
         private double ApplyDiscount(double cost)

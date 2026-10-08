@@ -69,5 +69,26 @@ namespace BloodSeal.Tests
             Assert.Equal(2, manager.GetSealLevel("War_PrimordialMight"));
             Assert.Equal(1.30f, manager.GetDamageMultiplier(), 0.001f);
         }
+
+        [Fact]
+        public void PentagramStats_Incorporates_Awakening_Damage_And_Hp()
+        {
+            var manager = new AwakeningManager();
+            AwakeningManager.SetInstance(manager);
+            manager.AddAwakeningPoints(5);
+            manager.TryUpgradeSeal("War_PrimordialMight"); // lvl 1 -> +15%
+            manager.TryUpgradeSeal("War_BloodAegis");       // lvl 1 -> +15%
+            manager.TryUpgradeSeal("War_VampiricThirst");   // lvl 1 -> +0.5%
+
+            var stats = new BloodSeal.Combat.PentagramStats();
+            Assert.True(stats.Atk > 10.0f);
+            Assert.True(stats.MaxHp > 100.0f);
+            Assert.True(stats.LifestealPercent >= 1.5f);
+
+            stats.AtkLevel = 10;
+            stats.ResetToDefaults();
+            Assert.Equal(1, stats.AtkLevel);
+            Assert.Equal(1, stats.MaxHpLevel);
+        }
     }
 }
