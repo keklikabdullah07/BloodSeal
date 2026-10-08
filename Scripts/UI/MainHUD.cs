@@ -33,6 +33,12 @@ namespace BloodSeal.UI
         [Export] public Button AwakeningBtn;
         [Export] public AwakeningModal AwakeningModal;
 
+        // Lore Relics Vault
+        [Export] public Button RelicVaultBtn;
+        [Export] public RelicVaultModal RelicVaultModal;
+
+        private Action<RelicDefinition> _onRelicUnlockedHandler;
+
         public override void _Ready()
         {
             if (GameManager.Instance != null)
@@ -54,6 +60,7 @@ namespace BloodSeal.UI
                 UpdateGateNotificationUI();
                 UpdateLibraryNotificationUI();
                 UpdateAwakeningNotificationUI();
+                UpdateRelicVaultNotificationUI();
                 UpdateAllStatButtons();
             }
 
@@ -68,12 +75,19 @@ namespace BloodSeal.UI
                 AwakeningManager.Instance.OnAwakened += UpdateAwakeningNotificationUI;
             }
 
+            if (RelicManager.Instance != null)
+            {
+                _onRelicUnlockedHandler = _ => UpdateRelicVaultNotificationUI();
+                RelicManager.Instance.OnRelicUnlocked += _onRelicUnlockedHandler;
+            }
+
             // Connect button signals
             RageButton?.Connect("pressed", Callable.From(OnRagePressed));
             RetryBossButton?.Connect("pressed", Callable.From(OnRetryBossPressed));
             GateNotificationBtn?.Connect("pressed", Callable.From(() => GateModal?.ShowModal()));
             LibraryBtn?.Connect("pressed", Callable.From(() => LibraryModal?.ShowModal()));
             AwakeningBtn?.Connect("pressed", Callable.From(() => AwakeningModal?.ShowModal()));
+            RelicVaultBtn?.Connect("pressed", Callable.From(() => RelicVaultModal?.ShowModal()));
             UpgradeAtkBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeAtk()));
             UpgradeAtkSpdBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeAtkSpeed()));
             UpgradeLifestealBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeLifesteal()));
@@ -92,6 +106,10 @@ namespace BloodSeal.UI
                 GameManager.Instance.OnStatsUpgraded -= UpdateAllStatButtons;
                 GameManager.Instance.OnProfileChanged -= UpdateProfileUI;
                 GameManager.Instance.OnGateNotificationAvailable -= UpdateGateNotificationUI;
+            }
+            if (RelicManager.Instance != null && _onRelicUnlockedHandler != null)
+            {
+                RelicManager.Instance.OnRelicUnlocked -= _onRelicUnlockedHandler;
             }
         }
 
@@ -160,21 +178,25 @@ namespace BloodSeal.UI
         {
             if (WaveLabel != null)
             {
-                if (isBoss)
-                    WaveLabel.Text = $"⚠️ BOSS SAVAŞI: DALGA {wave} ⚠️";
-                else if (GameManager.Instance != null && GameManager.Instance.IsInSafeFarmMode)
-                    WaveLabel.Text = $"⚔️ GÜVENLİ FARM: DALGA {wave} ⚔️";
-                else
-                    WaveLabel.Text = $"DALGA {wave} / {((wave / 10) + 1) * 10}";
+                if (isBoss) WaveLabel.Text = $"⚠️ BOSS SAVAŞI: DALGA {wave} ⚠️";
+                else if (GameManager.Instance != null && GameManager.Instance.IsInSafeFarmMode) WaveLabel.Text = $"⚔️ GÜVENLİ FARM: DALGA {wave} ⚔️";
+                else WaveLabel.Text = $"DALGA {wave} / {((wave / 10) + 1) * 10}";
             }
 
-            if (RetryBossButton != null)
-            {
-                RetryBossButton.Visible = GameManager.Instance != null && GameManager.Instance.IsInSafeFarmMode;
-            }
+            if (RetryBossButton != null) RetryBossButton.Visible = GameManager.Instance != null && GameManager.Instance.IsInSafeFarmMode;
 
             UpdateLibraryNotificationUI();
             UpdateAwakeningNotificationUI();
+            UpdateRelicVaultNotificationUI();
+        }
+
+        private void UpdateRelicVaultNotificationUI()
+        {
+            if (RelicVaultBtn == null || GameManager.Instance == null) return;
+            int count = RelicManager.Instance?.GetCollectedCount() ?? 0;
+            bool isAvailable = count > 0 || GameManager.Instance.CurrentWave >= 10;
+            RelicVaultBtn.Visible = isAvailable;
+            if (isAvailable) RelicVaultBtn.Text = $"🏛️ MAHZEN ({count}/10)";
         }
 
         private void UpdateRageUI(float percentage)
@@ -190,14 +212,8 @@ namespace BloodSeal.UI
 
         private void UpdateRageStateUI(bool isActive)
         {
-            if (RageVignetteRect != null)
-            {
-                RageVignetteRect.Visible = isActive;
-            }
-            if (GameManager.Instance != null)
-            {
-                UpdateRageUI(GameManager.Instance.RagePercentage);
-            }
+            if (RageVignetteRect != null) RageVignetteRect.Visible = isActive;
+            if (GameManager.Instance != null) UpdateRageUI(GameManager.Instance.RagePercentage);
         }
 
         private void UpdateAllStatButtons()

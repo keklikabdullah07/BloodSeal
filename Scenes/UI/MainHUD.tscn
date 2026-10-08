@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Scripts/UI/ManorGateModal.cs" id="4_gate"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/LibraryModal.tscn" id="5_lib"]
 [ext_resource type="PackedScene" path="res://Scenes/UI/AwakeningModal.tscn" id="6_awakening"]
+[ext_resource type="PackedScene" path="res://Scenes/UI/RelicVaultModal.tscn" id="7_relics"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vig"]
 shader = ExtResource("2_vignette")
@@ -67,7 +68,7 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[node name="MainHUD" type="CanvasLayer" node_paths=PackedStringArray("GoldLabel", "WaveLabel", "ProfileLabel", "RageButton", "RageProgressBar", "RetryBossButton", "RageVignetteRect", "UpgradeAtkBtn", "UpgradeAtkSpdBtn", "UpgradeLifestealBtn", "UpgradeMaxHpBtn", "UpgradeRangeBtn", "GateNotificationBtn", "GateModal", "LibraryBtn", "LibraryModal", "AwakeningBtn", "AwakeningModal")]
+[node name="MainHUD" type="CanvasLayer" node_paths=PackedStringArray("GoldLabel", "WaveLabel", "ProfileLabel", "RageButton", "RageProgressBar", "RetryBossButton", "RageVignetteRect", "UpgradeAtkBtn", "UpgradeAtkSpdBtn", "UpgradeLifestealBtn", "UpgradeMaxHpBtn", "UpgradeRangeBtn", "GateNotificationBtn", "GateModal", "LibraryBtn", "LibraryModal", "AwakeningBtn", "AwakeningModal", "RelicVaultBtn", "RelicVaultModal")]
 script = ExtResource("1_hud")
 GoldLabel = NodePath("TopBar/Margin/HBox/GoldLabel")
 WaveLabel = NodePath("TopBar/Margin/HBox/WaveLabel")
@@ -87,6 +88,8 @@ LibraryBtn = NodePath("TopBar/Margin/HBox/LibraryNotificationButton")
 LibraryModal = NodePath("LibraryModal")
 AwakeningBtn = NodePath("TopBar/Margin/HBox/AwakeningNotificationButton")
 AwakeningModal = NodePath("AwakeningModal")
+RelicVaultBtn = NodePath("TopBar/Margin/HBox/RelicVaultNotificationButton")
+RelicVaultModal = NodePath("RelicVaultModal")
 
 [node name="RageVignette" type="ColorRect" parent="."]
 visible = false
@@ -160,6 +163,14 @@ theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
 theme_override_font_sizes/font_size = 15
 theme_override_styles/normal = SubResource("StyleBoxFlat_gate_btn")
 text = "🩸 UYANIŞ"
+
+[node name="RelicVaultNotificationButton" type="Button" parent="TopBar/Margin/HBox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.35, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_gate_btn")
+text = "🏛️ MAHZEN (0/10)"
 
 [node name="Spacer2" type="Control" parent="TopBar/Margin/HBox"]
 layout_mode = 2
@@ -484,3 +495,6 @@ text = "Daha Sonra Karar Ver"
 [node name="LibraryModal" parent="." instance=ExtResource("5_lib")]
 
 [node name="AwakeningModal" parent="." instance=ExtResource("6_awakening")]
+
+[node name="RelicVaultModal" parent="." instance=ExtResource("7_relics")]
+

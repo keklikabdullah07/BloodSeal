@@ -1,0 +1,197 @@
+[gd_scene format=3 uid="uid://c6xk8yp1rm0b"]
+
+[ext_resource type="Script" path="res://Scripts/UI/RelicVaultModal.cs" id="1_relic_modal"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_relic_modal"]
+bg_color = Color(0.05, 0.03, 0.06, 0.97)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.75, 0.55, 0.2, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.7)
+shadow_size = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_box"]
+bg_color = Color(0.09, 0.05, 0.08, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.65, 0.45, 0.2, 0.7)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="RelicVaultModal" type="Control" node_paths=PackedStringArray("CloseBtn", "HeaderStatusLabel", "RelicListContainer", "DetailIconLabel", "DetailNameLabel", "DetailWaveLabel", "DetailBonusLabel", "DetailStatusBadge", "DetailLoreLabel")]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_relic_modal")
+CloseBtn = NodePath("Center/Panel/Margin/VBox/Header/CloseButton")
+HeaderStatusLabel = NodePath("Center/Panel/Margin/VBox/HeaderStatus")
+RelicListContainer = NodePath("Center/Panel/Margin/VBox/Body/LeftPanel/Scroll/RelicListContainer")
+DetailIconLabel = NodePath("Center/Panel/Margin/VBox/Body/RightPanel/Margin/DetailVBox/DetailIconLabel")
+DetailNameLabel = NodePath("Center/Panel/Margin/VBox/Body/RightPanel/Margin/DetailVBox/DetailNameLabel")
+DetailWaveLabel = NodePath("Center/Panel/Margin/VBox/Body/RightPanel/Margin/DetailVBox/DetailWaveLabel")
+DetailBonusLabel = NodePath("Center/Panel/Margin/VBox/Body/RightPanel/Margin/DetailVBox/DetailBonusLabel")
+DetailStatusBadge = NodePath("Center/Panel/Margin/VBox/Body/RightPanel/Margin/DetailVBox/DetailStatusBadge")
+DetailLoreLabel = NodePath("Center/Panel/Margin/VBox/Body/RightPanel/Margin/DetailVBox/DetailLoreLabel")
+
+[node name="DarkOverlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.01, 0.02, 0.88)
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(1040, 620)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_relic_modal")
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 22
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 22
+theme_override_constants/margin_bottom = 18
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Header" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Center/Panel/Margin/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(1, 0.8, 0.35, 1)
+theme_override_font_sizes/font_size = 24
+text = "🏛️ MALİKANE MAHZENİ & LORE ESERLERİ"
+
+[node name="CloseButton" type="Button" parent="Center/Panel/Margin/VBox/Header"]
+custom_minimum_size = Vector2(40, 36)
+layout_mode = 2
+text = "✕"
+
+[node name="HeaderStatus" type="Label" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.8, 0.7, 1)
+theme_override_font_sizes/font_size = 14
+text = "📜 Kurtarılan Eserler: 0 / 10 | Kalıcı Gotik Miras (Uyanışta Kaybolmaz)"
+
+[node name="HSeparator" type="HSeparator" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+
+[node name="Body" type="HBoxContainer" parent="Center/Panel/Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+
+[node name="LeftPanel" type="VBoxContainer" parent="Center/Panel/Margin/VBox/Body"]
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ListTitle" type="Label" parent="Center/Panel/Margin/VBox/Body/LeftPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.75, 0.45, 1)
+theme_override_font_sizes/font_size = 15
+text = "KADİM KALINTILAR KOLEKSİYONU"
+
+[node name="Scroll" type="ScrollContainer" parent="Center/Panel/Margin/VBox/Body/LeftPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RelicListContainer" type="VBoxContainer" parent="Center/Panel/Margin/VBox/Body/LeftPanel/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="RightPanel" type="PanelContainer" parent="Center/Panel/Margin/VBox/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_detail_box")
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel/Margin/VBox/Body/RightPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 16
+
+[node name="DetailVBox" type="VBoxContainer" parent="Center/Panel/Margin/VBox/Body/RightPanel/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="DetailIconLabel" type="Label" parent="Center/Panel/Margin/VBox/Body/RightPanel/Margin/DetailVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 46
+text = "💍"
+horizontal_alignment = 1
+
+[node name="DetailNameLabel" type="Label" parent="Center/Panel/Margin/VBox/Body/RightPanel/Margin/DetailVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.5, 1)
+theme_override_font_sizes/font_size = 20
+text = "Lord Darius'un Mühür Yüzüğü"
+horizontal_alignment = 1
+
+[node name="DetailWaveLabel" type="Label" parent="Center/Panel/Margin/VBox/Body/RightPanel/Margin/DetailVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 13
+text = "Dalga 10 Muhafızı Kalıntısı"
+horizontal_alignment = 1
+
+[node name="DetailStatusBadge" type="Label" parent="Center/Panel/Margin/VBox/Body/RightPanel/Margin/DetailVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 14
+text = "✓ KURTARILDI (ETKİN)"
+horizontal_alignment = 1
+
+[node name="DetailBonusLabel" type="Label" parent="Center/Panel/Margin/VBox/Body/RightPanel/Margin/DetailVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 1, 0.5, 1)
+theme_override_font_sizes/font_size = 15
+text = "✨ Kalıcı Pasif Etki: +%5 Tüm Hasarlar"
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="Center/Panel/Margin/VBox/Body/RightPanel/Margin/DetailVBox"]
+layout_mode = 2
+
+[node name="LoreTitle" type="Label" parent="Center/Panel/Margin/VBox/Body/RightPanel/Margin/DetailVBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.65, 0.4, 1)
+theme_override_font_sizes/font_size = 13
+text = "KADİM GOTHIC LORE HİKAYESİ:"
+
+[node name="DetailLoreLabel" type="RichTextLabel" parent="Center/Panel/Margin/VBox/Body/RightPanel/Margin/DetailVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
+text = "[i]\"Lord Darius'un parmağında parlayan aile mührü.\"[/i]"
