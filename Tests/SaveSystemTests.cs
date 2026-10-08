@@ -153,5 +153,28 @@ namespace BloodSeal.Tests
             Assert.Equal(4, deserialized.AwakeningLevels["War_PrimordialMight"]);
             Assert.Equal(2, deserialized.AwakeningLevels["Flow_WaveLeap"]);
         }
+
+        [Fact]
+        public void SaveData_SerializesAndDeserializes_RelicFields()
+        {
+            var data = new SaveData
+            {
+                CollectedRelics = new System.Collections.Generic.List<string>
+                {
+                    "Relic_DariusRing",
+                    "Relic_TornPortrait",
+                    "Relic_CryptKey"
+                }
+            };
+
+            string json = JsonSerializer.Serialize(data);
+            var deserialized = JsonSerializer.Deserialize<SaveData>(json);
+
+            Assert.NotNull(deserialized);
+            Assert.Equal(3, deserialized.CollectedRelics.Count);
+            Assert.Contains("Relic_DariusRing", deserialized.CollectedRelics);
+            Assert.Contains("Relic_TornPortrait", deserialized.CollectedRelics);
+            Assert.Contains("Relic_CryptKey", deserialized.CollectedRelics);
+        }
     }
 }

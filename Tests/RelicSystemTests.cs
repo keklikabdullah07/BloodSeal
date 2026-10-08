@@ -88,10 +88,18 @@ namespace BloodSeal.Tests
             var am = new AwakeningManager();
             AwakeningManager.SetInstance(am);
 
-            Assert.Equal(0f, am.GetPointsMultiplier());
+            try
+            {
+                Assert.Equal(0f, am.GetPointsMultiplier());
 
-            rm.UnlockRelic("Relic_ExtinguishedLantern");
-            Assert.Equal(0.10f, am.GetPointsMultiplier(), 0.001f);
+                rm.UnlockRelic("Relic_ExtinguishedLantern");
+                Assert.Equal(0.10f, am.GetPointsMultiplier(), 0.001f);
+            }
+            finally
+            {
+                RelicManager.SetInstance(new RelicManager());
+                AwakeningManager.SetInstance(new AwakeningManager());
+            }
         }
     }
 }

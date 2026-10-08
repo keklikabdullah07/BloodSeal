@@ -40,5 +40,8 @@ namespace BloodSeal.Core
         public int AwakeningPoints { get; set; } = 0;
         public int TotalAwakenings { get; set; } = 0;
         public System.Collections.Generic.Dictionary<string, int> AwakeningLevels { get; set; } = new();
+
+        // Lore Relics Progression (GDD Section 2 & 6)
+        public System.Collections.Generic.List<string> CollectedRelics { get; set; } = new();
     }
 }

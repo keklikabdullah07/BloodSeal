@@ -55,6 +55,12 @@ namespace BloodSeal.Core
                 data.AwakeningLevels = am.GetAllLevels();
             }
 
+            var relics = RelicManager.Instance;
+            if (relics != null)
+            {
+                data.CollectedRelics = relics.GetAllCollectedIds();
+            }
+
             return data;
         }
 
@@ -97,13 +103,21 @@ namespace BloodSeal.Core
                 }
             }
 
+            var relics = RelicManager.Instance;
+            if (relics != null)
+            {
+                relics.Reset();
+                if (data.CollectedRelics != null)
+                {
+                    foreach (var id in data.CollectedRelics)
+                        relics.UnlockRelic(id);
+                }
+            }
+
             if (gm == null) return;
 
             gm.SetProfile(data.PlayerName, data.Bloodline, data.Origin);
-            if (gm.Profile != null)
-            {
-                gm.Profile.HasCompletedPrologue = data.HasCompletedPrologue;
-            }
+            if (gm.Profile != null) gm.Profile.HasCompletedPrologue = data.HasCompletedPrologue;
 
             if (gm.Stats != null)
             {
@@ -135,12 +149,7 @@ namespace BloodSeal.Core
         public static OfflineEarningsResult CalculateOfflineEarnings(SaveData data, long nowUtcSeconds = 0)
         {
             if (data == null || data.LastSaveTimestamp <= 0) return new OfflineEarningsResult();
-
-            if (nowUtcSeconds <= 0)
-            {
-                nowUtcSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            }
-
+            if (nowUtcSeconds <= 0) nowUtcSeconds = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             return OfflineProgressCalculator.Calculate(data.HighestWave, data.LastSaveTimestamp, nowUtcSeconds);
         }
 
@@ -148,19 +157,9 @@ namespace BloodSeal.Core
         {
             if (data == null) return false;
             data.LastSaveTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
             string json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
-
-            // Godot user:// veya yerel dosya yolu ayrımı
-            if (savePath.StartsWith("user://"))
-            {
-                string globalPath = ProjectSettings.GlobalizePath(savePath);
-                return WriteAtomicToDisk(globalPath, json);
-            }
-            else
-            {
-                return WriteAtomicToDisk(savePath, json);
-            }
+            string targetPath = savePath.StartsWith("user://") ? ProjectSettings.GlobalizePath(savePath) : savePath;
+            return WriteAtomicToDisk(targetPath, json);
         }
 
         public static SaveData Load(string savePath = DefaultSavePath)
@@ -168,14 +167,11 @@ namespace BloodSeal.Core
             string targetPath = savePath.StartsWith("user://")
                 ? ProjectSettings.GlobalizePath(savePath)
                 : savePath;
-
             string backupPath = targetPath + ".bak";
 
-            // 1. Ana dosyadan okuma
             SaveData data = TryReadFile(targetPath);
             if (data != null) return data;
 
-            // 2. Yedek (.bak) dosyadan kurtarma denemesi
             if (System.IO.File.Exists(backupPath))
             {
                 GD.PrintRich("[color=yellow]SaveSystem: Ana kayıt bozuk veya bulunamadı, .bak yedeğinden yükleniyor...[/color]");
@@ -199,16 +195,12 @@ namespace BloodSeal.Core
                 string tmpPath = targetPath + ".tmp";
                 string bakPath = targetPath + ".bak";
 
-                // 1. .tmp dosyasına yaz ve diske flush et
                 System.IO.File.WriteAllText(tmpPath, json);
-
-                // 2. Önceki çalışan dosya varsa .bak olarak sakla
                 if (System.IO.File.Exists(targetPath))
                 {
                     System.IO.File.Copy(targetPath, bakPath, true);
                 }
 
-                // 3. .tmp dosyasını hedef dosyanın üzerine taşı (Atomic Replace)
                 System.IO.File.Move(tmpPath, targetPath, true);
                 return true;
             }
@@ -222,12 +214,9 @@ namespace BloodSeal.Core
         private static SaveData TryReadFile(string path)
         {
             if (!System.IO.File.Exists(path)) return null;
-
             try
             {
-                string json = System.IO.File.ReadAllText(path);
-                var data = JsonSerializer.Deserialize<SaveData>(json);
-                return data;
+                return JsonSerializer.Deserialize<SaveData>(System.IO.File.ReadAllText(path));
             }
             catch (Exception ex)
             {
