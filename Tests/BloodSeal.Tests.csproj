@@ -30,6 +30,7 @@
     <Compile Include="..\Scripts\Core\RelicModels.cs" Link="Core\RelicModels.cs" />
     <Compile Include="..\Scripts\Core\RelicManager.cs" Link="Core\RelicManager.cs" />
     <Compile Include="..\Scripts\Core\AudioData.cs" Link="Core\AudioData.cs" />
+    <Compile Include="..\Scripts\Core\ObjectPool.cs" Link="Core\ObjectPool.cs" />
     <Compile Include="..\Scripts\Combat\PentagramStats.cs" Link="Combat\PentagramStats.cs" />
   </ItemGroup>
 
