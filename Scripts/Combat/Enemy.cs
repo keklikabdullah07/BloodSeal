@@ -74,11 +74,11 @@ namespace BloodSeal.Combat
                     {
                         _attackTimer = 0.0;
                         _heroTarget.TakeDamage(AttackDamage);
-                        // Attack hit tween
                         if (_visual != null)
                         {
                             var tween = CreateTween();
-                            tween.TweenProperty(_visual, "position:x", -15f, 0.08f);
+                            tween.TweenProperty(_visual, "position:x", 8f, 0.04f);
+                            tween.TweenProperty(_visual, "position:x", -20f, 0.08f);
                             tween.TweenProperty(_visual, "position:x", 0f, 0.12f);
                         }
                     }
@@ -94,19 +94,21 @@ namespace BloodSeal.Combat
             UpdateHealthBar();
             OnHealthChanged?.Invoke(CurrentHp, MaxHp);
 
-            // Pop-up floating damage text
             FloatingTextManager.Instance?.SpawnDamage(GlobalPosition + new Vector2(0, -50), amount, isCrit);
-
-            // Blood splatter VFX & SFX
             FXManager.Instance?.PlayBloodSplatter(GlobalPosition + new Vector2(0, -35), Vector2.Right);
             Core.AudioManager.Instance?.PlayHit(isCrit);
 
-            // Flash visual on hit
             if (_visual != null)
             {
-                var tween = CreateTween();
-                tween.TweenProperty(_visual, "modulate", new Color(2f, 0.5f, 0.5f), 0.06f);
-                tween.TweenProperty(_visual, "modulate", Colors.White, 0.1f);
+                var tween = CreateTween().SetParallel(true);
+                tween.TweenProperty(_visual, "scale", new Vector2(1.14f, 0.88f), 0.05f);
+                tween.TweenProperty(_visual, "position:x", 10f, 0.05f);
+                tween.TweenProperty(_visual, "modulate", new Color(2.2f, 0.5f, 0.5f), 0.05f);
+
+                var settle = CreateTween().SetParallel(true);
+                settle.TweenProperty(_visual, "scale", Vector2.One, 0.10f).SetDelay(0.05f);
+                settle.TweenProperty(_visual, "position:x", 0f, 0.10f).SetDelay(0.05f);
+                settle.TweenProperty(_visual, "modulate", Colors.White, 0.10f).SetDelay(0.05f);
             }
 
             if (CurrentHp <= 0)
@@ -130,7 +132,6 @@ namespace BloodSeal.Combat
             if (IsDead) return;
             IsDead = true;
 
-            // Death explosion particle
             FXManager.Instance?.PlayDeathExplosion(GlobalPosition + new Vector2(0, -35), this is BossEnemy);
 
             if (GameManager.Instance != null)
@@ -141,6 +142,23 @@ namespace BloodSeal.Combat
                 FloatingTextManager.Instance?.SpawnGold(GlobalPosition + new Vector2(0, -30), goldReward);
             }
 
+            if (_visual != null)
+            {
+                var deathTween = CreateTween().SetParallel(true);
+                deathTween.TweenProperty(_visual, "position:x", 25f, 0.13f);
+                deathTween.TweenProperty(_visual, "rotation", -0.35f, 0.13f);
+                deathTween.TweenProperty(_visual, "scale", new Vector2(0.7f, 0.7f), 0.13f);
+                deathTween.TweenProperty(_visual, "modulate:a", 0.0f, 0.13f);
+                deathTween.Finished += FinishDeath;
+            }
+            else
+            {
+                FinishDeath();
+            }
+        }
+
+        private void FinishDeath()
+        {
             if (this is not BossEnemy && WaveSpawner.Instance != null)
             {
                 WaveSpawner.Instance.ReleaseEnemy(this);
@@ -175,6 +193,8 @@ namespace BloodSeal.Combat
             if (_visual != null)
             {
                 _visual.Position = Vector2.Zero;
+                _visual.Rotation = 0f;
+                _visual.Scale = Vector2.One;
                 _visual.Modulate = Colors.White;
             }
             SetProcess(false);

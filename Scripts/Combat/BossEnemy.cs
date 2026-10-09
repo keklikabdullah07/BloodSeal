@@ -119,7 +119,18 @@ namespace BloodSeal.Combat
                 }
             }
 
-            QueueFree();
+            if (_visual != null)
+            {
+                var deathTween = CreateTween().SetParallel(true);
+                deathTween.TweenProperty(_visual, "position:y", 20f, 0.20f);
+                deathTween.TweenProperty(_visual, "scale", new Vector2(1.2f, 0.4f), 0.20f);
+                deathTween.TweenProperty(_visual, "modulate:a", 0.0f, 0.20f);
+                deathTween.Finished += QueueFree;
+            }
+            else
+            {
+                QueueFree();
+            }
         }
     }
 }
