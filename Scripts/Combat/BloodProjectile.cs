@@ -1,8 +1,9 @@
 using Godot;
+using BloodSeal.Core;
 
 namespace BloodSeal.Combat
 {
-    public partial class BloodProjectile : Node2D
+    public partial class BloodProjectile : Node2D, IPoolable
     {
         [Export] public float Speed = 750f;
         public Node2D Target { get; set; }
@@ -12,7 +13,7 @@ namespace BloodSeal.Combat
         {
             if (!IsInstanceValid(Target))
             {
-                QueueFree();
+                Despawn();
                 return;
             }
 
@@ -26,8 +27,35 @@ namespace BloodSeal.Combat
                 {
                     enemy.TakeDamage(Damage, false);
                 }
+                Despawn();
+            }
+        }
+
+        private void Despawn()
+        {
+            if (PetCompanion.Instance != null)
+            {
+                PetCompanion.Instance.ReleaseProjectile(this);
+            }
+            else
+            {
                 QueueFree();
             }
+        }
+
+        public void OnSpawnFromPool()
+        {
+            Visible = true;
+            SetProcess(true);
+        }
+
+        public void OnReturnToPool()
+        {
+            Target = null;
+            Damage = 5f;
+            GlobalPosition = Vector2.Zero;
+            Rotation = 0f;
+            SetProcess(false);
         }
     }
 }

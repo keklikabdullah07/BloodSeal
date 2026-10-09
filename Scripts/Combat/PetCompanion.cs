@@ -12,6 +12,9 @@ namespace BloodSeal.Combat
 
         [Export] public Node2D TargetHero;
 
+        public static PetCompanion Instance { get; private set; }
+
+        private NodePool<BloodProjectile> _projectilePool;
         private Node2D _hero;
         private double _shootTimer = 0.0;
         private double _timePassed = 0.0;
@@ -22,11 +25,36 @@ namespace BloodSeal.Combat
             TargetHero = hero;
         }
 
+        public override void _EnterTree()
+        {
+            Instance = this;
+        }
+
         public override void _Ready()
         {
+            Instance = this;
             if (_hero == null && TargetHero != null)
             {
                 _hero = TargetHero;
+            }
+
+            if (ProjectileScene != null)
+            {
+                var parent = GetTree()?.CurrentScene ?? this;
+                _projectilePool = new NodePool<BloodProjectile>(ProjectileScene, parent, 15);
+            }
+        }
+
+        public void ReleaseProjectile(BloodProjectile proj)
+        {
+            if (proj == null) return;
+            if (_projectilePool != null)
+            {
+                _projectilePool.Release(proj);
+            }
+            else
+            {
+                proj.QueueFree();
             }
         }
 
@@ -72,12 +100,15 @@ namespace BloodSeal.Combat
 
             if (nearest != null && ProjectileScene != null)
             {
-                var proj = ProjectileScene.Instantiate<BloodProjectile>();
+                BloodProjectile proj = _projectilePool != null ? _projectilePool.Acquire() : ProjectileScene.Instantiate<BloodProjectile>();
                 proj.GlobalPosition = GlobalPosition;
                 proj.Target = nearest;
                 float petMult = ResearchManager.Instance?.GetPetMultiplier() ?? 1.0f;
                 proj.Damage = GameManager.Instance.Stats.Atk * 0.4f * petMult;
-                GetTree().CurrentScene.AddChild(proj);
+                if (_projectilePool == null)
+                {
+                    GetTree().CurrentScene.AddChild(proj);
+                }
             }
         }
     }
