@@ -21,21 +21,12 @@ namespace BloodSeal.UI
         [Export] public Button UpgradeMaxHpBtn;
         [Export] public Button UpgradeRangeBtn;
 
-        // Manor Gate
-        [Export] public Button GateNotificationBtn;
-        [Export] public ManorGateModal GateModal;
-
-        // Manor Library
-        [Export] public Button LibraryBtn;
-        [Export] public LibraryModal LibraryModal;
-
-        // Awakening / Rebirth
-        [Export] public Button AwakeningBtn;
-        [Export] public AwakeningModal AwakeningModal;
-
-        // Lore Relics Vault
-        [Export] public Button RelicVaultBtn;
-        [Export] public RelicVaultModal RelicVaultModal;
+        // Modals & Panels
+        [Export] public Button GateNotificationBtn; [Export] public ManorGateModal GateModal;
+        [Export] public Button LibraryBtn; [Export] public LibraryModal LibraryModal;
+        [Export] public Button AwakeningBtn; [Export] public AwakeningModal AwakeningModal;
+        [Export] public Button RelicVaultBtn; [Export] public RelicVaultModal RelicVaultModal;
+        [Export] public Button SettingsBtn; [Export] public SettingsModal SettingsModal;
 
         private Action<RelicDefinition> _onRelicUnlockedHandler;
 
@@ -65,9 +56,7 @@ namespace BloodSeal.UI
             }
 
             if (ResearchManager.Instance != null)
-            {
                 ResearchManager.Instance.OnLoreScrollsChanged += _ => UpdateLibraryNotificationUI();
-            }
 
             if (AwakeningManager.Instance != null)
             {
@@ -81,6 +70,13 @@ namespace BloodSeal.UI
                 RelicManager.Instance.OnRelicUnlocked += _onRelicUnlockedHandler;
             }
 
+            if (SettingsModal == null) { SettingsModal = new SettingsModal(); AddChild(SettingsModal); }
+            if (SettingsBtn == null)
+            {
+                SettingsBtn = new Button { Text = "⚙️", CustomMinimumSize = new Vector2(44, 44), Position = new Vector2(1850, 16) };
+                AddChild(SettingsBtn);
+            }
+
             // Connect button signals
             RageButton?.Connect("pressed", Callable.From(OnRagePressed));
             RetryBossButton?.Connect("pressed", Callable.From(OnRetryBossPressed));
@@ -88,6 +84,7 @@ namespace BloodSeal.UI
             LibraryBtn?.Connect("pressed", Callable.From(() => LibraryModal?.ShowModal()));
             AwakeningBtn?.Connect("pressed", Callable.From(() => AwakeningModal?.ShowModal()));
             RelicVaultBtn?.Connect("pressed", Callable.From(() => RelicVaultModal?.ShowModal()));
+            SettingsBtn?.Connect("pressed", Callable.From(() => SettingsModal?.ShowModal()));
             UpgradeAtkBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeAtk()));
             UpgradeAtkSpdBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeAtkSpeed()));
             UpgradeLifestealBtn?.Connect("pressed", Callable.From(() => GameManager.Instance?.UpgradeLifesteal()));
