@@ -12,6 +12,7 @@ namespace BloodSeal.Combat
         public event Action<float, float> OnHealthChanged; // current, max
 
         private double _attackCooldown = 0.0;
+        private double _idleTime = 0.0;
         private Node2D _visualRoot;
         private ProgressBar _healthBar;
         private bool _wasRageActive = false;
@@ -58,6 +59,12 @@ namespace BloodSeal.Combat
             {
                 _wasRageActive = isRage;
                 CameraShake.Instance?.SetBaseTrauma(isRage ? 0.15f : 0.0f);
+            }
+
+            _idleTime += delta;
+            if (_visualRoot != null && _attackCooldown > 0.0)
+            {
+                _visualRoot.Scale = new Vector2(1.0f, 1.0f + Mathf.Sin((float)_idleTime * 3.5f) * 0.02f);
             }
 
             float currentAtkSpeed = GameManager.Instance != null ? GameManager.Instance.Stats.AtkSpeed : 1.0f;
@@ -107,14 +114,17 @@ namespace BloodSeal.Combat
             bool isCrit = isRage;
             if (isCrit) damage *= 2f;
 
-            // Slash tween animation
+            // Slash tween animation with forward tilt and spring recoil
             if (_visualRoot != null)
             {
-                var tween = CreateTween();
+                var tween = CreateTween().SetParallel(true);
                 tween.TweenProperty(_visualRoot, "position:x", 35f, 0.07f)
-                     .SetTrans(Tween.TransitionType.Back)
-                     .SetEase(Tween.EaseType.Out);
-                tween.TweenProperty(_visualRoot, "position:x", 0f, 0.12f);
+                     .SetTrans(Tween.TransitionType.Back).SetEase(Tween.EaseType.Out);
+                tween.TweenProperty(_visualRoot, "rotation", 0.08f, 0.07f);
+
+                var backTween = CreateTween().SetParallel(true);
+                backTween.TweenProperty(_visualRoot, "position:x", 0f, 0.12f).SetDelay(0.07f);
+                backTween.TweenProperty(_visualRoot, "rotation", 0f, 0.12f).SetDelay(0.07f);
             }
 
             // Spawn Slash VFX & SFX
