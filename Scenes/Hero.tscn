@@ -1,61 +1,54 @@
-[gd_scene load_steps=3 format=3 uid="uid://chero001"]
+[gd_scene format=3 uid="uid://chero001"]
 
 [ext_resource type="Script" path="res://Scripts/Combat/Hero.cs" id="1_hero"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Characters/hero_knight.png" id="2_herotex"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hero"]
-radius = 24.0
-height = 90.0
+radius = 26.0
+height = 110.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.12, 0.08, 0.1, 0.8)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fill"]
+bg_color = Color(0.85, 0.1, 0.2, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
 
 [node name="Hero" type="CharacterBody2D"]
 collision_layer = 1
 script = ExtResource("1_hero")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -45)
+position = Vector2(0, -55)
 shape = SubResource("CapsuleShape2D_hero")
 
 [node name="VisualRoot" type="Node2D" parent="."]
 
 [node name="Shadow" type="Polygon2D" parent="VisualRoot"]
-position = Vector2(0, -4)
-scale = Vector2(1, 0.4)
-color = Color(0, 0, 0, 0.55)
+position = Vector2(0, -2)
+scale = Vector2(1.1, 0.45)
+color = Color(0, 0, 0, 0.6)
 polygon = PackedVector2Array(-35, 0, -25, -12, 0, -16, 25, -12, 35, 0, 25, 12, 0, 16, -25, 12)
 
-[node name="Cloak" type="Polygon2D" parent="VisualRoot"]
-color = Color(0.2, 0.04, 0.06, 1)
-polygon = PackedVector2Array(-24, -70, -34, -20, -16, -2, -10, -50)
-
-[node name="RimLight" type="Polygon2D" parent="VisualRoot"]
-color = Color(0.9, 0.3, 0.35, 0.4)
-polygon = PackedVector2Array(-20, -82, 20, -82, 24, -45, 14, -4, -14, -4, -24, -45)
-
-[node name="Body" type="Polygon2D" parent="VisualRoot"]
-color = Color(0.12, 0.12, 0.15, 1)
-polygon = PackedVector2Array(-18, -80, 18, -80, 22, -45, 12, -5, -12, -5, -22, -45)
-
-[node name="Head" type="Polygon2D" parent="VisualRoot"]
-color = Color(0.85, 0.75, 0.7, 1)
-polygon = PackedVector2Array(-10, -96, 10, -96, 8, -78, -8, -78)
-
-[node name="RedGlowEye" type="Polygon2D" parent="VisualRoot"]
-color = Color(1, 0.1, 0.2, 1)
-polygon = PackedVector2Array(2, -88, 7, -88, 5, -85, 1, -85)
-
-[node name="GiantSword" type="Polygon2D" parent="VisualRoot"]
-position = Vector2(18, -50)
-rotation = 0.25
-color = Color(0.4, 0.42, 0.48, 1)
-polygon = PackedVector2Array(-5, -60, 5, -60, 7, 20, 2, 40, -2, 40, -7, 20)
-
-[node name="SwordRune" type="Polygon2D" parent="VisualRoot/GiantSword"]
-color = Color(0.95, 0.1, 0.25, 1)
-polygon = PackedVector2Array(-2, -40, 2, -40, 2, 10, -2, 10)
+[node name="HeroSprite" type="Sprite2D" parent="VisualRoot"]
+texture_filter = 2
+position = Vector2(0, -60)
+scale = Vector2(0.55, 0.55)
+texture = ExtResource("2_herotex")
 
 [node name="HealthBar" type="ProgressBar" parent="."]
 offset_left = -50.0
-offset_top = -118.0
+offset_top = -125.0
 offset_right = 50.0
-offset_bottom = -108.0
+offset_bottom = -115.0
+theme_override_styles/background = SubResource("StyleBoxFlat_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_fill")
 value = 100.0
 show_percentage = false
