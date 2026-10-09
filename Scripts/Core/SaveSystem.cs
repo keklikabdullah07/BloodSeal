@@ -61,6 +61,15 @@ namespace BloodSeal.Core
                 data.CollectedRelics = relics.GetAllCollectedIds();
             }
 
+            var audio = AudioManager.Instance;
+            if (audio != null)
+            {
+                data.MasterVolume = audio.MasterVolume;
+                data.BgmVolume = audio.BgmVolume;
+                data.SfxVolume = audio.SfxVolume;
+                data.IsMuted = audio.IsMuted;
+            }
+
             return data;
         }
 
@@ -112,6 +121,12 @@ namespace BloodSeal.Core
                     foreach (var id in data.CollectedRelics)
                         relics.UnlockRelic(id);
                 }
+            }
+
+            var audio = AudioManager.Instance;
+            if (audio != null)
+            {
+                audio.ApplySettings(data.MasterVolume, data.BgmVolume, data.SfxVolume, data.IsMuted);
             }
 
             if (gm == null) return;

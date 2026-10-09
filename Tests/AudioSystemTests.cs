@@ -43,5 +43,26 @@ namespace BloodSeal.Tests
             Assert.True(Enum.IsDefined(typeof(AudioCueType), "ModalOpen"));
             Assert.True(Enum.IsDefined(typeof(AudioCueType), "ModalClose"));
         }
+
+        [Fact]
+        public void SaveData_SerializesAndRestores_AudioSettings()
+        {
+            var data = new SaveData
+            {
+                MasterVolume = 0.75f,
+                BgmVolume = 0.60f,
+                SfxVolume = 0.90f,
+                IsMuted = true
+            };
+
+            string json = System.Text.Json.JsonSerializer.Serialize(data);
+            var restored = System.Text.Json.JsonSerializer.Deserialize<SaveData>(json);
+
+            Assert.NotNull(restored);
+            Assert.Equal(0.75f, restored.MasterVolume);
+            Assert.Equal(0.60f, restored.BgmVolume);
+            Assert.Equal(0.90f, restored.SfxVolume);
+            Assert.True(restored.IsMuted);
+        }
     }
 }

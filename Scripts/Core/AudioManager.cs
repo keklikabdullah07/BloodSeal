@@ -126,6 +126,25 @@ namespace BloodSeal.Core
             }
         }
 
+        public float MasterVolume { get; private set; } = 1.0f;
+        public float BgmVolume { get; private set; } = 0.8f;
+        public float SfxVolume { get; private set; } = 1.0f;
+        public bool IsMuted { get; private set; } = false;
+
+        public void ApplySettings(float master, float bgm, float sfx, bool isMuted)
+        {
+            MasterVolume = master;
+            BgmVolume = bgm;
+            SfxVolume = sfx;
+            IsMuted = isMuted;
+
+            SetBusVolume("Master", isMuted ? 0.0001f : master);
+            SetBusVolume("BGM", bgm);
+            SetBusVolume("SFX", sfx);
+            SetBusVolume("UI", sfx);
+            SetBusMute("Master", isMuted);
+        }
+
         public void SetBusMute(string busName, bool isMuted)
         {
             int busIdx = AudioServer.GetBusIndex(busName);

@@ -43,5 +43,11 @@ namespace BloodSeal.Core
 
         // Lore Relics Progression (GDD Section 2 & 6)
         public System.Collections.Generic.List<string> CollectedRelics { get; set; } = new();
+
+        // Audio Settings
+        public float MasterVolume { get; set; } = 1.0f;
+        public float BgmVolume { get; set; } = 0.8f;
+        public float SfxVolume { get; set; } = 1.0f;
+        public bool IsMuted { get; set; } = false;
     }
 }
