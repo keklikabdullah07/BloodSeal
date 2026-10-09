@@ -47,6 +47,21 @@ namespace BloodSeal.Tests
         }
 
         [Fact]
+        public void SaveData_Serialization_Preserves_TutorialStep()
+        {
+            var data = new SaveData
+            {
+                TutorialStep = (int)TutorialStep.ActivateBerserk
+            };
+
+            string json = JsonSerializer.Serialize(data);
+            var deserialized = JsonSerializer.Deserialize<SaveData>(json);
+
+            Assert.NotNull(deserialized);
+            Assert.Equal((int)TutorialStep.ActivateBerserk, deserialized.TutorialStep);
+        }
+
+        [Fact]
         public void OfflineProgress_Under_60_Seconds_Returns_No_Claimable_Earnings()
         {
             long lastSave = 1000000;

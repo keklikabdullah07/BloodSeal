@@ -49,5 +49,8 @@ namespace BloodSeal.Core
         public float BgmVolume { get; set; } = 0.8f;
         public float SfxVolume { get; set; } = 1.0f;
         public bool IsMuted { get; set; } = false;
+
+        // Tutorial / Onboarding (FTUE)
+        public int TutorialStep { get; set; } = 1;
     }
 }

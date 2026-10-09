@@ -70,6 +70,7 @@ namespace BloodSeal.Core
                 data.IsMuted = audio.IsMuted;
             }
 
+            data.TutorialStep = (int)(TutorialManager.Instance?.CurrentStep ?? TutorialStep.TapToAttack);
             return data;
         }
 
@@ -128,6 +129,9 @@ namespace BloodSeal.Core
             {
                 audio.ApplySettings(data.MasterVolume, data.BgmVolume, data.SfxVolume, data.IsMuted);
             }
+
+            if (TutorialManager.Instance != null)
+                TutorialManager.Instance.SetStep(data.TutorialStep <= 0 ? TutorialStep.TapToAttack : (TutorialStep)data.TutorialStep);
 
             if (gm == null) return;
 
