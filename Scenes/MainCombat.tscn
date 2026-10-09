@@ -16,6 +16,9 @@
 [ext_resource type="PackedScene" path="res://Scenes/VFX/DeathExplosion.tscn" id="14_expl"]
 [ext_resource type="PackedScene" path="res://Scenes/VFX/TapRipple.tscn" id="15_ripple"]
 [ext_resource type="Script" path="res://Scripts/Combat/ParallaxScroller.cs" id="16_scroll"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Background/bg_sky_bloodmoon.png" id="17_sky"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Background/bg_ruins_spires.png" id="18_ruins"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/Background/bg_ground_cobble.png" id="19_ground"]
 
 [node name="MainCombat" type="Node2D"]
 
@@ -26,43 +29,21 @@ script = ExtResource("16_scroll")
 
 [node name="SkyLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_scale = Vector2(0.1, 0.1)
-motion_mirroring = Vector2(2400, 0)
+motion_mirroring = Vector2(1920, 0)
 
-[node name="SkyGradient" type="ColorRect" parent="ParallaxBackground/SkyLayer"]
-offset_right = 2400.0
-offset_bottom = 1200.0
-color = Color(0.04, 0.03, 0.07, 1)
-
-[node name="BloodMoonHalo" type="Polygon2D" parent="ParallaxBackground/SkyLayer"]
-position = Vector2(340, 260)
-color = Color(0.85, 0.08, 0.18, 0.22)
-polygon = PackedVector2Array(-140, 0, -100, -100, 0, -140, 100, -100, 140, 0, 100, 100, 0, 140, -100, 100)
-
-[node name="BloodMoon" type="Polygon2D" parent="ParallaxBackground/SkyLayer"]
-position = Vector2(340, 260)
-color = Color(0.92, 0.15, 0.22, 1)
-polygon = PackedVector2Array(-90, 0, -64, -64, 0, -90, 64, -64, 90, 0, 64, 64, 0, 90, -64, 64)
-
-[node name="MoonCrater" type="Polygon2D" parent="ParallaxBackground/SkyLayer/BloodMoon"]
-position = Vector2(-25, -20)
-color = Color(0.7, 0.08, 0.15, 1)
-polygon = PackedVector2Array(-20, 0, -14, -14, 0, -20, 14, -14, 20, 0, 14, 14, 0, 20, -14, 14)
+[node name="SkySprite" type="Sprite2D" parent="ParallaxBackground/SkyLayer"]
+texture_filter = 2
+position = Vector2(960, 540)
+texture = ExtResource("17_sky")
 
 [node name="RuinsLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_scale = Vector2(0.4, 0.4)
-motion_mirroring = Vector2(2400, 0)
+motion_mirroring = Vector2(1920, 0)
 
-[node name="Spire1" type="Polygon2D" parent="ParallaxBackground/RuinsLayer"]
-color = Color(0.08, 0.06, 0.1, 1)
-polygon = PackedVector2Array(600, 800, 680, 280, 720, 280, 800, 800)
-
-[node name="Spire2" type="Polygon2D" parent="ParallaxBackground/RuinsLayer"]
-color = Color(0.06, 0.04, 0.08, 1)
-polygon = PackedVector2Array(1100, 800, 1160, 340, 1200, 340, 1260, 800)
-
-[node name="Spire3" type="Polygon2D" parent="ParallaxBackground/RuinsLayer"]
-color = Color(0.09, 0.07, 0.11, 1)
-polygon = PackedVector2Array(1500, 800, 1570, 220, 1610, 220, 1680, 800)
+[node name="RuinsSprite" type="Sprite2D" parent="ParallaxBackground/RuinsLayer"]
+texture_filter = 2
+position = Vector2(960, 540)
+texture = ExtResource("18_ruins")
 
 [node name="MistParticles" type="CPUParticles2D" parent="ParallaxBackground/RuinsLayer"]
 position = Vector2(960, 650)
@@ -77,19 +58,12 @@ color = Color(0.6, 0.1, 0.2, 0.2)
 
 [node name="GroundLayer" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_scale = Vector2(1, 1)
-motion_mirroring = Vector2(2400, 0)
+motion_mirroring = Vector2(1920, 0)
 
-[node name="GroundBase" type="ColorRect" parent="ParallaxBackground/GroundLayer"]
-offset_top = 700.0
-offset_right = 2400.0
-offset_bottom = 1200.0
-color = Color(0.1, 0.08, 0.11, 1)
-
-[node name="GroundEdge" type="ColorRect" parent="ParallaxBackground/GroundLayer"]
-offset_top = 690.0
-offset_right = 2400.0
-offset_bottom = 702.0
-color = Color(0.25, 0.18, 0.2, 1)
+[node name="GroundSprite" type="Sprite2D" parent="ParallaxBackground/GroundLayer"]
+texture_filter = 2
+position = Vector2(960, 540)
+texture = ExtResource("19_ground")
 
 [node name="TapCombatArea" type="Control" parent="."]
 layout_mode = 3
@@ -140,4 +114,3 @@ SlashScene = ExtResource("12_slash")
 BloodSplatterScene = ExtResource("13_blood")
 DeathExplosionScene = ExtResource("14_expl")
 TapRippleScene = ExtResource("15_ripple")
-
