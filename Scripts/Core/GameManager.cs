@@ -130,6 +130,7 @@ namespace BloodSeal.Core
                 IsRageActive = true;
                 double bonus = ResearchManager.Instance?.GetBerserkBonusDuration() ?? 0.0;
                 _rageActiveTimer = 10.0 + bonus;
+                AudioManager.Instance?.PlayRageBurst();
                 OnRageStateChanged?.Invoke(true);
                 return true;
             }
@@ -144,10 +145,11 @@ namespace BloodSeal.Core
             bool isBoss = (wave % 10 == 0);
             OnWaveChanged?.Invoke(CurrentWave, isBoss);
 
+            if (isBoss) AudioManager.Instance?.PlayBGM(BgmTrackType.BossCombat);
+            else AudioManager.Instance?.PlayBGM(BgmTrackType.GothicAmbient);
+
             if (wave >= ManorGateHelper.GateUnlockWave && !HasClaimedGateReward)
-            {
                 OnGateNotificationAvailable?.Invoke();
-            }
 
             SaveGame();
         }

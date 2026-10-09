@@ -49,12 +49,13 @@ namespace BloodSeal.UI
             Modulate = new Color(1, 1, 1, 0);
             var tween = CreateTween();
             tween.TweenProperty(this, "modulate:a", 1.0f, 0.22f);
-
+            Core.AudioManager.Instance?.PlayModalOpen();
             SwitchTab(_currentDiscipline);
         }
 
         public void CloseModal()
         {
+            Core.AudioManager.Instance?.PlayModalClose();
             var tween = CreateTween();
             tween.TweenProperty(this, "modulate:a", 0.0f, 0.18f);
             tween.TweenCallback(Callable.From(() => Visible = false));
@@ -228,23 +229,14 @@ namespace BloodSeal.UI
             int scrollCost = node.GetScrollCost(nextLvl);
 
             int currentScrolls = ResearchManager.Instance?.LoreScrolls ?? 0;
-            if (GameManager.Instance.Gold >= goldCost && currentScrolls >= scrollCost)
+            if (GameManager.Instance.Gold >= goldCost && currentScrolls >= scrollCost && GameManager.Instance.SpendGold(goldCost))
             {
-                if (GameManager.Instance.SpendGold(goldCost))
-                {
-                    double dummy = goldCost;
-                    ResearchManager.Instance?.TryUpgradeResearch(nodeId, ref dummy);
-
-                    Core.AudioManager.Instance?.PlayHit();
-                    FloatingTextManager.Instance?.SpawnMessage(
-                        new Vector2(960, 400),
-                        $"✨ {node.Name} ARAŞTIRILDI! (Lv.{nextLvl})",
-                        new Color(1f, 0.85f, 0.3f)
-                    );
-
-                    GameManager.Instance.SaveGame();
-                    RefreshUI();
-                }
+                double dummy = goldCost;
+                ResearchManager.Instance?.TryUpgradeResearch(nodeId, ref dummy);
+                Core.AudioManager.Instance?.PlayHit();
+                FloatingTextManager.Instance?.SpawnMessage(new Vector2(960, 400), $"✨ {node.Name} ARAŞTIRILDI! (Lv.{nextLvl})", new Color(1f, 0.85f, 0.3f));
+                GameManager.Instance.SaveGame();
+                RefreshUI();
             }
         }
     }

@@ -39,6 +39,7 @@ namespace BloodSeal.UI
             Modulate = new Color(1, 1, 1, 0);
             var tween = CreateTween();
             tween.TweenProperty(this, "modulate:a", 1.0f, 0.2f);
+            AudioManager.Instance?.PlayModalOpen();
 
             var all = RelicDatabase.AllRelics;
             _selectedRelic = all.FirstOrDefault(r => RelicManager.Instance?.HasRelic(r.Id) == true) ?? (all.Count > 0 ? all[0] : null);
@@ -48,6 +49,7 @@ namespace BloodSeal.UI
 
         public void CloseModal()
         {
+            AudioManager.Instance?.PlayModalClose();
             var tween = CreateTween();
             tween.TweenProperty(this, "modulate:a", 0.0f, 0.15f);
             tween.TweenCallback(Callable.From(() => Visible = false));

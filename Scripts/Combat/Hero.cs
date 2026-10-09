@@ -190,6 +190,7 @@ namespace BloodSeal.Combat
             if (CurrentHp <= 0)
             {
                 CurrentHp = 0;
+                AudioManager.Instance?.PlayHeroDeath();
                 GameManager.Instance?.NotifyHeroDied();
             }
         }

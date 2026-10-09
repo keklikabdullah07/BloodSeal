@@ -43,11 +43,13 @@ namespace BloodSeal.UI
             Modulate = new Color(1, 1, 1, 0);
             var tween = CreateTween();
             tween.TweenProperty(this, "modulate:a", 1.0f, 0.2f);
+            AudioManager.Instance?.PlayModalOpen();
             SwitchBranch(_currentBranch);
         }
 
         public void CloseModal()
         {
+            AudioManager.Instance?.PlayModalClose();
             var tween = CreateTween();
             tween.TweenProperty(this, "modulate:a", 0.0f, 0.15f);
             tween.TweenCallback(Callable.From(() => Visible = false));
@@ -187,6 +189,7 @@ namespace BloodSeal.UI
             bool success = am.ExecuteAwakening(gm.CurrentWave, () => gm.ResetForAwakening());
             if (success)
             {
+                AudioManager.Instance?.PlayAwakeningRitual();
                 CloseModal();
             }
         }

@@ -69,6 +69,7 @@ namespace BloodSeal.Combat
             CameraShake.Instance?.AddTrauma(0.50f);
             FXManager.Instance?.TriggerLocalHitFreeze(null, this, 0.040f);
             FXManager.Instance?.PlayDeathExplosion(GlobalPosition + new Vector2(0, -35), true);
+            AudioManager.Instance?.PlayBossVictory();
 
             double baseGold = GameManager.Instance.CurrentWave * 60 + 250;
             double bossGold = GameManager.Instance.CalculateGoldReward(baseGold);
@@ -90,6 +91,7 @@ namespace BloodSeal.Combat
                     {
                         rm.RecordMilestoneBossDefeated(wave);
                         RelicManager.Instance?.UnlockRelicForWave(wave);
+                        AudioManager.Instance?.PlayRelicUnlock();
                     }
                     FloatingTextManager.Instance?.SpawnMessage(
                         GlobalPosition + new Vector2(0, -75),
