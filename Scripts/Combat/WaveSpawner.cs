@@ -11,17 +11,44 @@ namespace BloodSeal.Combat
         [Export] public Hero TargetHero;
         [Export] public Vector2 SpawnPosition = new Vector2(2050, 700);
 
+        public static WaveSpawner Instance { get; private set; }
+
+        private NodePool<Enemy> _enemyPool;
         private int _enemiesRemainingToSpawn = 0;
         private double _spawnCooldown = 0.0;
         private bool _isWaveActive = false;
 
+        public override void _EnterTree()
+        {
+            Instance = this;
+        }
+
         public override void _Ready()
         {
+            Instance = this;
+            if (EnemyScene != null)
+            {
+                _enemyPool = new NodePool<Enemy>(EnemyScene, this, 15);
+            }
+
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.OnWaveChanged += StartWave;
                 GameManager.Instance.OnHeroDied += ClearAllEnemies;
                 StartWave(GameManager.Instance.CurrentWave, GameManager.Instance.CurrentWave % 10 == 0);
+            }
+        }
+
+        public void ReleaseEnemy(Enemy enemy)
+        {
+            if (enemy == null) return;
+            if (enemy is not BossEnemy && _enemyPool != null)
+            {
+                _enemyPool.Release(enemy);
+            }
+            else
+            {
+                enemy.QueueFree();
             }
         }
 
@@ -90,11 +117,15 @@ namespace BloodSeal.Combat
 
         private void SpawnEnemy(int wave)
         {
-            if (EnemyScene == null || TargetHero == null) return;
-            var enemy = EnemyScene.Instantiate<Enemy>();
+            if (TargetHero == null) return;
+            var enemy = _enemyPool != null ? _enemyPool.Acquire() : EnemyScene?.Instantiate<Enemy>();
+            if (enemy == null) return;
             enemy.GlobalPosition = SpawnPosition + new Vector2(0, (float)GD.RandRange(-25, 25));
             enemy.Setup(wave, TargetHero);
-            AddChild(enemy);
+            if (_enemyPool == null)
+            {
+                AddChild(enemy);
+            }
         }
 
         private void SpawnBoss(int wave)
@@ -112,7 +143,14 @@ namespace BloodSeal.Combat
             var enemies = GetTree().GetNodesInGroup("Enemies");
             foreach (var node in enemies)
             {
-                if (node is Node n) n.QueueFree();
+                if (node is Enemy enemy)
+                {
+                    ReleaseEnemy(enemy);
+                }
+                else if (node is Node n)
+                {
+                    n.QueueFree();
+                }
             }
             _enemiesRemainingToSpawn = 0;
         }

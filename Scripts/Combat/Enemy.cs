@@ -4,7 +4,7 @@ using BloodSeal.Core;
 
 namespace BloodSeal.Combat
 {
-    public partial class Enemy : CharacterBody2D
+    public partial class Enemy : CharacterBody2D, IPoolable
     {
         [Export] public float MoveSpeed = 120f;
         public float MaxHp { get; protected set; }
@@ -33,10 +33,14 @@ namespace BloodSeal.Combat
         public virtual void Setup(int wave, Hero hero)
         {
             _heroTarget = hero;
+            IsDead = false;
             MaxHp = wave * 25f + 50f;
             CurrentHp = MaxHp;
             AttackDamage = wave * 3f + 5f;
-            AddToGroup("Enemies");
+            if (!IsInGroup("Enemies"))
+            {
+                AddToGroup("Enemies");
+            }
             UpdateHealthBar();
             OnHealthChanged?.Invoke(CurrentHp, MaxHp);
         }
@@ -125,7 +129,44 @@ namespace BloodSeal.Combat
             GameManager.Instance.AddGold(goldReward);
             FloatingTextManager.Instance?.SpawnGold(GlobalPosition + new Vector2(0, -30), goldReward);
 
-            QueueFree();
+            if (this is not BossEnemy && WaveSpawner.Instance != null)
+            {
+                WaveSpawner.Instance.ReleaseEnemy(this);
+            }
+            else
+            {
+                QueueFree();
+            }
+        }
+
+        public virtual void OnSpawnFromPool()
+        {
+            IsDead = false;
+            Visible = true;
+            SetProcess(true);
+            SetPhysicsProcess(true);
+        }
+
+        public virtual void OnReturnToPool()
+        {
+            IsDead = true;
+            _heroTarget = null;
+            Velocity = Vector2.Zero;
+            if (IsInGroup("Enemies"))
+            {
+                RemoveFromGroup("Enemies");
+            }
+            if (_healthBar != null)
+            {
+                _healthBar.Visible = false;
+            }
+            if (_visual != null)
+            {
+                _visual.Position = Vector2.Zero;
+                _visual.Modulate = Colors.White;
+            }
+            SetProcess(false);
+            SetPhysicsProcess(false);
         }
     }
 }
