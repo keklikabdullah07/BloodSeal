@@ -103,7 +103,8 @@ namespace BloodSeal.Combat
                 proj.GlobalPosition = GlobalPosition;
                 proj.Target = nearest;
                 float petMult = ResearchManager.Instance?.GetPetMultiplier() ?? 1.0f;
-                proj.Damage = GameManager.Instance.Stats.Atk * 0.4f * petMult;
+                float baseAtk = GameManager.Instance?.Stats?.Atk ?? 10f;
+                proj.Damage = baseAtk * 0.4f * petMult;
                 if (_projectilePool == null)
                 {
                     GetTree().CurrentScene.AddChild(proj);

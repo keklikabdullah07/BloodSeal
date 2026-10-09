@@ -71,10 +71,13 @@ namespace BloodSeal.Combat
             FXManager.Instance?.PlayDeathExplosion(GlobalPosition + new Vector2(0, -35), true);
             AudioManager.Instance?.PlayBossVictory();
 
-            double baseGold = GameManager.Instance.CurrentWave * 60 + 250;
-            double bossGold = GameManager.Instance.CalculateGoldReward(baseGold);
-            GameManager.Instance.AddGold(bossGold);
-            FloatingTextManager.Instance?.SpawnGold(GlobalPosition + new Vector2(0, -40), bossGold);
+            if (GameManager.Instance != null)
+            {
+                double baseGold = GameManager.Instance.CurrentWave * 60 + 250;
+                double bossGold = GameManager.Instance.CalculateGoldReward(baseGold);
+                GameManager.Instance.AddGold(bossGold);
+                FloatingTextManager.Instance?.SpawnGold(GlobalPosition + new Vector2(0, -40), bossGold);
+            }
 
             // Kadim Parşömen Düşüşü: İlk kesimde (Milestone) garanti, tekrarlarda %10 şans
             int wave = GameManager.Instance != null ? GameManager.Instance.CurrentWave : 10;

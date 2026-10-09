@@ -123,11 +123,13 @@ namespace BloodSeal.Combat
             // Death explosion particle
             FXManager.Instance?.PlayDeathExplosion(GlobalPosition + new Vector2(0, -35), this is BossEnemy);
 
-            double baseGold = GameManager.Instance.CurrentWave * 5 + 10;
-            double goldReward = GameManager.Instance.CalculateGoldReward(baseGold);
-
-            GameManager.Instance.AddGold(goldReward);
-            FloatingTextManager.Instance?.SpawnGold(GlobalPosition + new Vector2(0, -30), goldReward);
+            if (GameManager.Instance != null)
+            {
+                double baseGold = GameManager.Instance.CurrentWave * 5 + 10;
+                double goldReward = GameManager.Instance.CalculateGoldReward(baseGold);
+                GameManager.Instance.AddGold(goldReward);
+                FloatingTextManager.Instance?.SpawnGold(GlobalPosition + new Vector2(0, -30), goldReward);
+            }
 
             if (this is not BossEnemy && WaveSpawner.Instance != null)
             {
