@@ -1,4 +1,5 @@
 using Godot;
+using BloodSeal.Core;
 
 namespace BloodSeal.Combat
 {
@@ -11,51 +12,93 @@ namespace BloodSeal.Combat
         [Export] public PackedScene DeathExplosionScene;
         [Export] public PackedScene TapRippleScene;
 
+        private NodePool<SlashEffect> _slashPool;
+        private NodePool<OneShotParticle> _bloodPool;
+        private NodePool<OneShotParticle> _deathPool;
+        private NodePool<TapRipple> _tapPool;
+
         public override void _EnterTree()
         {
             Instance = this;
         }
 
+        public override void _Ready()
+        {
+            if (SlashScene != null)
+                _slashPool = new NodePool<SlashEffect>(SlashScene, this, 10);
+            if (BloodSplatterScene != null)
+                _bloodPool = new NodePool<OneShotParticle>(BloodSplatterScene, this, 15);
+            if (DeathExplosionScene != null)
+                _deathPool = new NodePool<OneShotParticle>(DeathExplosionScene, this, 10);
+            if (TapRippleScene != null)
+                _tapPool = new NodePool<TapRipple>(TapRippleScene, this, 10);
+        }
+
+        public void ReleaseSlash(SlashEffect slash) => _slashPool?.Release(slash);
+        public void ReleaseBloodSplatter(OneShotParticle blood) => _bloodPool?.Release(blood);
+        public void ReleaseDeathExplosion(OneShotParticle expl) => _deathPool?.Release(expl);
+        public void ReleaseTapRipple(TapRipple rip) => _tapPool?.Release(rip);
+
         public void PlaySlash(Vector2 pos, bool isBerserk)
         {
-            if (SlashScene == null) return;
-            var slash = SlashScene.Instantiate<Node2D>();
-            slash.GlobalPosition = pos;
-            if (isBerserk)
+            if (_slashPool != null)
             {
-                slash.Scale = new Vector2(1.6f, 1.6f);
-                slash.Modulate = new Color(1.5f, 0.4f, 0.2f);
+                var slash = _slashPool.Acquire();
+                slash.Play(pos, isBerserk);
             }
-            AddChild(slash);
+            else if (SlashScene != null)
+            {
+                var slash = SlashScene.Instantiate<SlashEffect>();
+                AddChild(slash);
+                slash.Play(pos, isBerserk);
+            }
         }
 
         public void PlayBloodSplatter(Vector2 pos, Vector2 direction)
         {
-            if (BloodSplatterScene == null) return;
-            var blood = BloodSplatterScene.Instantiate<Node2D>();
-            blood.GlobalPosition = pos;
-            blood.Rotation = direction.Angle();
-            AddChild(blood);
+            if (_bloodPool != null)
+            {
+                var blood = _bloodPool.Acquire();
+                blood.OnFinished = ReleaseBloodSplatter;
+                blood.Play(pos, 1.0f, direction.Angle());
+            }
+            else if (BloodSplatterScene != null)
+            {
+                var blood = BloodSplatterScene.Instantiate<OneShotParticle>();
+                AddChild(blood);
+                blood.Play(pos, 1.0f, direction.Angle());
+            }
         }
 
         public void PlayDeathExplosion(Vector2 pos, bool isBoss)
         {
-            if (DeathExplosionScene == null) return;
-            var expl = DeathExplosionScene.Instantiate<Node2D>();
-            expl.GlobalPosition = pos;
-            if (isBoss)
+            if (_deathPool != null)
             {
-                expl.Scale = new Vector2(2.5f, 2.5f);
+                var expl = _deathPool.Acquire();
+                expl.OnFinished = ReleaseDeathExplosion;
+                expl.Play(pos, isBoss ? 2.5f : 1.0f, 0f);
             }
-            AddChild(expl);
+            else if (DeathExplosionScene != null)
+            {
+                var expl = DeathExplosionScene.Instantiate<OneShotParticle>();
+                AddChild(expl);
+                expl.Play(pos, isBoss ? 2.5f : 1.0f, 0f);
+            }
         }
 
         public void PlayTapRipple(Vector2 pos)
         {
-            if (TapRippleScene == null) return;
-            var rip = TapRippleScene.Instantiate<Node2D>();
-            rip.GlobalPosition = pos;
-            AddChild(rip);
+            if (_tapPool != null)
+            {
+                var rip = _tapPool.Acquire();
+                rip.Play(pos);
+            }
+            else if (TapRippleScene != null)
+            {
+                var rip = TapRippleScene.Instantiate<TapRipple>();
+                AddChild(rip);
+                rip.Play(pos);
+            }
         }
 
         private double _lastHitFreezeTime = -10.0;
