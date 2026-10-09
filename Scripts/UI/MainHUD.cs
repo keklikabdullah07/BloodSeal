@@ -15,11 +15,7 @@ namespace BloodSeal.UI
         [Export] public ColorRect RageVignetteRect;
 
         // Pentagram Buttons
-        [Export] public Button UpgradeAtkBtn;
-        [Export] public Button UpgradeAtkSpdBtn;
-        [Export] public Button UpgradeLifestealBtn;
-        [Export] public Button UpgradeMaxHpBtn;
-        [Export] public Button UpgradeRangeBtn;
+        [Export] public Button UpgradeAtkBtn, UpgradeAtkSpdBtn, UpgradeLifestealBtn, UpgradeMaxHpBtn, UpgradeRangeBtn;
 
         // Modals & Panels
         [Export] public Button GateNotificationBtn; [Export] public ManorGateModal GateModal;
@@ -77,7 +73,6 @@ namespace BloodSeal.UI
                 AddChild(SettingsBtn);
             }
 
-            // Connect button signals
             RageButton?.Connect("pressed", Callable.From(OnRagePressed));
             RetryBossButton?.Connect("pressed", Callable.From(OnRetryBossPressed));
             GateNotificationBtn?.Connect("pressed", Callable.From(() => GateModal?.ShowModal()));
@@ -175,9 +170,22 @@ namespace BloodSeal.UI
         {
             if (WaveLabel != null)
             {
-                if (isBoss) WaveLabel.Text = $"⚠️ BOSS SAVAŞI: DALGA {wave} ⚠️";
-                else if (GameManager.Instance != null && GameManager.Instance.IsInSafeFarmMode) WaveLabel.Text = $"⚔️ GÜVENLİ FARM: DALGA {wave} ⚔️";
-                else WaveLabel.Text = $"DALGA {wave} / {((wave / 10) + 1) * 10}";
+                var zone = Combat.ZoneHelper.GetZoneForWave(wave);
+                string zoneTitle = Combat.ZoneHelper.GetZoneName(zone);
+
+                if (isBoss)
+                {
+                    string bossName = Combat.ZoneHelper.GetBossName(wave);
+                    WaveLabel.Text = $"⚠️ {zoneTitle} | BOSS: {bossName.ToUpper()} (DALGA {wave}) ⚠️";
+                }
+                else if (GameManager.Instance != null && GameManager.Instance.IsInSafeFarmMode)
+                {
+                    WaveLabel.Text = $"⚔️ {zoneTitle} | GÜVENLİ FARM: DALGA {wave} ⚔️";
+                }
+                else
+                {
+                    WaveLabel.Text = $"🏰 {zoneTitle} | DALGA {wave} / {((wave / 10) + 1) * 10}";
+                }
             }
 
             if (RetryBossButton != null) RetryBossButton.Visible = GameManager.Instance != null && GameManager.Instance.IsInSafeFarmMode;
