@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://bosscombat001bgm"
-path="res://.godot/imported/boss_combat.wav-sample.sample"
+uid="uid://bdlv2mumv2wdk"
+path="res://.godot/imported/boss_combat.wav-7c79c8fe212c64248909a169d945b891.sample"
 
 [deps]
 
 source_file="res://Audio/BGM/boss_combat.wav"
-dest_files=["res://.godot/imported/boss_combat.wav-sample.sample"]
+dest_files=["res://.godot/imported/boss_combat.wav-7c79c8fe212c64248909a169d945b891.sample"]
 
 [params]
 
