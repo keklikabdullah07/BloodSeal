@@ -27,6 +27,7 @@
 | **Malikane Odaları & Kütüphane** | **Uygulandı** | [`Scripts/Core/ResearchManager.cs`](file:///c:/Users/Partridge/Desktop/blood-seal/Scripts/Core/ResearchManager.cs)<br>[`Scripts/UI/LibraryModal.cs`](file:///c:/Users/Partridge/Desktop/blood-seal/Scripts/UI/LibraryModal.cs) | 3 disiplin, 9 araştırma düğümü, altın + parşömen maliyeti ve savaş çarpanları. |
 | **Uyanış (Awakening / Rebirth)** | **Uygulandı** | [`Scripts/Core/AwakeningManager.cs`](file:///c:/Users/Partridge/Desktop/blood-seal/Scripts/Core/AwakeningManager.cs)<br>[`Scripts/UI/AwakeningModal.cs`](file:///c:/Users/Partridge/Desktop/blood-seal/Scripts/UI/AwakeningModal.cs) | Dalga 20+ eşiği, polinomik AP formülü, 3 dallı ve 7 pasifli Kadim Mühürler Ağacı, prestij sıfırlaması. |
 | **Lore Eserleri & Malikane Mahzeni (Relic Vault)** | **Uygulandı** | [`Scripts/Core/RelicModels.cs`](file:///c:/Users/Partridge/Desktop/blood-seal/Scripts/Core/RelicModels.cs)<br>[`Scripts/Core/RelicManager.cs`](file:///c:/Users/Partridge/Desktop/blood-seal/Scripts/Core/RelicManager.cs)<br>[`Scripts/UI/RelicVaultModal.cs`](file:///c:/Users/Partridge/Desktop/blood-seal/Scripts/UI/RelicVaultModal.cs) | Dalga 10-100 milestone Boss'larından düşen 10 benzersiz Gotik eser; kalıcı pasif bonuslar (hasar, can, altın, hız, lifesteal, AP); Uyanışta silinmez; iki sütunlu vitrin modalı. |
+| **Ses Mimarisi & Gotik Ses Deneyimi** | **Uygulandı** | [`Scripts/Core/AudioManager.cs`](file:///c:/Users/Partridge/Desktop/blood-seal/Scripts/Core/AudioManager.cs)<br>[`Scripts/UI/SettingsModal.cs`](file:///c:/Users/Partridge/Desktop/blood-seal/Scripts/UI/SettingsModal.cs) | 6 kanallı döngüsel SFX havuzu, çift kanallı BGM crossfade (Minyon vs Boss teması), kapsamlı oynanış sesleri (Rage, Boss zaferi, Eser, Uyanış), logaritmik dB dönüşümü, SaveData kalıcılığı ve Gotik SettingsModal arayüzü. |
 
 ---
 
@@ -180,15 +181,15 @@ Projedeki tüm 23 C# dosyası taranmış ve satır sayıları ölçülmüştür:
 | `godot-csharp` | Tüm oyun scriptleri, partial classlar, C# eventleri | **Kullanılıyor** |
 | `godot-shaders` | `Shaders/BloodVignette.gdshader` | **Kullanılıyor** |
 | `godot-signals-groups` | "Enemies" grubu ve `Action` eventleri | **Kullanılıyor** |
-| `godot-ui-control` | `MainHUD.tscn`, `SelectionCard.tscn`, `PrologueScene.tscn` | **Kullanılıyor** |
+| `godot-ui-control` | `MainHUD.tscn`, `SelectionCard.tscn`, `PrologueScene.tscn`, modallar | **Kullanılıyor** |
+| `godot-audio` | `AudioManager.cs`, çift kanallı BGM crossfade, 6 kanallı SFX havuzu, SettingsModal | **Kullanılıyor** |
+| `save-systems` | `SaveSystem.cs`, `SaveData.cs`, atomik yazma, 6 saatlik offline ilerleme, ses ayarları | **Kullanılıyor** |
 | `camera-systems` | Sadece `CameraShake.cs` içinde basit offset sarsıntısı var; kamera takip/deadzone yok | **Kısmen** |
 | `game-ui-ux` | Responsive UI Container yapıları var; gamepad/klavye fokus navigasyonu yok | **Kısmen** |
-| `godot-export` | `export_presets.cfg` tanımlandı ancak Android exportu net10.0 sebebiyle başarısız | **Kısmen** |
+| `godot-export` | `export_presets.cfg` tanımlandı, Android net9.0 platform koşulu çözüldü | **Kısmen** |
 | `create-game-assets` | Henüz hiçbir görsel üretim scripti veya asset pipeline çalıştırılmadı | **KULLANILMIYOR** |
-| `godot-audio` | Projede tek bir ses dosyası, `AudioStreamPlayer` veya ses bus'ı yok | **KULLANILMIYOR** |
 | `godot-resources` | Özel `.tres` Godot Resource sınıfı yok (JSON ve C# kullanılıyor) | **KULLANILMIYOR** |
 | `performance-optimization`| Profiler ölçümü veya nesne havuzlaması (Object Pooling) yok | **KULLANILMIYOR** |
-| `save-systems` | Disk kaydı, atomik yazma veya offline ilerleme kodu henüz yazılmadı | **KULLANILMIYOR** |
 
 ---
 
@@ -209,15 +210,10 @@ Projedeki tüm 23 C# dosyası taranmış ve satır sayıları ölçülmüştür:
 
 ---
 
-## 7. En Büyük 10 Risk ve Eksik (Önem Sırasına Göre)
+## 7. Kalan Kritik Riskler ve Yol Haritası İhtiyaçları
 
-1. **🔴 Android C# TargetFramework Çıkmazı:** Godot 4.7 Mono Android export template'i `net10.0` desteklememekte, `net9.0` veya Gradle build istemektedir. Şu an mobil APK üretilememektedir.
-2. **🔴 Kalıcı Kayıt ve Çevrimdışı İlerleme Yokluğu:** Oyundan çıkıldığında altın, dalga ve karakter profilini diske kaydeden ve açılışta 6 saatlik formülü çalıştıran `SaveSystem.cs` henüz yazılmamıştır.
-3. **🔴 Görsel Varlıkların Tamamının Geçici (Polygon2D) Olması:** Oyunda tek bir profesyonel sprite, tileset veya animasyon karesi yoktur.
-4. **🟠 Ses Mimarisinin Tamamen Sıfır Olması:** Projede tek bir ses dosyası veya SFX/BGM oynatıcı yoktur (`godot-audio` boşta beklemektedir).
-5. **🟠 Denge Eğrisi Uçurumu:** Doğrusal altın geliri ($55$ altın/minyon) ile üstel maliyet ($1.15^{Lv-1}$) arasındaki fark ilerleyen dalgalarda aşırı farm sürelerine ve oyuncunun sıkılmasına yol açacaktır.
-6. **🟠 Nesne Havuzu (Object Pooling) Eksikliği:** Minyonlar, mermiler ve parçacıklar her dalgada `Instantiate()` ve `QueueFree()` ile yaratılıp silinmektedir; mobilde GC (Garbage Collection) takılmaları riski taşımaktadır.
-7. **🟡 `SaveData.cs` - `GameManager.cs` Tip Uyuşmazlığı:** `SaveData.cs` içinde `Gold` `long` tanımlıyken oyun motorunda `double` yapılmıştır.
-8. **🟡 Malikane & Lore Sistemlerinin (GDD Bölüm 5) Olmaması:** Malikane kapısı seçimi, kilitli odalar ve kütüphane araştırmaları henüz mevcut değildir.
-9. **🟡 `PetCompanion.cs` Call Down İhlali:** `_hero = GetParent().GetNodeOrNull<Node2D>("Hero")` ile sahne ağacında üst nesneye tırmanmaktadır.
-10. **🟡 Uyanış (Awakening / Rebirth) Sisteminin Yokluğu:** Tıkanılan dalgalarda karakteri sıfırlayıp kalıcı çarpanlar veren prestij sistemi henüz tasarlanmamıştır.
+1. **🔴 Görsel Varlıkların Tamamının Geçici (Polygon2D) Olması:** Oyunda tek bir profesyonel sprite, tileset veya animasyon karesi yoktur (`create-game-assets` ve `bloodseal-art-style`).
+2. **🟠 Nesne Havuzu (Object Pooling) Eksikliği:** Minyonlar, mermiler ve parçacıklar her dalgada `Instantiate()` ve `QueueFree()` ile yaratılıp silinmektedir; mobilde GC (Garbage Collection) takılmaları riski taşımaktadır (`performance-optimization`).
+3. **🟠 Denge Eğrisi Uçurumu:** Doğrusal altın geliri ($55$ altın/minyon) ile üstel maliyet ($1.15^{Lv-1}$) arasındaki fark ilerleyen dalgalarda aşırı farm sürelerine yol açabilir; Uyanış çarpanları ve kütüphane araştırmaları bu dengeyi yumuşatmıştır ancak ileri dalga simülasyonları gereklidir.
+4. **🟡 Android Export Şablon Kurulumu:** C# multi-targeting (`net9.0`) platform koşulu çözülmüştür, ancak yerel cihazda Godot Android Mono export template (`android_debug.apk`) ve Java SDK henüz kurulu değildir (`godot-export`).
+5. **🟡 Gamepad ve Dokunmatik UI İyileştirmeleri:** Menüler ve modallar fare/dokunma ile çalışmaktadır; klavye/gamepad focus navigasyonu ve mobil safe-area optimizasyonları eklenebilir (`game-ui-ux`).
