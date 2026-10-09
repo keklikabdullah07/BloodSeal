@@ -32,6 +32,7 @@
     <Compile Include="..\Scripts\Core\AudioData.cs" Link="Core\AudioData.cs" />
     <Compile Include="..\Scripts\Core\ObjectPool.cs" Link="Core\ObjectPool.cs" />
     <Compile Include="..\Scripts\Combat\PentagramStats.cs" Link="Combat\PentagramStats.cs" />
+    <Compile Include="..\Scripts\Combat\ZoneModels.cs" Link="Combat\ZoneModels.cs" />
   </ItemGroup>
 
 </Project>
