@@ -19,6 +19,7 @@
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Background/bg_sky_bloodmoon.png" id="17_sky"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Background/bg_ruins_spires.png" id="18_ruins"]
 [ext_resource type="Texture2D" path="res://Assets/Sprites/Background/bg_ground_cobble.png" id="19_ground"]
+[ext_resource type="Script" path="res://Scripts/UI/TutorialController.cs" id="20_tut"]
 
 [node name="MainCombat" type="Node2D"]
 
@@ -103,6 +104,9 @@ script = ExtResource("8_floatmgr")
 FloatingTextScene = ExtResource("5_float")
 
 [node name="MainHUD" parent="." instance=ExtResource("6_hud")]
+
+[node name="TutorialController" type="CanvasLayer" parent="."]
+script = ExtResource("20_tut")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(960, 540)

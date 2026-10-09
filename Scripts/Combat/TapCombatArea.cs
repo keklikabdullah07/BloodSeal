@@ -57,6 +57,8 @@ namespace BloodSeal.Combat
                 GameManager.Instance.AddRage(1.5f * rageMult * (1.0f + relicRage));
             }
 
+            TutorialManager.Instance?.RegisterTap();
+
             // Visual tap ripple, SFX & light screen shake (outside Berserk)
             FXManager.Instance?.PlayTapRipple(tapPos);
             Core.AudioManager.Instance?.PlayTap();

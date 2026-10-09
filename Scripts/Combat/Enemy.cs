@@ -142,6 +142,8 @@ namespace BloodSeal.Combat
                 FloatingTextManager.Instance?.SpawnGold(GlobalPosition + new Vector2(0, -30), goldReward);
             }
 
+            TutorialManager.Instance?.RecordEnemyDefeated();
+
             if (_visual != null)
             {
                 var deathTween = CreateTween().SetParallel(true);
