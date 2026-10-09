@@ -40,8 +40,7 @@ namespace BloodSeal.Combat
 
             if (ProjectileScene != null)
             {
-                var parent = GetTree()?.CurrentScene ?? this;
-                _projectilePool = new NodePool<BloodProjectile>(ProjectileScene, parent, 15);
+                _projectilePool = new NodePool<BloodProjectile>(ProjectileScene, this, 15);
             }
         }
 

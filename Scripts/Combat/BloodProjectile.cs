@@ -9,6 +9,11 @@ namespace BloodSeal.Combat
         public Node2D Target { get; set; }
         public float Damage { get; set; } = 5f;
 
+        public override void _Ready()
+        {
+            TopLevel = true;
+        }
+
         public override void _Process(double delta)
         {
             if (!IsInstanceValid(Target))
