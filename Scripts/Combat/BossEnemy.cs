@@ -9,6 +9,13 @@ namespace BloodSeal.Combat
         private double _enrageTimer = 0.0;
         private int _enrageSteps = 0;
         private float _baseAttackDamage = 0f;
+        private Sprite2D _bossSprite;
+
+        public override void _Ready()
+        {
+            base._Ready();
+            _bossSprite = _visual?.GetNodeOrNull<Sprite2D>("BossSprite");
+        }
 
         public override void Setup(int wave, Hero hero)
         {
@@ -20,6 +27,14 @@ namespace BloodSeal.Combat
             AttackDamage = _baseAttackDamage;
             AddToGroup("Enemies");
             Scale = new Vector2(1.9f, 1.9f);
+
+            if (_bossSprite != null)
+            {
+                string texPath = ZoneHelper.GetBossTexturePath(wave);
+                var tex = GD.Load<Texture2D>(texPath);
+                if (tex != null) _bossSprite.Texture = tex;
+            }
+
             UpdateHealthBar();
             TriggerHealthChanged(CurrentHp, MaxHp);
         }

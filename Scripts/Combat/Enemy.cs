@@ -23,11 +23,13 @@ namespace BloodSeal.Combat
         protected double _attackTimer = 0.0;
         protected ProgressBar _healthBar;
         protected Node2D _visual;
+        protected Sprite2D _sprite;
 
         public override void _Ready()
         {
             _healthBar = GetNodeOrNull<ProgressBar>("HealthBar");
             _visual = GetNodeOrNull<Node2D>("Visual");
+            _sprite = _visual?.GetNodeOrNull<Sprite2D>("EnemySprite");
         }
 
         public virtual void Setup(int wave, Hero hero)
@@ -37,6 +39,14 @@ namespace BloodSeal.Combat
             MaxHp = wave * 25f + 50f;
             CurrentHp = MaxHp;
             AttackDamage = wave * 3f + 5f;
+
+            if (_sprite != null)
+            {
+                string texPath = ZoneHelper.GetMinionTexturePath(wave);
+                var tex = GD.Load<Texture2D>(texPath);
+                if (tex != null) _sprite.Texture = tex;
+            }
+
             if (!IsInGroup("Enemies"))
             {
                 AddToGroup("Enemies");
