@@ -23,6 +23,7 @@
 [ext_resource type="Script" path="res://Scripts/UI/QuestController.cs" id="21_quest"]
 [ext_resource type="Script" path="res://Scripts/UI/FamiliarController.cs" id="22_familiar"]
 [ext_resource type="Script" path="res://Scripts/UI/InventoryController.cs" id="23_inv"]
+[ext_resource type="Script" path="res://Scripts/UI/SafeAreaHandler.cs" id="24_safe"]
 
 [node name="MainCombat" type="Node2D"]
 
@@ -130,3 +131,7 @@ SlashScene = ExtResource("12_slash")
 BloodSplatterScene = ExtResource("13_blood")
 DeathExplosionScene = ExtResource("14_expl")
 TapRippleScene = ExtResource("15_ripple")
+
+[node name="SafeAreaHandler" type="Node" parent="."]
+script = ExtResource("24_safe")
+
