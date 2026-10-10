@@ -7,7 +7,7 @@ namespace BloodSeal.Combat
     public partial class Hero : CharacterBody2D
     {
         public float CurrentHp { get; private set; }
-        public float MaxHp => GameManager.Instance != null ? GameManager.Instance.Stats.MaxHp : 100f;
+        public float MaxHp => (GameManager.Instance != null ? GameManager.Instance.Stats.MaxHp : 100f) + (EquipmentManager.Instance?.GetTotalPrimaryBonus(EquipmentSlot.Armor) ?? 0f);
 
         public event Action<float, float> OnHealthChanged; // current, max
 
@@ -29,6 +29,7 @@ namespace BloodSeal.Combat
                 GameManager.Instance.OnStatsUpgraded += OnStatsChanged;
                 GameManager.Instance.OnHeroDied += OnHeroRespawned;
             }
+            if (EquipmentManager.Instance != null) EquipmentManager.Instance.OnEquipmentChanged += UpdateHealthUI;
         }
 
         public override void _ExitTree()
@@ -38,6 +39,7 @@ namespace BloodSeal.Combat
                 GameManager.Instance.OnStatsUpgraded -= OnStatsChanged;
                 GameManager.Instance.OnHeroDied -= OnHeroRespawned;
             }
+            if (EquipmentManager.Instance != null) EquipmentManager.Instance.OnEquipmentChanged -= UpdateHealthUI;
         }
 
         private void OnStatsChanged()
@@ -67,11 +69,9 @@ namespace BloodSeal.Combat
                 _visualRoot.Scale = new Vector2(1.0f, 1.0f + Mathf.Sin((float)_idleTime * 3.5f) * 0.02f);
             }
 
-            float currentAtkSpeed = GameManager.Instance != null ? GameManager.Instance.Stats.AtkSpeed : 1.0f;
-            if (isRage)
-            {
-                currentAtkSpeed *= 2f;
-            }
+            float eqSpeed = EquipmentManager.Instance?.GetTotalPrimaryBonus(EquipmentSlot.Ring) ?? 0f;
+            float currentAtkSpeed = (GameManager.Instance != null ? GameManager.Instance.Stats.AtkSpeed : 1.0f) * (1f + eqSpeed);
+            if (isRage) currentAtkSpeed *= 2f;
 
             float cooldownTime = 1f / currentAtkSpeed;
 
@@ -110,8 +110,9 @@ namespace BloodSeal.Combat
         private void PerformAttack(Enemy target)
         {
             bool isRage = GameManager.Instance != null && GameManager.Instance.IsRageActive;
-            float damage = GameManager.Instance != null ? GameManager.Instance.Stats.Atk : 10f;
-            float bonusCrit = FamiliarManager.Instance?.GetCritChanceBonus() ?? 0f;
+            float eqAtk = EquipmentManager.Instance?.GetTotalPrimaryBonus(EquipmentSlot.Weapon) ?? 0f;
+            float damage = (GameManager.Instance != null ? GameManager.Instance.Stats.Atk : 10f) + eqAtk;
+            float bonusCrit = (FamiliarManager.Instance?.GetCritChanceBonus() ?? 0f) + (EquipmentManager.Instance?.GetTotalSecondaryBonus("Crit") ?? 0f);
             bool isCrit = isRage || (bonusCrit > 0f && GD.Randf() < bonusCrit);
             if (isCrit)
             {
@@ -164,7 +165,8 @@ namespace BloodSeal.Combat
             // Lifesteal
             if (GameManager.Instance != null)
             {
-                float lifestealRate = GameManager.Instance.Stats.LifestealPercent / 100f;
+                float eqLifesteal = (EquipmentManager.Instance?.GetTotalPrimaryBonus(EquipmentSlot.Amulet) ?? 0f) / 100f;
+                float lifestealRate = (GameManager.Instance.Stats.LifestealPercent / 100f) + eqLifesteal;
                 float heal = damage * lifestealRate;
                 Heal(heal);
 

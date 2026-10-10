@@ -71,7 +71,7 @@ namespace BloodSeal.Core
             }
             if (EquipmentManager.Instance != null)
             {
-                data.EquippedItems = new System.Collections.Generic.Dictionary<EquipmentSlot, EquipmentItem?>(EquipmentManager.Instance.EquippedItems);
+                data.EquippedItems = new System.Collections.Generic.Dictionary<EquipmentSlot, EquipmentItem>(EquipmentManager.Instance.EquippedItems!);
                 data.BagItems = new System.Collections.Generic.List<EquipmentItem>(EquipmentManager.Instance.BagItems);
             }
             return data;

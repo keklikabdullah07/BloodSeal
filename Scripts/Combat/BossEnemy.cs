@@ -120,6 +120,17 @@ namespace BloodSeal.Combat
                 }
             }
 
+            var droppedItem = EquipmentManager.Instance?.RollDrop(wave, true);
+            if (droppedItem != null)
+            {
+                var def = EquipmentDatabase.Get(droppedItem.DefinitionId);
+                FloatingTextManager.Instance?.SpawnMessage(
+                    GlobalPosition + new Vector2(0, -95),
+                    $"🎁 {def.Name} Düştü!",
+                    new Color(droppedItem.GetRarityHex())
+                );
+            }
+
             if (_visual != null)
             {
                 var deathTween = CreateTween().SetParallel(true);

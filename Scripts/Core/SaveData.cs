@@ -63,7 +63,7 @@ namespace BloodSeal.Core
         public System.Collections.Generic.Dictionary<string, FamiliarProgress> FamiliarProgresses { get; set; } = new();
 
         // Equipment & Inventory (Gotik Eşyalar ve Çanta)
-        public System.Collections.Generic.Dictionary<EquipmentSlot, EquipmentItem?> EquippedItems { get; set; } = new();
+        public System.Collections.Generic.Dictionary<EquipmentSlot, EquipmentItem> EquippedItems { get; set; } = new();
         public System.Collections.Generic.List<EquipmentItem> BagItems { get; set; } = new();
     }
 }

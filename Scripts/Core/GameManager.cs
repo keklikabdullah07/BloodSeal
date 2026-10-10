@@ -207,6 +207,7 @@ namespace BloodSeal.Core
             }
             if (RelicManager.Instance != null) mult *= (1.0 + RelicManager.Instance.GetGoldBonus());
             if (FamiliarManager.Instance != null) mult *= (1.0 + FamiliarManager.Instance.GetGoldMultiplierBonus());
+            if (EquipmentManager.Instance != null) mult += EquipmentManager.Instance.GetTotalSecondaryBonus("Gold");
             return baseGold * mult;
         }
 
