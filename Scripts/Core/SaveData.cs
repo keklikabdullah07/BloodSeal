@@ -52,5 +52,10 @@ namespace BloodSeal.Core
 
         // Tutorial / Onboarding (FTUE)
         public int TutorialStep { get; set; } = 1;
+
+        // Quests & Achievements (GDD & Milestones)
+        public System.Collections.Generic.Dictionary<string, QuestProgress> QuestProgresses { get; set; } = new();
+        public System.Collections.Generic.List<string> ActiveDailyQuestIds { get; set; } = new();
+        public long LastDailyResetTimestamp { get; set; } = 0;
     }
 }

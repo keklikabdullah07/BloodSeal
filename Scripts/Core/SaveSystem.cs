@@ -48,29 +48,22 @@ namespace BloodSeal.Core
             }
 
             var am = AwakeningManager.Instance;
-            if (am != null)
-            {
-                data.AwakeningPoints = am.AwakeningPoints;
-                data.TotalAwakenings = am.TotalAwakenings;
-                data.AwakeningLevels = am.GetAllLevels();
-            }
+            if (am != null) { data.AwakeningPoints = am.AwakeningPoints; data.TotalAwakenings = am.TotalAwakenings; data.AwakeningLevels = am.GetAllLevels(); }
 
             var relics = RelicManager.Instance;
-            if (relics != null)
-            {
-                data.CollectedRelics = relics.GetAllCollectedIds();
-            }
+            if (relics != null) data.CollectedRelics = relics.GetAllCollectedIds();
 
             var audio = AudioManager.Instance;
-            if (audio != null)
-            {
-                data.MasterVolume = audio.MasterVolume;
-                data.BgmVolume = audio.BgmVolume;
-                data.SfxVolume = audio.SfxVolume;
-                data.IsMuted = audio.IsMuted;
-            }
+            if (audio != null) { data.MasterVolume = audio.MasterVolume; data.BgmVolume = audio.BgmVolume; data.SfxVolume = audio.SfxVolume; data.IsMuted = audio.IsMuted; }
 
             data.TutorialStep = (int)(TutorialManager.Instance?.CurrentStep ?? TutorialStep.TapToAttack);
+
+            if (QuestManager.Instance != null)
+            {
+                data.QuestProgresses = new System.Collections.Generic.Dictionary<string, QuestProgress>(QuestManager.Instance.AllProgress);
+                data.ActiveDailyQuestIds = new System.Collections.Generic.List<string>(QuestManager.Instance.ActiveDailyQuestIds);
+                data.LastDailyResetTimestamp = QuestManager.Instance.LastDailyResetTimestamp;
+            }
             return data;
         }
 
@@ -100,38 +93,39 @@ namespace BloodSeal.Core
                 }
             }
 
-            var am = AwakeningManager.Instance;
-            if (am != null)
+            var am2 = AwakeningManager.Instance;
+            if (am2 != null)
             {
-                am.Reset();
-                if (data.AwakeningPoints > 0) am.AddAwakeningPoints(data.AwakeningPoints);
-                am.SetTotalAwakenings(data.TotalAwakenings);
+                am2.Reset();
+                if (data.AwakeningPoints > 0) am2.AddAwakeningPoints(data.AwakeningPoints);
+                am2.SetTotalAwakenings(data.TotalAwakenings);
                 if (data.AwakeningLevels != null)
                 {
                     foreach (var kvp in data.AwakeningLevels)
-                        am.SetSealLevel(kvp.Key, kvp.Value);
+                        am2.SetSealLevel(kvp.Key, kvp.Value);
                 }
             }
 
-            var relics = RelicManager.Instance;
-            if (relics != null)
+            var relics2 = RelicManager.Instance;
+            if (relics2 != null)
             {
-                relics.Reset();
+                relics2.Reset();
                 if (data.CollectedRelics != null)
                 {
                     foreach (var id in data.CollectedRelics)
-                        relics.UnlockRelic(id);
+                        relics2.UnlockRelic(id);
                 }
             }
 
-            var audio = AudioManager.Instance;
-            if (audio != null)
-            {
-                audio.ApplySettings(data.MasterVolume, data.BgmVolume, data.SfxVolume, data.IsMuted);
-            }
+            var audio2 = AudioManager.Instance;
+            if (audio2 != null)
+                audio2.ApplySettings(data.MasterVolume, data.BgmVolume, data.SfxVolume, data.IsMuted);
 
             if (TutorialManager.Instance != null)
                 TutorialManager.Instance.SetStep(data.TutorialStep <= 0 ? TutorialStep.TapToAttack : (TutorialStep)data.TutorialStep);
+
+            if (QuestManager.Instance != null)
+                QuestManager.Instance.LoadState(data.QuestProgresses, data.ActiveDailyQuestIds, data.LastDailyResetTimestamp);
 
             if (gm == null) return;
 

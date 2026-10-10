@@ -191,5 +191,23 @@ namespace BloodSeal.Tests
             Assert.Contains("Relic_TornPortrait", deserialized.CollectedRelics);
             Assert.Contains("Relic_CryptKey", deserialized.CollectedRelics);
         }
+
+        [Fact]
+        public void SaveSystem_SerializesAndRestoresQuestProgress()
+        {
+            var data = new SaveData();
+            data.QuestProgresses["milestone_kills_1"] = new QuestProgress { QuestId = "milestone_kills_1", CurrentAmount = 45, IsClaimed = false };
+            data.ActiveDailyQuestIds.Add("daily_kills_30");
+            data.LastDailyResetTimestamp = 123456789;
+
+            string json = JsonSerializer.Serialize(data);
+            var restored = JsonSerializer.Deserialize<SaveData>(json);
+
+            Assert.NotNull(restored);
+            Assert.True(restored.QuestProgresses.ContainsKey("milestone_kills_1"));
+            Assert.Equal(45, restored.QuestProgresses["milestone_kills_1"].CurrentAmount);
+            Assert.Single(restored.ActiveDailyQuestIds);
+            Assert.Equal(123456789, restored.LastDailyResetTimestamp);
+        }
     }
 }
