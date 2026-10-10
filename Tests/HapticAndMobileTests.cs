@@ -47,8 +47,18 @@ namespace BloodSeal.Tests
 
             bool called = haptic.Vibrate(20);
             Assert.False(called);
-
             haptic.SetHapticsEnabled(true);
+        }
+
+        [Fact]
+        public void SaveData_SerializesAndRestores_IsHapticsEnabled()
+        {
+            var data = new SaveData { IsHapticsEnabled = false };
+            string json = System.Text.Json.JsonSerializer.Serialize(data);
+            var loaded = System.Text.Json.JsonSerializer.Deserialize<SaveData>(json);
+
+            Assert.NotNull(loaded);
+            Assert.False(loaded.IsHapticsEnabled);
         }
     }
 }

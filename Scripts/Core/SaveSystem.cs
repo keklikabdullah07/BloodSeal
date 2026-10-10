@@ -55,6 +55,7 @@ namespace BloodSeal.Core
 
             var audio = AudioManager.Instance;
             if (audio != null) { data.MasterVolume = audio.MasterVolume; data.BgmVolume = audio.BgmVolume; data.SfxVolume = audio.SfxVolume; data.IsMuted = audio.IsMuted; }
+            data.IsHapticsEnabled = HapticManager.Instance.IsHapticsEnabled;
 
             data.TutorialStep = (int)(TutorialManager.Instance?.CurrentStep ?? TutorialStep.TapToAttack);
 
@@ -108,8 +109,8 @@ namespace BloodSeal.Core
             }
 
             var audio2 = AudioManager.Instance;
-            if (audio2 != null)
-                audio2.ApplySettings(data.MasterVolume, data.BgmVolume, data.SfxVolume, data.IsMuted);
+            if (audio2 != null) audio2.ApplySettings(data.MasterVolume, data.BgmVolume, data.SfxVolume, data.IsMuted);
+            HapticManager.Instance.SetHapticsEnabled(data.IsHapticsEnabled);
 
             if (TutorialManager.Instance != null)
                 TutorialManager.Instance.SetStep(data.TutorialStep <= 0 ? TutorialStep.TapToAttack : (TutorialStep)data.TutorialStep);

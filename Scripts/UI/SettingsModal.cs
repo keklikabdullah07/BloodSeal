@@ -8,14 +8,13 @@ namespace BloodSeal.UI
     public partial class SettingsModal : Control
     {
         [Export] public Button? CloseBtn;
+        [Export] public Button? HapticBtn;
         [Export] public HSlider? MasterSlider;
         [Export] public Label? MasterValueLabel;
         [Export] public CheckBox? MasterMuteCheck;
-
         [Export] public HSlider? BgmSlider;
         [Export] public Label? BgmValueLabel;
         [Export] public CheckBox? BgmMuteCheck;
-
         [Export] public HSlider? SfxSlider;
         [Export] public Label? SfxValueLabel;
         [Export] public CheckBox? SfxMuteCheck;
@@ -35,7 +34,6 @@ namespace BloodSeal.UI
             Modulate = new Color(1, 1, 1, 0);
             var tween = CreateTween();
             tween.TweenProperty(this, "modulate:a", 1.0f, 0.2f);
-
             AudioManager.Instance?.PlayModalOpen();
             RefreshValuesFromAudio();
         }
@@ -55,18 +53,14 @@ namespace BloodSeal.UI
         private void WireEvents()
         {
             CloseBtn?.Connect("pressed", Callable.From(CloseModal));
+            HapticBtn?.Connect("pressed", Callable.From(OnHapticToggled));
 
             if (MasterSlider != null)
             {
                 MasterSlider.Connect("value_changed", Callable.From<double>(OnMasterChanged));
                 MasterSlider.Connect("drag_ended", Callable.From<bool>(_ => PlayTestSound()));
             }
-
-            if (BgmSlider != null)
-            {
-                BgmSlider.Connect("value_changed", Callable.From<double>(OnBgmChanged));
-            }
-
+            if (BgmSlider != null) BgmSlider.Connect("value_changed", Callable.From<double>(OnBgmChanged));
             if (SfxSlider != null)
             {
                 SfxSlider.Connect("value_changed", Callable.From<double>(OnSfxChanged));
@@ -94,6 +88,8 @@ namespace BloodSeal.UI
             if (SfxSlider != null) SfxSlider.Value = audio.SfxVolume * 100.0;
             if (SfxValueLabel != null) SfxValueLabel.Text = $"%{(int)(audio.SfxVolume * 100)}";
             _isUpdatingUI = false;
+
+            UpdateHapticButtonText();
         }
 
         private void OnMasterChanged(double val)
@@ -120,40 +116,34 @@ namespace BloodSeal.UI
             AudioManager.Instance?.SetSfxVolume(v);
         }
 
-        private void OnMasterMuteToggled(bool muted)
+        private void OnMasterMuteToggled(bool muted) { if (!_isUpdatingUI) AudioManager.Instance?.SetMuted(muted); }
+        private void OnBgmMuteToggled(bool muted) { if (!_isUpdatingUI) AudioManager.Instance?.SetBusMute("BGM", muted); }
+        private void OnSfxMuteToggled(bool muted) { if (!_isUpdatingUI) AudioManager.Instance?.SetBusMute("SFX", muted); }
+        private void PlayTestSound() => AudioManager.Instance?.PlayButtonClick();
+
+        private void OnHapticToggled()
         {
-            if (_isUpdatingUI) return;
-            AudioManager.Instance?.SetMuted(muted);
+            var h = HapticManager.Instance;
+            h.SetHapticsEnabled(!h.IsHapticsEnabled);
+            UpdateHapticButtonText();
+            PlayTestSound();
+            if (h.IsHapticsEnabled) h.VibrateLight();
         }
 
-        private void OnBgmMuteToggled(bool muted)
+        private void UpdateHapticButtonText()
         {
-            if (_isUpdatingUI) return;
-            AudioManager.Instance?.SetBusMute("BGM", muted);
-        }
-
-        private void OnSfxMuteToggled(bool muted)
-        {
-            if (_isUpdatingUI) return;
-            AudioManager.Instance?.SetBusMute("SFX", muted);
-        }
-
-        private void PlayTestSound()
-        {
-            AudioManager.Instance?.PlayButtonClick();
+            if (HapticBtn == null) return;
+            bool on = HapticManager.Instance.IsHapticsEnabled;
+            HapticBtn.Text = on ? "📳 Titreşim (Haptik): [AÇIK]" : "📳 Titreşim (Haptik): [KAPALI]";
+            HapticBtn.Modulate = on ? new Color(0.6f, 1.2f, 0.7f) : new Color(0.7f, 0.7f, 0.7f);
         }
 
         private void BuildUIIfNeeded()
         {
             if (GetChildCount() > 0) return;
-
             SetAnchorsPreset(LayoutPreset.FullRect);
 
-            var dim = new ColorRect
-            {
-                Color = new Color(0.04f, 0.02f, 0.06f, 0.88f),
-                MouseFilter = MouseFilterEnum.Stop
-            };
+            var dim = new ColorRect { Color = new Color(0.04f, 0.02f, 0.06f, 0.88f), MouseFilter = MouseFilterEnum.Stop };
             dim.SetAnchorsPreset(LayoutPreset.FullRect);
             AddChild(dim);
 
@@ -161,7 +151,7 @@ namespace BloodSeal.UI
             center.SetAnchorsPreset(LayoutPreset.FullRect);
             AddChild(center);
 
-            var panel = new PanelContainer { CustomMinimumSize = new Vector2(620, 440) };
+            var panel = new PanelContainer { CustomMinimumSize = new Vector2(620, 480) };
             var style = new StyleBoxFlat
             {
                 BgColor = new Color(0.08f, 0.05f, 0.09f, 0.98f),
@@ -173,32 +163,33 @@ namespace BloodSeal.UI
             center.AddChild(panel);
 
             var margin = new MarginContainer();
-            margin.AddThemeConstantOverride("margin_left", 32);
-            margin.AddThemeConstantOverride("margin_right", 32);
-            margin.AddThemeConstantOverride("margin_top", 24);
-            margin.AddThemeConstantOverride("margin_bottom", 24);
+            margin.AddThemeConstantOverride("margin_left", 32); margin.AddThemeConstantOverride("margin_right", 32);
+            margin.AddThemeConstantOverride("margin_top", 24); margin.AddThemeConstantOverride("margin_bottom", 24);
             panel.AddChild(margin);
 
-            var vbox = new VBoxContainer { CustomMinimumSize = new Vector2(550, 380) };
-            vbox.AddThemeConstantOverride("separation", 18);
+            var vbox = new VBoxContainer { CustomMinimumSize = new Vector2(550, 420) };
+            vbox.AddThemeConstantOverride("separation", 16);
             margin.AddChild(vbox);
 
-            var title = new Label
-            {
-                Text = "⚙️ SES VE SİSTEM AYARLARI",
-                HorizontalAlignment = HorizontalAlignment.Center,
-                Modulate = new Color(1.3f, 0.85f, 0.35f)
-            };
+            var title = new Label { Text = "⚙️ SES VE SİSTEM AYARLARI", HorizontalAlignment = HorizontalAlignment.Center, Modulate = new Color(1.3f, 0.85f, 0.35f) };
             vbox.AddChild(title);
 
             MasterSlider = CreateSliderRow(vbox, "Ana Ses (Master):", out MasterValueLabel, out MasterMuteCheck, "Sessize Al");
             BgmSlider = CreateSliderRow(vbox, "Müzik (BGM):", out BgmValueLabel, out BgmMuteCheck, "Müziği Kapat");
             SfxSlider = CreateSliderRow(vbox, "Ses Efektleri (SFX):", out SfxValueLabel, out SfxMuteCheck, "Efektleri Kapat");
 
+            HapticBtn = new Button
+            {
+                Text = "📳 Titreşim (Haptik): [AÇIK]",
+                CustomMinimumSize = new Vector2(300, 40),
+                SizeFlagsHorizontal = SizeFlags.ShrinkCenter
+            };
+            vbox.AddChild(HapticBtn);
+
             CloseBtn = new Button
             {
                 Text = "✕ AYARLARI KAPAT",
-                CustomMinimumSize = new Vector2(200, 44),
+                CustomMinimumSize = new Vector2(200, 40),
                 SizeFlagsHorizontal = SizeFlags.ShrinkCenter
             };
             vbox.AddChild(CloseBtn);
@@ -212,9 +203,7 @@ namespace BloodSeal.UI
 
             var topHBox = new HBoxContainer();
             row.AddChild(topHBox);
-
-            var titleLbl = new Label { Text = titleText, SizeFlagsHorizontal = SizeFlags.ExpandFill, Modulate = new Color(0.9f, 0.9f, 0.9f) };
-            topHBox.AddChild(titleLbl);
+            topHBox.AddChild(new Label { Text = titleText, SizeFlagsHorizontal = SizeFlags.ExpandFill, Modulate = new Color(0.9f, 0.9f, 0.9f) });
 
             valueLabel = new Label { Text = "%100", CustomMinimumSize = new Vector2(50, 0), HorizontalAlignment = HorizontalAlignment.Right, Modulate = new Color(1.2f, 0.8f, 0.3f) };
             topHBox.AddChild(valueLabel);
@@ -223,20 +212,11 @@ namespace BloodSeal.UI
             sliderHBox.AddThemeConstantOverride("separation", 16);
             row.AddChild(sliderHBox);
 
-            var slider = new HSlider
-            {
-                MinValue = 0,
-                MaxValue = 100,
-                Step = 1,
-                Value = 100,
-                SizeFlagsHorizontal = SizeFlags.ExpandFill,
-                CustomMinimumSize = new Vector2(340, 24)
-            };
+            var slider = new HSlider { MinValue = 0, MaxValue = 100, Step = 1, Value = 100, SizeFlagsHorizontal = SizeFlags.ExpandFill, CustomMinimumSize = new Vector2(340, 24) };
             sliderHBox.AddChild(slider);
 
             muteCheck = new CheckBox { Text = muteText, Modulate = new Color(0.8f, 0.8f, 0.8f) };
             sliderHBox.AddChild(muteCheck);
-
             return slider;
         }
     }
