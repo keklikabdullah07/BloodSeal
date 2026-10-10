@@ -1,5 +1,3 @@
-using Godot;
-
 namespace BloodSeal.Core
 {
     public enum FamiliarType
@@ -19,7 +17,7 @@ namespace BloodSeal.Core
         public string Description { get; set; } = "";
         public string PassiveDescription { get; set; } = "";
         public string IconPath { get; set; } = "";
-        public Color AuraColor { get; set; } = Colors.Red;
+        public string AuraColorHex { get; set; } = "#E51940";
         public float BaseAttackMultiplier { get; set; } = 0.4f;
         public float BaseAttackInterval { get; set; } = 1.2f;
         public double BaseUpgradeCost { get; set; } = 100.0;

@@ -38,6 +38,8 @@
     <Compile Include="..\Scripts\Core\QuestModels.cs" Link="Core\QuestModels.cs" />
     <Compile Include="..\Scripts\Core\QuestDatabase.cs" Link="Core\QuestDatabase.cs" />
     <Compile Include="..\Scripts\Core\QuestManager.cs" Link="Core\QuestManager.cs" />
+    <Compile Include="..\Scripts\Core\FamiliarModels.cs" Link="Core\FamiliarModels.cs" />
+    <Compile Include="..\Scripts\Core\FamiliarDatabase.cs" Link="Core\FamiliarDatabase.cs" />
+    <Compile Include="..\Scripts\Core\FamiliarManager.cs" Link="Core\FamiliarManager.cs" />
   </ItemGroup>
-
 </Project>

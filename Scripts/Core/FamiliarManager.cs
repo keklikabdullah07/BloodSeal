@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 
@@ -5,15 +6,15 @@ namespace BloodSeal.Core
 {
     public class FamiliarManager
     {
-        private static FamiliarManager _instance;
+        private static FamiliarManager? _instance;
         public static FamiliarManager Instance => _instance ??= new FamiliarManager();
 
         public string ActiveFamiliarId { get; private set; } = "blood_raven";
         private readonly Dictionary<string, FamiliarProgress> _progresses = new();
 
-        public event Action<string> OnActiveFamiliarChanged;
-        public event Action<string, int> OnFamiliarUpgraded;
-        public event Action<string> OnFamiliarUnlocked;
+        public event Action<string>? OnActiveFamiliarChanged;
+        public event Action<string, int>? OnFamiliarUpgraded;
+        public event Action<string>? OnFamiliarUnlocked;
 
         public FamiliarManager()
         {
