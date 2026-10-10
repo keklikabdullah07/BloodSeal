@@ -64,8 +64,7 @@ namespace BloodSeal.Combat
                 float dist = GlobalPosition.DistanceTo(_heroTarget.GlobalPosition);
                 if (dist > 95f)
                 {
-                    Velocity = new Vector2(-MoveSpeed, 0);
-                    MoveAndSlide();
+                    GlobalPosition += new Vector2(-MoveSpeed * (float)delta, 0f);
                 }
                 else
                 {

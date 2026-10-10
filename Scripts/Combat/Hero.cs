@@ -64,7 +64,12 @@ namespace BloodSeal.Combat
             }
 
             _idleTime += delta;
-            if (_visualRoot != null && _attackCooldown > 0.0)
+            if (_attackCooldown > 0.0)
+            {
+                _attackCooldown -= delta;
+            }
+
+            if (_visualRoot != null)
             {
                 _visualRoot.Scale = new Vector2(1.0f, 1.0f + Mathf.Sin((float)_idleTime * 3.5f) * 0.02f);
             }
