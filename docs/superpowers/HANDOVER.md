@@ -3,8 +3,8 @@
 ## 📌 Son Tamamlanan Sistemler (Hazır & Doğrulanmış)
 1. **Öğretici & İlk Kullanıcı Deneyimi (Onboarding / FTUE - 3. Adım):**
    - **`TutorialManager.cs`:** Saf C# singleton servisi ile adım durum makinesi (`TapToAttack` -> `UpgradeAttack` -> `ActivateBerserk` -> `VisitManorGate` -> `Completed`).
-   - **`TutorialHintCallout.cs`:** Gotik çerçeveli, hafif nabız atan işaretçi ok (`▲`/`▼`) ve dinamik ipucu balonu. `MouseFilter = MouseFilterEnum.Ignore` ile oyun ve UI tıklamalarını kesinlikle engellemez.
-   - **`TutorialController.cs`:** Bağımsız `CanvasLayer` (Layer 105); `MainHUD.cs` satır sayısına dokunmadan butonların ekran koordinatlarını bularak ipuçlarını konumlandırır ve adım geçişlerinde kendini günceller.
+   - **`TutorialHintCallout.cs`:** Gotik çerçeveli, hafif nabız atan işaretçi ok (`▲`/`▼`) ve dinamik ipucu balonu. `MouseFilter = MouseFilterEnum.Ignore` ile oyun ve UI tıklamalarını engellemez.
+   - **`TutorialController.cs`:** Bağımsız `CanvasLayer` (Layer 105); `MainHUD.cs` satır sayısına dokunmadan butonların ekran koordinatlarını bularak ipuçlarını konumlandırır.
    - **Kalıcılık (`SaveData.cs` & `SaveSystem.cs`):** `TutorialStep` kaydedilir ve oyun tekrar açıldığında kaldığı adımdan devam eder.
    - **Bağlayıcı Kurallara %100 Uyum:** `MainHUD.cs` ve `GameManager.cs` 248 satırda korundu, `SaveSystem.cs` 248 satır, tüm yeni sınıflar < 140 satır. `Engine.TimeScale` değiştirilmedi.
 2. **Karakter & Vuruş Animasyon Zenginleştirmesi (Combat Motion & Juice):**
@@ -20,11 +20,21 @@
 
 ---
 
-## 🎯 Sıradaki Hedef / Önerilen Adımlar
-1. **Başarımlar & Günlük Görevler Sistemi (Achievements & Daily Quests):**
-   - Belirli düşman öldürme, dalga tamamlama, Berserk açma, yadigar toplama hedefleri.
-   - Ödül olarak altın ve kan parşömeni verme.
-2. **Haptic / Titreşim & Mobil Giriş İyileştirmeleri:**
-   - Dokunmatik ekranlarda geri bildirim ve çoklu dokunuş (multi-touch) hissi.
-3. **Android Build & Export Hazırlığı:**
-   - Android debug export APK doğrulaması ve imzalama hazırlığı.
+## 🎯 Yeni Sohbette Başlanacak Sıradaki Sistem: Başarımlar & Günlük Kan Görevleri (Quest & Achievement System)
+Kullanıcı ile beyin fırtınası (brainstorming) tamamlanmış ve tüm mimari tercihler kesinleşmiştir:
+
+### Kesinleşen Tasarım Kararları:
+1. **İki Katmanlı Kapsam:**
+   - **Kalıcı Gotik Başarımlar (Milestones):** Uzun vadeli hedefler (Düşman öldürme, Boss kesme, Dalga geçme, Berserk açma, Stat yükseltme).
+   - **Günlük Kan Avı Görevleri (Daily Bounties):** 24 saatte bir (Unix timestamp ile) yenilenen 3 dinamik görev.
+2. **Ödül Yapısı:**
+   - Günlük Görevler: Bol Altın + Parşömen.
+   - Kalıcı Başarımlar: Parşömen + Uyanış Puanı (Awakening Points) + Altın.
+3. **Arayüz Entegrasyonu:**
+   - Üst/Sağ HUD Barında Parıldayan Gotik Mühür İkonu (bildirim rozetli).
+   - Tam Gotik Modal (`QuestModal.cs`): 2 sekmeli (Kalıcı Başarımlar / Günlük Av), kaydırılabilir liste, ilerleme çubuğu ve parıldayan "Talep Et" butonu.
+   - `MainHUD.cs` satır sayısına dokunulmayacak (248 satırda kalacak); modal bağımsız kontrolcü / sahne referansı ile yönetilecek.
+4. **Mimari:**
+   - **Yaklaşım 1 (Birleşik `QuestManager.cs`):** Saf C# tek yönetici, olay tabanlı sayaçlar (`OnEnemyDied`, `OnWaveChanged`, `OnTap`, `OnRageActive`, `OnStatsUpgraded`).
+   - `QuestModels.cs`, `QuestDatabase.cs`, `QuestManager.cs` (Saf C# -> xUnit ile %100 test edilebilir).
+   - `SaveData.cs` ve `SaveSystem.cs` içinde görev ilerlemelerinin ve son sıfırlama zamanının (`LastDailyResetTimestamp`) saklanması.
