@@ -35,6 +35,8 @@
     <Compile Include="..\Scripts\Combat\ZoneModels.cs" Link="Combat\ZoneModels.cs" />
     <Compile Include="..\Scripts\Core\TutorialModels.cs" Link="Core\TutorialModels.cs" />
     <Compile Include="..\Scripts\Core\TutorialManager.cs" Link="Core\TutorialManager.cs" />
+    <Compile Include="..\Scripts\Core\QuestModels.cs" Link="Core\QuestModels.cs" />
+    <Compile Include="..\Scripts\Core\QuestDatabase.cs" Link="Core\QuestDatabase.cs" />
   </ItemGroup>
 
 </Project>
