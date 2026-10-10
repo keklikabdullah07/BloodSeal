@@ -57,5 +57,9 @@ namespace BloodSeal.Core
         public System.Collections.Generic.Dictionary<string, QuestProgress> QuestProgresses { get; set; } = new();
         public System.Collections.Generic.List<string> ActiveDailyQuestIds { get; set; } = new();
         public long LastDailyResetTimestamp { get; set; } = 0;
+
+        // Familiars (Kan Bağı Yoldaşları)
+        public string ActiveFamiliarId { get; set; } = "blood_raven";
+        public System.Collections.Generic.Dictionary<string, FamiliarProgress> FamiliarProgresses { get; set; } = new();
     }
 }

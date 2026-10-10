@@ -64,6 +64,11 @@ namespace BloodSeal.Core
                 data.ActiveDailyQuestIds = new System.Collections.Generic.List<string>(QuestManager.Instance.ActiveDailyQuestIds);
                 data.LastDailyResetTimestamp = QuestManager.Instance.LastDailyResetTimestamp;
             }
+            if (FamiliarManager.Instance != null)
+            {
+                data.ActiveFamiliarId = FamiliarManager.Instance.ActiveFamiliarId;
+                data.FamiliarProgresses = new System.Collections.Generic.Dictionary<string, FamiliarProgress>(FamiliarManager.Instance.GetAllProgresses());
+            }
             return data;
         }
 
@@ -126,6 +131,7 @@ namespace BloodSeal.Core
 
             if (QuestManager.Instance != null)
                 QuestManager.Instance.LoadState(data.QuestProgresses, data.ActiveDailyQuestIds, data.LastDailyResetTimestamp);
+            FamiliarManager.Instance?.LoadProgresses(data.ActiveFamiliarId, data.FamiliarProgresses);
 
             if (gm == null) return;
 
