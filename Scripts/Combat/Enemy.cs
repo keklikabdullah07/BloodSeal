@@ -143,6 +143,7 @@ namespace BloodSeal.Combat
             }
 
             TutorialManager.Instance?.RecordEnemyDefeated();
+            QuestManager.Instance?.RecordEnemyKilled(false);
 
             if (_visual != null)
             {

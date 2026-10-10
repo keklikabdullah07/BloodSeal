@@ -51,7 +51,11 @@ namespace BloodSeal.Core
             else QueueFree();
         }
 
-        public override void _Ready() => LoadGame();
+        public override void _Ready()
+        {
+            LoadGame();
+            QuestManager.Instance?.CheckAndRefreshDailyQuests(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+        }
         public override void _ExitTree() { if (Instance == this) SaveGame(); }
 
         public void LoadGame()
@@ -132,6 +136,7 @@ namespace BloodSeal.Core
                 _rageActiveTimer = 10.0 + bonus;
                 AudioManager.Instance?.PlayRageBurst();
                 OnRageStateChanged?.Invoke(true);
+                QuestManager.Instance?.RecordBerserkActivated();
                 return true;
             }
             return false;
@@ -142,6 +147,7 @@ namespace BloodSeal.Core
             CurrentWave = wave;
             IsInSafeFarmMode = isSafeFarm;
             if (wave > HighestWave) HighestWave = wave;
+            QuestManager.Instance?.RecordWaveProgress(wave);
             bool isBoss = (wave % 10 == 0);
             OnWaveChanged?.Invoke(CurrentWave, isBoss);
 
@@ -155,17 +161,8 @@ namespace BloodSeal.Core
         }
 
         public void AdvanceWave() => SetWave(CurrentWave + 1, false);
-
-        public void NotifyHeroDied()
-        {
-            OnHeroDied?.Invoke();
-            SetWave(Math.Max(1, CurrentWave - 1), true);
-        }
-
-        public void RetryBoss()
-        {
-            if (IsInSafeFarmMode) SetWave(((CurrentWave / 10) + 1) * 10, false);
-        }
+        public void NotifyHeroDied() { OnHeroDied?.Invoke(); SetWave(Math.Max(1, CurrentWave - 1), true); }
+        public void RetryBoss() { if (IsInSafeFarmMode) SetWave(((CurrentWave / 10) + 1) * 10, false); }
 
         public bool UpgradeAtk() => TryUpgradeStat(Stats.GetAtkCost(), () => Stats.AtkLevel++);
         public bool UpgradeAtkSpeed() => TryUpgradeStat(Stats.GetAtkSpeedCost(), () => Stats.AtkSpeedLevel++);
@@ -179,6 +176,7 @@ namespace BloodSeal.Core
             {
                 upgradeAction();
                 OnStatsUpgraded?.Invoke();
+                QuestManager.Instance?.RecordStatUpgraded();
                 SaveGame();
                 return true;
             }

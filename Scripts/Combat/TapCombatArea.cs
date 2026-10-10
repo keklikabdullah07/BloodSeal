@@ -58,6 +58,7 @@ namespace BloodSeal.Combat
             }
 
             TutorialManager.Instance?.RegisterTap();
+            QuestManager.Instance?.RecordTapAttack();
 
             // Visual tap ripple, SFX & light screen shake (outside Berserk)
             FXManager.Instance?.PlayTapRipple(tapPos);

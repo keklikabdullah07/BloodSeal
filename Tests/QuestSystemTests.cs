@@ -114,5 +114,24 @@ namespace BloodSeal.Tests
             Assert.Equal(3, manager.ActiveDailyQuestIds.Count);
             Assert.Equal(t0 + 90000, manager.LastDailyResetTimestamp);
         }
+
+        [Fact]
+        public void QuestManager_HandlesAllGameEventTypes()
+        {
+            var qm = new QuestManager();
+            qm.ResetAll();
+
+            qm.RecordTapAttack();
+            qm.RecordBerserkActivated();
+            qm.RecordStatUpgraded();
+            qm.RecordWaveProgress(15);
+            qm.RecordEnemyKilled(isBoss: true);
+
+            Assert.Equal(1, qm.GetProgress("milestone_berserk_1").CurrentAmount);
+            Assert.Equal(1, qm.GetProgress("milestone_upgrade_10").CurrentAmount);
+            Assert.Equal(15, qm.GetProgress("milestone_wave_10").CurrentAmount);
+            Assert.Equal(1, qm.GetProgress("milestone_boss_1").CurrentAmount);
+            Assert.Equal(1, qm.GetProgress("milestone_kills_1").CurrentAmount);
+        }
     }
 }
