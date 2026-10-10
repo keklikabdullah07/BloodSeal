@@ -5,16 +5,38 @@ namespace BloodSeal.Combat
 {
     public partial class TapCombatArea : Control
     {
+        private double _tapTokens = 16.0;
+        private const double MaxTapTokens = 16.0;
+        private const double TapRefillRate = 16.0;
+        private ulong _lastTapTicks = 0;
+
         public override void _GuiInput(InputEvent @event)
         {
             if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed && mouseEvent.ButtonIndex == MouseButton.Left)
             {
-                OnTap(mouseEvent.GlobalPosition);
+                TryTap(mouseEvent.GlobalPosition);
             }
             else if (@event is InputEventScreenTouch touchEvent && touchEvent.Pressed)
             {
-                OnTap(touchEvent.Position);
+                // Multi-touch: Her parmak (touchEvent.Index) koordinatında bağımsız dokunuş işlenir
+                TryTap(touchEvent.Position);
             }
+        }
+
+        private void TryTap(Vector2 tapPos)
+        {
+            ulong now = Time.GetTicksMsec();
+            if (_lastTapTicks > 0)
+            {
+                double elapsed = (now - _lastTapTicks) / 1000.0;
+                _tapTokens = Mathf.Min(MaxTapTokens, _tapTokens + elapsed * TapRefillRate);
+            }
+            _lastTapTicks = now;
+
+            if (_tapTokens < 1.0) return; // Anti-macro / autoclicker sınırlayıcı (maks 16 tap/sn)
+            _tapTokens -= 1.0;
+
+            OnTap(tapPos);
         }
 
         private void OnTap(Vector2 tapPos)
@@ -60,15 +82,17 @@ namespace BloodSeal.Combat
             TutorialManager.Instance?.RegisterTap();
             QuestManager.Instance?.RecordTapAttack();
 
-            // Visual tap ripple, SFX & light screen shake (outside Berserk)
+            // Görsel halka (ripple), SFX, haptik titreşim ve hafif sarsıntı
             FXManager.Instance?.PlayTapRipple(tapPos);
             Core.AudioManager.Instance?.PlayTap();
+            HapticManager.Instance.VibrateLight();
+
             if (GameManager.Instance == null || !GameManager.Instance.IsRageActive)
             {
                 CameraShake.Instance?.AddTrauma(0.08f);
             }
 
-            // Spawn visual tap damage popup at clicked point
+            // Tıklanan noktada hasar sayısı
             FloatingTextManager.Instance?.SpawnDamage(tapPos, tapDmg, isCrit);
         }
     }

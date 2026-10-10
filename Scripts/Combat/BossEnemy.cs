@@ -85,6 +85,7 @@ namespace BloodSeal.Combat
             FXManager.Instance?.TriggerLocalHitFreeze(null, this, 0.040f);
             FXManager.Instance?.PlayDeathExplosion(GlobalPosition + new Vector2(0, -35), true);
             AudioManager.Instance?.PlayBossVictory();
+            HapticManager.Instance.VibrateHeavy();
             QuestManager.Instance?.RecordEnemyKilled(true);
 
             if (GameManager.Instance != null)

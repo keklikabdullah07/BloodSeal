@@ -61,6 +61,7 @@ namespace BloodSeal.Combat
             {
                 _wasRageActive = isRage;
                 CameraShake.Instance?.SetBaseTrauma(isRage ? 0.15f : 0.0f);
+                if (isRage) HapticManager.Instance.VibrateHeavy();
             }
 
             _idleTime += delta;
@@ -153,6 +154,7 @@ namespace BloodSeal.Combat
             {
                 if (isCrit)
                 {
+                    HapticManager.Instance.VibrateMedium();
                     CameraShake.Instance?.AddTrauma(0.20f);
                     if (isBoss)
                     {
