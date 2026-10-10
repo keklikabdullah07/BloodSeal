@@ -148,6 +148,7 @@ namespace BloodSeal.Core
             IsInSafeFarmMode = isSafeFarm;
             if (wave > HighestWave) HighestWave = wave;
             QuestManager.Instance?.RecordWaveProgress(wave);
+            FamiliarManager.Instance?.CheckWaveUnlocks(wave);
             bool isBoss = (wave % 10 == 0);
             OnWaveChanged?.Invoke(CurrentWave, isBoss);
 
@@ -205,6 +206,7 @@ namespace BloodSeal.Core
                 if (CurrentWave % 10 == 0) mult *= ResearchManager.Instance.GetBossTributeMultiplier();
             }
             if (RelicManager.Instance != null) mult *= (1.0 + RelicManager.Instance.GetGoldBonus());
+            if (FamiliarManager.Instance != null) mult *= (1.0 + FamiliarManager.Instance.GetGoldMultiplierBonus());
             return baseGold * mult;
         }
 

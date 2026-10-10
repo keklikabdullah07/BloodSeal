@@ -111,8 +111,13 @@ namespace BloodSeal.Combat
         {
             bool isRage = GameManager.Instance != null && GameManager.Instance.IsRageActive;
             float damage = GameManager.Instance != null ? GameManager.Instance.Stats.Atk : 10f;
-            bool isCrit = isRage;
-            if (isCrit) damage *= 2f;
+            float bonusCrit = FamiliarManager.Instance?.GetCritChanceBonus() ?? 0f;
+            bool isCrit = isRage || (bonusCrit > 0f && GD.Randf() < bonusCrit);
+            if (isCrit)
+            {
+                float critMult = 2f + (FamiliarManager.Instance?.GetCritDamageBonus() ?? 0f);
+                damage *= critMult;
+            }
 
             // Slash tween animation with forward tilt and spring recoil
             if (_visualRoot != null)
@@ -182,6 +187,9 @@ namespace BloodSeal.Combat
             {
                 amount = Mathf.Max(1f, amount - 3f);
             }
+
+            float reduction = FamiliarManager.Instance?.GetDamageReductionBonus() ?? 0f;
+            if (reduction > 0f) amount = Mathf.Max(1f, amount * (1f - reduction));
 
             CurrentHp -= amount;
             UpdateHealthUI();
