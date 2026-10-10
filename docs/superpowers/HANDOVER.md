@@ -5,8 +5,8 @@
    - **Üst Bar Çakışmaları ve Altın Göstergesi:** `GoldLabel` üst barın soluna (`ProfileLabel` yanına) taşındı. `TopBar`'a `margin_right = 500` eklenerek sağdaki bağımsız butonların (`Çanta`, `Yoldaş`, `Görevler`, `Ayarlar`) metinleri ve bildirimleri ezmesi/ekrandan taşırması tamamen önlendi.
    - **Profil & Buton Metin Kompaktlığı:** `ProfileLabel` gereksiz uzunluktan arındırılarak `👤 Valerius (Kemik)` formatına çekildi, detaylar `TooltipText`'e aktarıldı. Yoldaş butonu standart `🦇 YOLDAŞ` boyutuna sabitlendi.
    - **Öğretici (Berserk) Mantık Düzeltmesi:** Oyuncu henüz %100 öfkeye ulaşmadan beliren izole kırmızı `🔻` oku kaldırıldı; `TutorialController` artık Berserk ipucunu yalnızca `RagePercentage >= 100f` olduğunda gösteriyor. `TutorialHintCallout` panel boyutlandırması garantiye alındı.
-   - **Rage (Öfke) Butonu & Sağ Panel Gotik Tasarım:** `RageButton` mezar taşlarının üzerinden aşağıya (`anchor_top = 1.0`, alt panelin hemen üstü) çekildi ve `StyleBoxFlat_rage_btn` ile koyu kızıl gotik buton çerçevesine kavuşturuldu.
-   - **Kahraman Sprite Tabard Shading:** `hero_knight.png` görselindeki bacak arası saf beyaz (`#FFFFFF`) dikdörtgen kalıntısı, zırhla ve pelerinle uyumlu koyu kızıl Gotik kumaş gölgelendirmesine dönüştürüldü.
+   - **Yeni Muharebeye Hazır Kahraman Görseli:** Eski arkası dönük sprite yerine düşmanlara dönük (3/4 sağ cephe), devasa rünik kılıcını öne uzatmış, boynuzlu ve kızıl vizörlü gerçek bir Kan Şövalyesi sprite'ı (`hero_knight.png`) üretilip saydamlaştırıldı.
+   - **Bildirim Butonları Ferahlatıldı:** `margin_right = 530`, `🏛️ AR-GE`, `🏛️ MAHZEN (1)` ve `🩸 UYANIŞ (+2)` ile üst sağ butonlar arasındaki temas ve sıkışma tamamen ortadan kaldırıldı.
 2. **Gotik Ekipman & Envanter Sistemi (Gothic Gear & Inventory System - Tamamlandı):**
    - `EquipmentModels.cs`, `EquipmentDatabase.cs`, `EquipmentManager.cs`, `InventoryModal.cs`, `InventoryController.cs` (CanvasLayer 102). 16 özgün Gotik eşya, 4 slot, 24 çanta kapasitesi, üstel bileme/satış, boss garantili düşüşü.
 3. **Yoldaş / Familiar Sinerji ve Seviye Sistemi:**

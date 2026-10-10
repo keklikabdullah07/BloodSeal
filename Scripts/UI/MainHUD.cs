@@ -137,11 +137,11 @@ namespace BloodSeal.UI
             {
                 int pending = AwakeningManager.Instance.CalculatePendingPoints(GameManager.Instance.CurrentWave);
                 if (pending > 0)
-                    AwakeningBtn.Text = $"🩸 UYANIŞ (+{pending} AP)";
+                    AwakeningBtn.Text = $"🩸 UYANIŞ (+{pending})";
                 else if (AwakeningManager.Instance.AwakeningPoints > 0)
-                    AwakeningBtn.Text = $"✨ MÜHÜRLER ({AwakeningManager.Instance.AwakeningPoints} AP)";
+                    AwakeningBtn.Text = $"✨ MÜHÜR ({AwakeningManager.Instance.AwakeningPoints})";
                 else
-                    AwakeningBtn.Text = "🩸 KIZIL UYANIŞ";
+                    AwakeningBtn.Text = "🩸 UYANIŞ";
             }
         }
 
@@ -202,7 +202,7 @@ namespace BloodSeal.UI
             int count = RelicManager.Instance?.GetCollectedCount() ?? 0;
             bool isAvailable = count > 0 || GameManager.Instance.CurrentWave >= 10;
             RelicVaultBtn.Visible = isAvailable;
-            if (isAvailable) RelicVaultBtn.Text = $"🏛️ MAHZEN ({count}/10)";
+            if (isAvailable) RelicVaultBtn.Text = $"🏛️ MAHZEN ({count})";
         }
 
         private void UpdateRageUI(float percentage)
