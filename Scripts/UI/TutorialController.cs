@@ -111,11 +111,18 @@ namespace BloodSeal.UI
                     break;
 
                 case TutorialStep.ActivateBerserk:
-                    var rageBtn = GetTree().Root.FindChild("RageButton", true, false) as Button;
-                    Vector2 ragePos = rageBtn != null && rageBtn.IsVisibleInTree()
-                        ? rageBtn.GlobalPosition + rageBtn.Size * 0.5f
-                        : new Vector2(960, 850);
-                    _callout.ShowHint("GÜÇ PATLAMASI", "Öfken taştı! Berserk modunu başlat!", ragePos, pointUp: false);
+                    if (GameManager.Instance != null && GameManager.Instance.RagePercentage >= 100f)
+                    {
+                        var rageBtn = GetTree().Root.FindChild("RageButton", true, false) as Button;
+                        Vector2 ragePos = rageBtn != null && rageBtn.IsVisibleInTree()
+                            ? rageBtn.GlobalPosition + rageBtn.Size * 0.5f
+                            : new Vector2(960, 850);
+                        _callout.ShowHint("GÜÇ PATLAMASI", "Öfken taştı! Berserk modunu başlat!", ragePos, pointUp: false);
+                    }
+                    else
+                    {
+                        _callout.HideHint();
+                    }
                     break;
 
                 case TutorialStep.VisitManorGate:

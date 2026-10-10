@@ -75,7 +75,8 @@ namespace BloodSeal.UI
             if (fm == null) return;
 
             var activeDef = FamiliarDatabase.Get(fm.ActiveFamiliarId);
-            _familiarBtn.Text = $"🦇 {activeDef.Name}";
+            _familiarBtn.Text = "🦇 YOLDAŞ";
+            _familiarBtn.TooltipText = $"Aktif: {activeDef.Name}";
         }
     }
 }

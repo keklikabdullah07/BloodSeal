@@ -56,6 +56,18 @@ expand_margin_top = 4.0
 expand_margin_right = 8.0
 expand_margin_bottom = 4.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rage_btn"]
+bg_color = Color(0.16, 0.05, 0.08, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.2, 0.25, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gate_card"]
 bg_color = Color(0.12, 0.08, 0.15, 0.95)
 border_width_left = 2
@@ -111,23 +123,30 @@ grow_horizontal = 2
 layout_mode = 2
 theme_override_constants/margin_left = 30
 theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 30
+theme_override_constants/margin_right = 500
 theme_override_constants/margin_bottom = 15
 
 [node name="HBox" type="HBoxContainer" parent="TopBar/Margin"]
 layout_mode = 2
+theme_override_constants/separation = 14
 
 [node name="ZoneLabel" type="Label" parent="TopBar/Margin/HBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.7, 0.5, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 20
 text = "🩸 VARNATH"
 
 [node name="ProfileLabel" type="Label" parent="TopBar/Margin/HBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.45, 0.55, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
 text = "👤 Valerius"
+
+[node name="GoldLabel" type="Label" parent="TopBar/Margin/HBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.25, 1)
+theme_override_font_sizes/font_size = 22
+text = "🪙 0 Altın"
 
 [node name="Spacer1" type="Control" parent="TopBar/Margin/HBox"]
 layout_mode = 2
@@ -136,15 +155,19 @@ size_flags_horizontal = 3
 [node name="WaveLabel" type="Label" parent="TopBar/Margin/HBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 22
 text = "DALGA 1 / 10"
 horizontal_alignment = 1
+
+[node name="Spacer2" type="Control" parent="TopBar/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="GateNotificationButton" type="Button" parent="TopBar/Margin/HBox"]
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.25, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 14
 theme_override_styles/normal = SubResource("StyleBoxFlat_gate_btn")
 text = "🚪 MALİKANE KAPISI"
 
@@ -152,7 +175,7 @@ text = "🚪 MALİKANE KAPISI"
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.85, 0.4, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 14
 theme_override_styles/normal = SubResource("StyleBoxFlat_gate_btn")
 text = "🏛️ KÜTÜPHANE"
 
@@ -160,7 +183,7 @@ text = "🏛️ KÜTÜPHANE"
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.35, 0.35, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 14
 theme_override_styles/normal = SubResource("StyleBoxFlat_gate_btn")
 text = "🩸 UYANIŞ"
 
@@ -168,59 +191,50 @@ text = "🩸 UYANIŞ"
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.8, 0.35, 1)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 14
 theme_override_styles/normal = SubResource("StyleBoxFlat_gate_btn")
-text = "🏛️ MAHZEN (0/10)"
-
-[node name="Spacer2" type="Control" parent="TopBar/Margin/HBox"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="GoldLabel" type="Label" parent="TopBar/Margin/HBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.85, 0.25, 1)
-theme_override_font_sizes/font_size = 28
-text = "🪙 0 Altın"
-horizontal_alignment = 2
+text = "🏛️ MAHZEN"
 
 [node name="RightPanel" type="VBoxContainer" parent="."]
-anchors_preset = 6
+anchors_preset = 3
 anchor_left = 1.0
-anchor_top = 0.5
+anchor_top = 1.0
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -260.0
-offset_top = -180.0
-offset_right = -40.0
-offset_bottom = 160.0
+anchor_bottom = 1.0
+offset_left = -220.0
+offset_top = -340.0
+offset_right = -30.0
+offset_bottom = -165.0
 grow_horizontal = 0
-grow_vertical = 2
-theme_override_constants/separation = 20
+grow_vertical = 0
+theme_override_constants/separation = 12
 
 [node name="RageContainer" type="VBoxContainer" parent="RightPanel"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 6
 
 [node name="RageBar" type="ProgressBar" parent="RightPanel/RageContainer"]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(0, 14)
 layout_mode = 2
 max_value = 100.0
 value = 0.0
 show_percentage = false
 
 [node name="RageButton" type="Button" parent="RightPanel/RageContainer"]
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 68)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 18
-text = "Öfke: %0"
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_rage_btn")
+text = "🔥 Öfke: %0"
 
 [node name="RetryBossButton" type="Button" parent="RightPanel"]
 visible = false
-custom_minimum_size = Vector2(0, 70)
+custom_minimum_size = Vector2(0, 56)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.25, 0.25, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_rage_btn")
 text = "⚔️ BOSS'A MEYDAN OKU!"
 
 [node name="BottomPanel" type="PanelContainer" parent="."]

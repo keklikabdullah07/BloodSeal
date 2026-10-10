@@ -87,7 +87,9 @@ namespace BloodSeal.UI
             _messageLabel.Text = message;
             _arrowLabel.Text = pointUp ? "▲" : "▼";
 
+            _container.ResetSize();
             Vector2 boxSize = _container.GetCombinedMinimumSize();
+            _container.Size = boxSize;
             if (pointUp)
             {
                 _container.Position = new Vector2(

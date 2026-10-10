@@ -156,7 +156,8 @@ namespace BloodSeal.UI
                 {
                     runeTag = $" | ᚱ {ManorGateHelper.GetRuneName(GameManager.Instance.ActiveRune)}";
                 }
-                ProfileLabel.Text = $"👤 {profile.PlayerName} [{bl} | {or}{runeTag}]";
+                ProfileLabel.Text = $"👤 {profile.PlayerName} ({bl})";
+                ProfileLabel.TooltipText = $"{bl} | {or}{runeTag}";
             }
         }
 
@@ -211,7 +212,7 @@ namespace BloodSeal.UI
             {
                 bool isRage = GameManager.Instance != null && GameManager.Instance.IsRageActive;
                 RageButton.Disabled = percentage < 100f || isRage;
-                RageButton.Text = isRage ? "BERSERK AKTİF!" : (percentage >= 100f ? "ÖFKEYİ SERBEST BIRAK! 🔥" : $"Öfke: %{percentage:F0}");
+                RageButton.Text = isRage ? "⚡ BERSERK AKTİF!" : (percentage >= 100f ? "🔥 BERSERK'İ BAŞLAT!" : $"🔥 Öfke: %{percentage:F0}");
             }
         }
 
