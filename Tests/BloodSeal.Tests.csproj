@@ -41,5 +41,8 @@
     <Compile Include="..\Scripts\Core\FamiliarModels.cs" Link="Core\FamiliarModels.cs" />
     <Compile Include="..\Scripts\Core\FamiliarDatabase.cs" Link="Core\FamiliarDatabase.cs" />
     <Compile Include="..\Scripts\Core\FamiliarManager.cs" Link="Core\FamiliarManager.cs" />
+    <Compile Include="..\Scripts\Core\EquipmentModels.cs" Link="Core\EquipmentModels.cs" />
+    <Compile Include="..\Scripts\Core\EquipmentDatabase.cs" Link="Core\EquipmentDatabase.cs" />
+    <Compile Include="..\Scripts\Core\EquipmentManager.cs" Link="Core\EquipmentManager.cs" />
   </ItemGroup>
 </Project>
