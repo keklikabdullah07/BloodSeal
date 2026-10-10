@@ -69,6 +69,11 @@ namespace BloodSeal.Core
                 data.ActiveFamiliarId = FamiliarManager.Instance.ActiveFamiliarId;
                 data.FamiliarProgresses = new System.Collections.Generic.Dictionary<string, FamiliarProgress>(FamiliarManager.Instance.GetAllProgresses());
             }
+            if (EquipmentManager.Instance != null)
+            {
+                data.EquippedItems = new System.Collections.Generic.Dictionary<EquipmentSlot, EquipmentItem?>(EquipmentManager.Instance.EquippedItems);
+                data.BagItems = new System.Collections.Generic.List<EquipmentItem>(EquipmentManager.Instance.BagItems);
+            }
             return data;
         }
 
@@ -81,21 +86,9 @@ namespace BloodSeal.Core
             {
                 rm.Reset();
                 if (data.LoreScrolls > 0) rm.AddLoreScrolls(data.LoreScrolls);
-                if (data.ResearchLevels != null)
-                {
-                    foreach (var kvp in data.ResearchLevels)
-                        rm.SetResearchLevel(kvp.Key, kvp.Value);
-                }
-                if (data.DefeatedMilestoneBosses != null)
-                {
-                    foreach (int w in data.DefeatedMilestoneBosses)
-                        rm.RecordMilestoneBossDefeated(w);
-                }
-                // Geriye dönük uyumluluk: Kapıdan parşömen kazanılmışsa ve liste boşsa
-                if (data.HasFirstLoreScroll && rm.LoreScrolls == 0 && data.ResearchLevels?.Count == 0)
-                {
-                    rm.AddLoreScrolls(1);
-                }
+                if (data.ResearchLevels != null) foreach (var kvp in data.ResearchLevels) rm.SetResearchLevel(kvp.Key, kvp.Value);
+                if (data.DefeatedMilestoneBosses != null) foreach (int w in data.DefeatedMilestoneBosses) rm.RecordMilestoneBossDefeated(w);
+                if (data.HasFirstLoreScroll && rm.LoreScrolls == 0 && data.ResearchLevels?.Count == 0) rm.AddLoreScrolls(1);
             }
 
             var am2 = AwakeningManager.Instance;
@@ -104,22 +97,14 @@ namespace BloodSeal.Core
                 am2.Reset();
                 if (data.AwakeningPoints > 0) am2.AddAwakeningPoints(data.AwakeningPoints);
                 am2.SetTotalAwakenings(data.TotalAwakenings);
-                if (data.AwakeningLevels != null)
-                {
-                    foreach (var kvp in data.AwakeningLevels)
-                        am2.SetSealLevel(kvp.Key, kvp.Value);
-                }
+                if (data.AwakeningLevels != null) foreach (var kvp in data.AwakeningLevels) am2.SetSealLevel(kvp.Key, kvp.Value);
             }
 
             var relics2 = RelicManager.Instance;
             if (relics2 != null)
             {
                 relics2.Reset();
-                if (data.CollectedRelics != null)
-                {
-                    foreach (var id in data.CollectedRelics)
-                        relics2.UnlockRelic(id);
-                }
+                if (data.CollectedRelics != null) foreach (var id in data.CollectedRelics) relics2.UnlockRelic(id);
             }
 
             var audio2 = AudioManager.Instance;
@@ -132,6 +117,7 @@ namespace BloodSeal.Core
             if (QuestManager.Instance != null)
                 QuestManager.Instance.LoadState(data.QuestProgresses, data.ActiveDailyQuestIds, data.LastDailyResetTimestamp);
             FamiliarManager.Instance?.LoadProgresses(data.ActiveFamiliarId, data.FamiliarProgresses);
+            EquipmentManager.Instance?.LoadState(data.EquippedItems, data.BagItems);
 
             if (gm == null) return;
 
