@@ -31,10 +31,7 @@
 
 ---
 
-## 🎯 Sonraki Geliştirme İçin Önerilen Sistem Adayları:
-1. **Kadim Boss Zindanları / Kan Denemeleri (Trials of Blood - Önerilen):**
-   - Süreli boss rush modu, kısıtlı sürede kesilen boss'lara özel yüksek altın, kadim ekipman sandıkları ve parşömen ödülleri.
-2. **Gotik Ses ve Müzik Genişletmesi (Gothic Audio Polish):**
-   - Boss özel tema müzikleri, ekipman kuşanma/bileme SFX varyasyonları ve ortam ambiyansları.
-3. **Kan Paktı / Kan Bağı Yetenek Ağacı (Blood Pact Mastery):**
-   - Uyanış puanları veya kalıcı rünlerle açılan aktif/pasif derinlemesine yetenek kombinasyonları.
+## 🚀 Yeni Sohbet İçin Hazırlanan Aktif Hedef:
+**Kadim Boss Zindanları / Kan Denemeleri (Trials of Blood - Boss Rush)**
+- **Onaylanan Tasarım Belgesi:** `docs/superpowers/specs/2026-10-10-trials-of-blood-dungeon-design.md` (Commit: `dfcda34`)
+- **Yeni Sohbetin İlk Adımı:** `writing-plans` becerisi çalıştırılarak `docs/superpowers/plans/2026-10-10-trials-of-blood-dungeon.md` uygulama planı oluşturulacak ve doğrudan geliştirilmeye başlanacaktır.
