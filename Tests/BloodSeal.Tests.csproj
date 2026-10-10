@@ -44,5 +44,6 @@
     <Compile Include="..\Scripts\Core\EquipmentModels.cs" Link="Core\EquipmentModels.cs" />
     <Compile Include="..\Scripts\Core\EquipmentDatabase.cs" Link="Core\EquipmentDatabase.cs" />
     <Compile Include="..\Scripts\Core\EquipmentManager.cs" Link="Core\EquipmentManager.cs" />
+    <Compile Include="..\Scripts\Core\HapticManager.cs" Link="Core\HapticManager.cs" />
   </ItemGroup>
 </Project>
